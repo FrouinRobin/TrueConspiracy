@@ -50,6 +50,16 @@ TArray<UTC_Face*> ATC_Card::GetCardFaceList()
 	return _cardFaceList;
 }
 
+ETC_CardType ATC_Card::GetCardType()
+{
+	return _cardType;
+}
+
+TArray<ETC_CardType> ATC_Card::GetCardTypeList()
+{
+	return _cardTypeList;
+}
+
 UTexture2D* ATC_Card::GetCardIllustration()
 {
 	return _cardIllustration;
@@ -97,6 +107,16 @@ void ATC_Card::SetCardDefendFace(UTC_DefendFace* newDefendFace)
 void ATC_Card::SetCardFaceList(TArray<UTC_Face*> newFaceList)
 {
 	_cardFaceList = newFaceList;
+}
+
+void ATC_Card::SetCardType(ETC_CardType newType)
+{
+	_cardType = newType;
+}
+
+void ATC_Card::SetCardTypeList(TArray<ETC_CardType> newTypeList)
+{
+	_cardTypeList = newTypeList;
 }
 
 void ATC_Card::SetCardIllustration(UTexture2D* newImage)

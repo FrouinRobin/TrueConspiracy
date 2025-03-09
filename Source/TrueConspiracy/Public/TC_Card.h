@@ -7,6 +7,7 @@
 #include "TC_Face.h"
 #include "TC_AttackFace.h"
 #include "TC_DefendFace.h"
+#include "TC_CardType.h"
 #include "TC_Card.generated.h"
 
 UCLASS()
@@ -48,12 +49,11 @@ public:
 	UTC_DefendFace* GetCardDefendFace();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	TArray<UTC_Face*> GetCardFaceList();
-	/*UFUNCTION(BlueprintCallable, Category = "Getters")*/
-	//UCardType* GetCardType();
-	/*UFUNCTION(BlueprintCallable, Category = "Getters")*/
-	//TArray<UCardType> GetCardTypeList();
-	/*UFUNCTION(BlueprintCallable, Category = "Getters")*/
-	//TArray<UCardEffect> GetCardEffectList();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ETC_CardType GetCardType();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	TArray<ETC_CardType> GetCardTypeList();
+
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	UTexture2D* GetCardIllustration();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
@@ -76,12 +76,11 @@ public:
 	void SetCardDefendFace(UTC_DefendFace* newDefendFace);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardFaceList(TArray<UTC_Face*> newFaceList);
-	/*UFUNCTION(BlueprintCallable, Category = "Setters")*/
-	//UCardType* GetCardType();
-	/*UFUNCTION(BlueprintCallable, Category = "Setters")*/
-	//TArray<UCardType> GetCardTypeList();
-	/*UFUNCTION(BlueprintCallable, Category = "Setters")*/
-	//TArray<UCardEffect> GetCardEffectList();
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetCardType(ETC_CardType newType);
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetCardTypeList(TArray<ETC_CardType> newTypeList);
+
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardIllustration(UTexture2D* newImage);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
@@ -128,8 +127,8 @@ private:
 	UTC_Face* _cardCurrentFace;
 	TArray<UTC_Face*> _cardFaceList;
 
-	//UCardType* _cardType;
-	//TArray<UCardType> _cardTypes;
+	ETC_CardType _cardType;
+	TArray<ETC_CardType> _cardTypeList;
 
 	UTexture2D* _cardIllustration;
 	UTexture2D* _cardBackground;
