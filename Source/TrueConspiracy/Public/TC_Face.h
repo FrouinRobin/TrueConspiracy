@@ -67,6 +67,9 @@ public:
 	void OnFaceEndTurn();
 
 
+	UFUNCTION(BlueprintCallable)
+	UTC_EffectType* FindEffectOfType(TArray<UTC_EffectType*> FaceEffectList, TSubclassOf<UTC_EffectType> EffectTypeToFind);
+
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Type")

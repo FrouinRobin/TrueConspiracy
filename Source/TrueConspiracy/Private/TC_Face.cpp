@@ -75,3 +75,16 @@ void UTC_Face::SetCardScore(float newScore)
 {
 	FaceScore = newScore;
 }
+
+UTC_EffectType* UTC_Face::FindEffectOfType(TArray<UTC_EffectType*> FaceEffectList, TSubclassOf<UTC_EffectType> EffectTypeToFind)
+{
+	for (UTC_EffectType* EffectType : FaceEffectList)
+	{
+		if (EffectType->IsA(EffectTypeToFind))
+		{
+			return EffectType;
+		}
+	}
+
+	return NULL;
+}
