@@ -47,6 +47,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardScore(float newScore);
 
+	/* CUSTOM EVENT */
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnFacePlace();
@@ -66,6 +67,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnFaceEndTurn();
 
+	/* OTHER FUNCTION */
 
 	UFUNCTION(BlueprintCallable)
 	UTC_EffectType* FindEffectOfType(TArray<UTC_EffectType*> FaceEffectList, TSubclassOf<UTC_EffectType> EffectTypeToFind);

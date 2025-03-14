@@ -6,9 +6,7 @@
 #include "UObject/NoExportTypes.h"
 #include "TC_CardEffect.generated.h"
 
-/**
- * 
- */
+
 UCLASS(Blueprintable, BlueprintType, EditInlineNew, DefaultToInstanced)
 class TRUECONSPIRACY_API UTC_CardEffect : public UObject
 {

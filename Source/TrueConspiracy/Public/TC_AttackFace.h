@@ -6,9 +6,7 @@
 #include "TC_Face.h"
 #include "TC_AttackFace.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class TRUECONSPIRACY_API UTC_AttackFace : public UTC_Face
 {

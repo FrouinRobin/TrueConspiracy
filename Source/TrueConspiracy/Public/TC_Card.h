@@ -16,7 +16,7 @@ class TRUECONSPIRACY_API ATC_Card : public AActor
 	GENERATED_BODY()
 	
 public:
-	// Sets default values for this actor's properties
+
 	ATC_Card();
 
 	UPROPERTY(EditAnywhere, Category = "Card Mesh")

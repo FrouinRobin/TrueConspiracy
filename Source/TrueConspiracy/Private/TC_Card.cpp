@@ -3,10 +3,9 @@
 
 #include "TC_Card.h"
 
-// Sets default values
+
 ATC_Card::ATC_Card()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	CardMesh = CreateDefaultSubobject<UStaticMeshComponent>("Card Mesh", false);
 	RootComponent = CardMesh;
@@ -14,14 +13,13 @@ ATC_Card::ATC_Card()
 
 }
 
-// Called when the game starts or when spawned
+
 void ATC_Card::BeginPlay()
 {
 	Super::BeginPlay();
 
 }
 
-// Called every frame
 void ATC_Card::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
