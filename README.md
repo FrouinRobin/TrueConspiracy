@@ -15,9 +15,9 @@ Nomenclature Unreal Engine :
 
 C++ File = TC_Name
 
-Private Decleration = _variableName
+Private Decleration = _variableName / _functionName
 
-Public Declaration = VaraiabelName / FunctionName
+Public Declaration = VaraiableName / FunctionName
 
 BluePrint = BP_Name
 
