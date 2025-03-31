@@ -2,7 +2,10 @@
 
 
 #include "TC_Player.h"
+#include "Camera/CameraComponent.h"
+#include <GameFramework/SpringArmComponent.h>
 #include <TC_Face.h>
+#include <Components/CapsuleComponent.h>
 
 // Sets default values
 ATC_Player::ATC_Player()
@@ -10,6 +13,20 @@ ATC_Player::ATC_Player()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	RootComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
+
+	//_cameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	//_cameraBoom->SetupAttachment(RootComponent);
+	//_cameraBoom->SetUsingAbsoluteRotation(true);
+	//_cameraBoom->bDoCollisionTest = false;
+
+	_playerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
+	_playerCamera->SetupAttachment(RootComponent);
+	_playerCamera->bUsePawnControlRotation = false;
+
+	_cardAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("CardAnchor"));
+	_cardAnchor->SetupAttachment(_playerCamera);
+	_cardAnchor->SetRelativeLocation(FVector(0.f, 0.f, 200.f));
 }
 
 ATC_Card* ATC_Player::GetCardFromDeckByName(FString name, bool checkAllFaces)

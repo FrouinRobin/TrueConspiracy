@@ -24,6 +24,10 @@ public:
 	// Would a card have an ID for both faces or would each faces have their unique IDs?
 	ATC_Card* GetCardFromDeckById(FString id);
 
+	//ATC_Card* GetCardFromDeckByCondition();
+
+	//TArray<ATC_Card*> GetDeck();
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -31,6 +35,12 @@ protected:
 
 	UPROPERTY()
 	TArray<ATC_Card*> _playerDeck;
+
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UCameraComponent* _playerCamera;
+	class USpringArmComponent* _cameraBoom;
+	class USceneComponent* _cardAnchor;
 
 public:	
 	// Called every frame
