@@ -3,9 +3,8 @@
 
 #include "TC_Player.h"
 #include "Camera/CameraComponent.h"
-#include <GameFramework/SpringArmComponent.h>
-#include <TC_Face.h>
 #include <Components/CapsuleComponent.h>
+#include <TC_Face.h>
 
 // Sets default values
 ATC_Player::ATC_Player()
@@ -14,11 +13,6 @@ ATC_Player::ATC_Player()
 	PrimaryActorTick.bCanEverTick = true;
 
 	RootComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
-
-	//_cameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	//_cameraBoom->SetupAttachment(RootComponent);
-	//_cameraBoom->SetUsingAbsoluteRotation(true);
-	//_cameraBoom->bDoCollisionTest = false;
 
 	_playerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
 	_playerCamera->SetupAttachment(RootComponent);
@@ -64,6 +58,12 @@ ATC_Card* ATC_Player::GetCardFromDeckById(FString id)
 	}
 	UE_LOG(LogTemp, Warning, TEXT("GetCardFromDeckById() did not return any card!"));
 	return nullptr;
+}
+
+bool ATC_Player::AddCardToDeck(ATC_Card* card)
+{
+	_playerDeck.Add(card);
+	return true;
 }
 
 // Called when the game starts or when spawned

@@ -28,6 +28,9 @@ public:
 
 	//TArray<ATC_Card*> GetDeck();
 
+	UFUNCTION(BlueprintCallable)
+	bool AddCardToDeck(ATC_Card* card);
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -39,7 +42,6 @@ protected:
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* _playerCamera;
-	class USpringArmComponent* _cameraBoom;
 	class USceneComponent* _cardAnchor;
 
 public:	
