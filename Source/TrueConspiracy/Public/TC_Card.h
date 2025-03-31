@@ -122,6 +122,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SwitchPhase();
 
+	/*OPERATOR*/
+	bool operator==(const ATC_Card& Other) const;
 private:
 
 	UTC_Face* _cardCurrentFace;
