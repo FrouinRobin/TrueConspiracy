@@ -2,26 +2,108 @@
 
 
 #include "Board/TC_Board.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Engine/World.h"
+#include "Kismet/KismetSystemLibrary.h"
 
-// Sets default values
 ATC_Board::ATC_Board()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
-// Called when the game starts or when spawned
 void ATC_Board::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	InitializeBoard();
 }
 
-// Called every frame
 void ATC_Board::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
+void ATC_Board::InitializeBoard()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Initializing Board..."));
+
+	// Création des 2 BoardZones (1 par joueur)
+	for (int i = 0; i < 2; i++)
+	{
+		UTC_BoardZone* T_BoardZone = NewObject<UTC_BoardZone>(this);
+		if (T_BoardZone)
+		{
+			BoardZones.Add(T_BoardZone);
+			UE_LOG(LogTemp, Warning, TEXT("BoardZone %d Created"), i);
+		}
+	}
+
+	// Création des 6 FightZones (3 par joueur)
+	for (int i = 0; i < 6; i++)
+	{
+		UTC_FightZone* T_FightZone = NewObject<UTC_FightZone>(this);
+		if (T_FightZone)
+		{
+			FightZones.Add(T_FightZone);
+			UE_LOG(LogTemp, Warning, TEXT("FightZone %d Created"), i);
+		}
+	}
+
+	// Création des 6 LandCards (1 par FightZone)
+	for (int i = 0; i < 6; i++)
+	{
+		UTC_LandCard* T_LandCard = NewObject<UTC_LandCard>(this);
+		if (T_LandCard)
+		{
+			LandCards.Add(T_LandCard);
+			UE_LOG(LogTemp, Warning, TEXT("LandCard %d Created"), i);
+		}
+	}
+
+	// Création des 6 BoardSlots (3 par joueur)
+	for (int i = 0; i < 6; i++)
+	{
+		UTC_BoardSlot* T_BoardSlot = NewObject<UTC_BoardSlot>(this);
+		if (T_BoardSlot)
+		{
+			BoardSlots.Add(T_BoardSlot);
+			UE_LOG(LogTemp, Warning, TEXT("BoardSlot %d Created"), i);
+		}
+	}
+
+	// Création des 24 Slots (4 par BoardSlot)
+	for (int i = 0; i < 24; i++)
+	{
+		UTC_Slot* T_Slot = NewObject<UTC_Slot>(this);
+		if (T_Slot)
+		{
+			Slots.Add(T_Slot);
+			UE_LOG(LogTemp, Warning, TEXT("Slot %d Created"), i);
+		}
+	}
+}
+
+bool ATC_Board::PlaceCard(ATC_Card* Card, UTC_Slot* Slot)
+{
+	if (!Card || !Slot)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Invalid Card or Slot!"));
+		return false;
+	}
+
+	// Vérifier si le slot est vide
+	if (Slot->HasCard)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Slot is already occupied!"));
+		return false;
+	}
+
+	// Placer la carte dans le slot
+	Slot->SetCard(Card);
+	Slot->HasCard = true;
+	UE_LOG(LogTemp, Warning, TEXT("Card placed successfully!"));
+
+	// Appeler l'evenement OnCardPlace sur la carte
+	Card->OnCardPlace();
+
+	return true;
+}

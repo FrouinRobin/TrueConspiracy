@@ -5,8 +5,10 @@
 
 void UTC_LandCard::ApplyBonus()
 {
+
 }
 
 void UTC_LandCard::ApplyMalus()
 {
+
 }
