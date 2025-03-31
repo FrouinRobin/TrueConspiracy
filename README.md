@@ -21,7 +21,7 @@ C++ File = TC_Name
 
 Private Decleration = _variableName / _functionName
 
-Public Declaration = VaraiableName / FunctionName
+Public Declaration = VariableName / FunctionName
 
 
 Création d'Assets / Object : initial du type_nom (M_monMaterial) sauf pour scène et script :
