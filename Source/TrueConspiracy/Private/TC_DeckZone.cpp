@@ -23,11 +23,10 @@ ATC_Card* UTC_DeckZone::GetCard(float index)
 
 ATC_Card* UTC_DeckZone::GetCard(ATC_Card CardIn)
 {
-	/*
 	for (ATC_Card* Card : _hand)
 	{
 		if (*Card == CardIn)
 			return Card;
-	}*/
+	}
 	return nullptr;
 }

@@ -164,3 +164,15 @@ void ATC_Card::SwitchPhase()
 	OnCardStartPhase();
 }
 
+/*OPERATOR*/
+
+bool ATC_Card::operator==(const ATC_Card& Other) const
+{
+	if (CardMesh == Other.CardMesh)
+	{
+		return true;
+	}
+
+	return false;
+}
+
