@@ -25,5 +25,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	TArray<UTC_BoardZone> BoardZones;
+	TArray<UTC_FightZone> FightZones;
+	TArray<UTC_LandCard> LandCards;
 };
