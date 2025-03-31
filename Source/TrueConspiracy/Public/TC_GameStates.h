@@ -3,10 +3,10 @@
 #include "CoreMinimal.h"
 
 class ATC_Card;
-struct FAIAction;
+struct FAIActions;
 
 UENUM(BlueprintType)
-enum class EGameModeFormat
+enum class EGameModeFormat : uint8
 {
 	BO3,
 	BO5,
@@ -62,7 +62,7 @@ public:
 
 	// --- Generating Futur State(s) ---
 	TArray<TC_GameStates> GetNextStates() const;
-	void ApplyAction(const FAIAction& InAction);
+	void ApplyAction(const FAIActions& InAction);
 
 	// --- Tool(s) Function(s) ---
 	TC_GameStates Clone() const;

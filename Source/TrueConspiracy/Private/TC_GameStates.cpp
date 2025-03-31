@@ -1,4 +1,5 @@
 #include "TC_GameStates.h"
+#include "TC_AIActions.h"
 
 // --- Game Format(s) ---
 FGameFormat::FGameFormat()
@@ -79,7 +80,12 @@ bool TC_GameStates::IsGameRunning() const
 
 int32 TC_GameStates::GetWinner() const
 {
-	return int32();
+	if (IsGameRunning()) return -1; // Game still running
+
+	if (Player1Score > Player2Score) return 1;
+	if (Player2Score > Player1Score) return 2;
+
+	return 0; // Draw
 }
 
 TArray<TC_GameStates> TC_GameStates::GetNextStates() const
@@ -87,10 +93,80 @@ TArray<TC_GameStates> TC_GameStates::GetNextStates() const
 	return TArray<TC_GameStates>();
 }
 
-void TC_GameStates::ApplyAction(const FAIAction& InAction)
+void TC_GameStates::ApplyAction(const FAIActions& InAction)
 {
-
+	switch (InAction.Type)
+	{
+	case EActionType::PlayCard :
+	{
+		break;
+	}	
+	case EActionType::DrawCard:
+	{
+		break;
+	}
+	case EActionType::MoveCard:
+	{
+		break;
+	}
+	case EActionType::EndTurn:
+	{
+		break;
+	}
+	default:
+		break;
+	}
 }
+
+//void TC_GameStates::ApplyAction(const FAIAction& InAction)
+//{
+//	switch (InAction.Type)
+//	{
+//	case EActionType::PlayCard:
+//	{
+//		TArray<ATC_Card*>& hand = bIsPlayer1Turn ? Player1Hand : Player2Hand;
+//		TArray<ATC_Card*>& board = bIsPlayer1Turn ? Player1BoardCard : Player2BoardCard;
+//		int32& mana = bIsPlayer1Turn ? Player1Mana : Player2Mana;
+//
+//		// Vérifie l'index
+//		if (!hand.IsValidIndex(InAction.CardIndexInHand))
+//			return;
+//
+//		ATC_Card* cardToPlay = hand[InAction.CardIndexInHand];
+//		if (!cardToPlay) return;
+//
+//		// Vérifie le coût en mana
+//		if (cardToPlay->GetManaCost() > mana)
+//			return;
+//
+//		// Vérifie la limite de 12 cartes actives
+//		if (board.Num() >= 12)
+//			return;
+//
+//		// Appliquer l'action
+//		mana -= cardToPlay->GetManaCost();
+//		board.Add(cardToPlay);
+//		hand.RemoveAt(InAction.CardIndexInHand);
+//
+//		break;
+//	}
+//
+//	case EActionType::EndTurn:
+//	{
+//		// Fin du tour : on change de joueur, et on incrémente le compteur si P2 vient de jouer
+//		if (!bIsPlayer1Turn)
+//		{
+//			++CurrentTurn;
+//		}
+//
+//		bIsPlayer1Turn = !bIsPlayer1Turn;
+//		break;
+//	}
+//
+//	default:
+//		break;
+//	}
+//}
 
 TC_GameStates TC_GameStates::Clone() const
 {
