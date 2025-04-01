@@ -20,19 +20,19 @@ public:
 	ATC_Board();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
-	TArray<UTC_BoardZone*> BoardZones; // 2 zones (1 par joueur)
+	TArray<ATC_BoardZone*> BoardZones; // 2 zones (1 par joueur)
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
-	TArray<UTC_FightZone*> FightZones; // 6 FightZones (3 par joueur)
+	TArray<ATC_FightZone*> FightZones; // 6 FightZones (3 par joueur)
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
-	TArray<UTC_LandCard*> LandCards; // 6 LandCards (1 par FightZone)
+	TArray<ATC_LandCard*> LandCards; // 6 LandCards (1 par FightZone)
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
-	TArray<UTC_BoardSlot*> BoardSlots; // 6 BoardSlots (3 par joueur)
+	TArray<ATC_BoardSlot*> BoardSlots; // 6 BoardSlots (3 par joueur)
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
-	TArray<UTC_Slot*> Slots; // 24 Slots (4 par BoardSlot)
+	TArray<ATC_Slot*> Slots; // 24 Slots (4 par BoardSlot)
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Board", meta = (AllowPrivateAccess = "true"))
 	USceneComponent* _boardRoot;
@@ -56,7 +56,7 @@ public:
 	void InitializeBoard();
 
 	UFUNCTION(BlueprintCallable)
-	bool PlaceCard(ATC_Card* Card, UTC_Slot* Slot);
+	bool PlaceCard(ATC_Card* Card, ATC_Slot* Slot);
 
 
 };

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
+#include "GameFramework/Actor.h"
 #include "TC_BoardSlot.h"
 #include "TC_LandCard.generated.h"
 
@@ -11,17 +11,23 @@
  *
  */
 UCLASS(Blueprintable, BlueprintType)
-class TRUECONSPIRACY_API UTC_LandCard : public UObject
+class TRUECONSPIRACY_API ATC_LandCard : public AActor
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<UTC_BoardSlot*> BoardSlot;
+
+	ATC_LandCard();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCard")
+	TArray<ATC_BoardSlot*> BoardSlots;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "LandCard")
+	USceneComponent* LandCardRoot;
 
 	UFUNCTION(BlueprintCallable)
 	void ApplyBonus();
-	
+
 	UFUNCTION(BlueprintCallable)
 	void ApplyMalus();
 };

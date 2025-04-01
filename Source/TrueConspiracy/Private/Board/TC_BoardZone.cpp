@@ -3,3 +3,10 @@
 
 #include "Board/TC_BoardZone.h"
 
+ATC_BoardZone::ATC_BoardZone()
+{
+	PrimaryActorTick.bCanEverTick = false;
+
+	BoardZoneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("BoardZoneRoot"));
+	RootComponent = BoardZoneRoot;
+}

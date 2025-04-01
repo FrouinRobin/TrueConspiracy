@@ -45,11 +45,12 @@ void ATC_Board::InitializeBoard()
 	// Création des 2 BoardZones (1 par joueur)
 	for (int i = 0; i < 2; i++)
 	{
-		UTC_BoardZone* T_BoardZone = NewObject<UTC_BoardZone>(this);
-		if (T_BoardZone)
+		FActorSpawnParameters SpawnParams;
+		ATC_BoardZone* NewBoardZone = GetWorld()->SpawnActor<ATC_BoardZone>(ATC_BoardZone::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+		if (NewBoardZone)
 		{
-			BoardZones.Add(T_BoardZone);
-			//T_BoardZone->AttachToComponent(_boardZonesRoot, FAttachmentTransformRules::KeepRelativeTransform);
+			NewBoardZone->AttachToComponent(_boardZonesRoot, FAttachmentTransformRules::KeepRelativeTransform);
+			BoardZones.Add(NewBoardZone);
 			UE_LOG(LogTemp, Warning, TEXT("BoardZone %d Created"), i);
 		}
 	}
@@ -57,10 +58,12 @@ void ATC_Board::InitializeBoard()
 	// Création des 6 FightZones (3 par joueur)
 	for (int i = 0; i < 6; i++)
 	{
-		UTC_FightZone* T_FightZone = NewObject<UTC_FightZone>(this);
-		if (T_FightZone)
+		FActorSpawnParameters SpawnParams;
+		ATC_FightZone* NewFightZone = GetWorld()->SpawnActor<ATC_FightZone>(ATC_FightZone::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+		if (NewFightZone)
 		{
-			FightZones.Add(T_FightZone);
+			NewFightZone->AttachToComponent(_fightZonesRoot, FAttachmentTransformRules::KeepRelativeTransform);
+			FightZones.Add(NewFightZone);
 			UE_LOG(LogTemp, Warning, TEXT("FightZone %d Created"), i);
 		}
 	}
@@ -68,10 +71,12 @@ void ATC_Board::InitializeBoard()
 	// Création des 6 LandCards (1 par FightZone)
 	for (int i = 0; i < 6; i++)
 	{
-		UTC_LandCard* T_LandCard = NewObject<UTC_LandCard>(this);
-		if (T_LandCard)
+		FActorSpawnParameters SpawnParams;
+		ATC_LandCard* NewLandCard = GetWorld()->SpawnActor<ATC_LandCard>(ATC_LandCard::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+		if (NewLandCard)
 		{
-			LandCards.Add(T_LandCard);
+			NewLandCard->AttachToComponent(_fightZonesRoot, FAttachmentTransformRules::KeepRelativeTransform);
+			LandCards.Add(NewLandCard);
 			UE_LOG(LogTemp, Warning, TEXT("LandCard %d Created"), i);
 		}
 	}
@@ -79,10 +84,12 @@ void ATC_Board::InitializeBoard()
 	// Création des 6 BoardSlots (3 par joueur)
 	for (int i = 0; i < 6; i++)
 	{
-		UTC_BoardSlot* T_BoardSlot = NewObject<UTC_BoardSlot>(this);
-		if (T_BoardSlot)
+		FActorSpawnParameters SpawnParams;
+		ATC_BoardSlot* NewBoardSlot = GetWorld()->SpawnActor<ATC_BoardSlot>(ATC_BoardSlot::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+		if (NewBoardSlot)
 		{
-			BoardSlots.Add(T_BoardSlot);
+			NewBoardSlot->AttachToComponent(_slotsRoot, FAttachmentTransformRules::KeepRelativeTransform);
+			BoardSlots.Add(NewBoardSlot);
 			UE_LOG(LogTemp, Warning, TEXT("BoardSlot %d Created"), i);
 		}
 	}
@@ -90,16 +97,19 @@ void ATC_Board::InitializeBoard()
 	// Création des 24 Slots (4 par BoardSlot)
 	for (int i = 0; i < 24; i++)
 	{
-		UTC_Slot* T_Slot = NewObject<UTC_Slot>(this);
-		if (T_Slot)
+		FActorSpawnParameters SpawnParams;
+		ATC_Slot* NewSlot = GetWorld()->SpawnActor<ATC_Slot>(ATC_Slot::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+		if (NewSlot)
 		{
-			Slots.Add(T_Slot);
+			NewSlot->AttachToComponent(_slotsRoot, FAttachmentTransformRules::KeepRelativeTransform);
+			Slots.Add(NewSlot);
 			UE_LOG(LogTemp, Warning, TEXT("Slot %d Created"), i);
 		}
 	}
 }
 
-bool ATC_Board::PlaceCard(ATC_Card* Card, UTC_Slot* Slot)
+
+bool ATC_Board::PlaceCard(ATC_Card* Card, ATC_Slot* Slot)
 {
 	if (!Card || !Slot)
 	{
@@ -108,7 +118,7 @@ bool ATC_Board::PlaceCard(ATC_Card* Card, UTC_Slot* Slot)
 	}
 
 	// Vérifier si le slot est vide
-	if (Slot->HasCard)
+	if (Slot->HasCard())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Slot is already occupied!"));
 		return false;
@@ -116,10 +126,9 @@ bool ATC_Board::PlaceCard(ATC_Card* Card, UTC_Slot* Slot)
 
 	// Placer la carte dans le slot
 	Slot->SetCard(Card);
-	Slot->HasCard = true;
 	UE_LOG(LogTemp, Warning, TEXT("Card placed successfully!"));
 
-	// Appeler l'evenement OnCardPlace sur la carte
+	// Appeler l'événement OnCardPlace sur la carte
 	Card->OnCardPlace();
 
 	return true;

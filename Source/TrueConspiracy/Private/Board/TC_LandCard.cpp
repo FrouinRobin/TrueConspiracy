@@ -3,12 +3,20 @@
 
 #include "Board/TC_LandCard.h"
 
-void UTC_LandCard::ApplyBonus()
+ATC_LandCard::ATC_LandCard()
 {
+	PrimaryActorTick.bCanEverTick = false;
 
+	LandCardRoot = CreateDefaultSubobject<USceneComponent>(TEXT("LandCardRoot"));
+	RootComponent = LandCardRoot;
 }
 
-void UTC_LandCard::ApplyMalus()
+void ATC_LandCard::ApplyBonus()
 {
+	//  bonus
+}
 
+void ATC_LandCard::ApplyMalus()
+{
+	//  malus
 }

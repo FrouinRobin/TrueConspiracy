@@ -3,7 +3,22 @@
 
 #include "Board/TC_BoardSlot.h"
 
-TArray<UTC_Slot*> UTC_BoardSlot::GetSlot()
+ATC_BoardSlot::ATC_BoardSlot()
 {
-	return _slot;
+	PrimaryActorTick.bCanEverTick = false;
+
+	BoardSlotRoot = CreateDefaultSubobject<USceneComponent>(TEXT("BoardSlotRoot"));
+	RootComponent = BoardSlotRoot;
+
+	OnActorBeginOverlap.AddDynamic(this, &ATC_BoardSlot::OnBoardSlotOverlap);
+}
+
+TArray<ATC_Slot*> ATC_BoardSlot::GetSlots()
+{
+	return Slots;
+}
+
+void ATC_BoardSlot::OnBoardSlotOverlap(AActor* OverlappedActor, AActor* OtherActor)
+{
+	
 }
