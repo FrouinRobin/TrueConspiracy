@@ -20,7 +20,7 @@ ATC_Player::ATC_Player()
 
 	_cardAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("CardAnchor"));
 	_cardAnchor->SetupAttachment(_playerCamera);
-	_cardAnchor->SetRelativeLocation(FVector(0.f, 0.f, 200.f));
+	_cardAnchor->SetRelativeLocation(FVector(0.f, 200.f, 0.f));
 }
 
 ATC_Card* ATC_Player::GetCardFromDeckByName(FString name, bool checkAllFaces)
@@ -63,6 +63,8 @@ ATC_Card* ATC_Player::GetCardFromDeckById(FString id)
 bool ATC_Player::AddCardToDeck(ATC_Card* card)
 {
 	_playerDeck.Add(card);
+	card->AttachToComponent(_cardAnchor, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
+	card->SetActorScale3D(FVector(0.5, 0.5, 0.5));
 	return true;
 }
 
