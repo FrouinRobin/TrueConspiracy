@@ -8,6 +8,7 @@
 #include "TC_AttackFace.h"
 #include "TC_DefendFace.h"
 #include "TC_CardType.h"
+#include "TC_CardID.h"
 #include "TC_Card.generated.h"
 
 UCLASS()
@@ -53,6 +54,8 @@ public:
 	ETC_CardType GetCardType();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	TArray<ETC_CardType> GetCardTypeList();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ETC_CardID GetCardID();
 
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	UTexture2D* GetCardIllustration();
@@ -129,6 +132,8 @@ private:
 
 	ETC_CardType _cardType;
 	TArray<ETC_CardType> _cardTypeList;
+
+	ETC_CardID _cardId;
 
 	UTexture2D* _cardIllustration;
 	UTexture2D* _cardBackground;

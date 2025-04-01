@@ -58,6 +58,11 @@ TArray<ETC_CardType> ATC_Card::GetCardTypeList()
 	return _cardTypeList;
 }
 
+ETC_CardID ATC_Card::GetCardID()
+{
+	return _cardId;
+}
+
 UTexture2D* ATC_Card::GetCardIllustration()
 {
 	return _cardIllustration;
@@ -163,4 +168,3 @@ void ATC_Card::SwitchPhase()
 	SwitchFace();
 	OnCardStartPhase();
 }
-
