@@ -13,7 +13,7 @@ enum class EActionType : uint8 //-> le type d’action
     PlayCard,
     DrawCard,
     MoveCard,
-    EndTurn
+    EndTurn,
 };
 
 struct FAIActions //-> represente une seule action
