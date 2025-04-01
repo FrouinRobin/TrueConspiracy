@@ -19,5 +19,5 @@ public:
 	TArray<UTC_CardEffect*> EffectList;
 
 	UFUNCTION(BlueprintCallable)
-	void DoEffect();
+	void DoEffect(ATC_Card* caster);
 };
