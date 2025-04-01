@@ -19,6 +19,33 @@ class TRUECONSPIRACY_API ATC_Board : public AActor
 public:
 	ATC_Board();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
+	TArray<UTC_BoardZone*> BoardZones; // 2 zones (1 par joueur)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
+	TArray<UTC_FightZone*> FightZones; // 6 FightZones (3 par joueur)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
+	TArray<UTC_LandCard*> LandCards; // 6 LandCards (1 par FightZone)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
+	TArray<UTC_BoardSlot*> BoardSlots; // 6 BoardSlots (3 par joueur)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
+	TArray<UTC_Slot*> Slots; // 24 Slots (4 par BoardSlot)
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Board", meta = (AllowPrivateAccess = "true"))
+	USceneComponent* _boardRoot;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Board", meta = (AllowPrivateAccess = "true"))
+	USceneComponent* _boardZonesRoot;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Board", meta = (AllowPrivateAccess = "true"))
+	USceneComponent* _fightZonesRoot;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Board", meta = (AllowPrivateAccess = "true"))
+	USceneComponent* _slotsRoot;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -31,18 +58,5 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool PlaceCard(ATC_Card* Card, UTC_Slot* Slot);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<UTC_BoardZone*> BoardZones; // 2 zones (1 par joueur)
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<UTC_FightZone*> FightZones; // 6 FightZones (3 par joueur)
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<UTC_LandCard*> LandCards; // 6 LandCards (1 par FightZone)
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<UTC_BoardSlot*> BoardSlots; // 6 BoardSlots (3 par joueur)
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<UTC_Slot*> Slots; // 24 Slots (4 par BoardSlot)
 };

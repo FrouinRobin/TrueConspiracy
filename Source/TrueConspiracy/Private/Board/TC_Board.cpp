@@ -9,6 +9,22 @@
 ATC_Board::ATC_Board()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+
+	// Créer la racine du Board
+	_boardRoot = CreateDefaultSubobject<USceneComponent>(TEXT("BoardRoot"));
+	RootComponent = _boardRoot;
+
+	// Créer les repères pour organiser les zones et slots
+	_boardZonesRoot = CreateDefaultSubobject<USceneComponent>(TEXT("BoardZonesRoot"));
+	_boardZonesRoot->SetupAttachment(_boardRoot);
+
+	_fightZonesRoot = CreateDefaultSubobject<USceneComponent>(TEXT("FightZonesRoot"));
+	_fightZonesRoot->SetupAttachment(_boardRoot);
+
+	_slotsRoot = CreateDefaultSubobject<USceneComponent>(TEXT("SlotsRoot"));
+	_slotsRoot->SetupAttachment(_boardRoot);
+
 }
 
 void ATC_Board::BeginPlay()
@@ -33,6 +49,7 @@ void ATC_Board::InitializeBoard()
 		if (T_BoardZone)
 		{
 			BoardZones.Add(T_BoardZone);
+			//T_BoardZone->AttachToComponent(_boardZonesRoot, FAttachmentTransformRules::KeepRelativeTransform);
 			UE_LOG(LogTemp, Warning, TEXT("BoardZone %d Created"), i);
 		}
 	}
