@@ -8,7 +8,7 @@ ATC_Card::ATC_Card()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	CardMesh = CreateDefaultSubobject<UStaticMeshComponent>("Card Mesh", false);
-	RootComponent = CardMesh;
+	SetRootComponent(CardMesh);
 
 
 }

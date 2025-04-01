@@ -5,6 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include <Components/CapsuleComponent.h>
 #include <TC_Face.h>
+#include <Components/SphereComponent.h>
 
 // Sets default values
 ATC_Player::ATC_Player()
@@ -20,7 +21,10 @@ ATC_Player::ATC_Player()
 
 	_cardAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("CardAnchor"));
 	_cardAnchor->SetupAttachment(_playerCamera);
-	_cardAnchor->SetRelativeLocation(FVector(0.f, 200.f, 0.f));
+	_cardAnchor->SetRelativeLocation(FVector((125, 0, -65)));
+
+	USphereComponent* sphere = CreateDefaultSubobject<USphereComponent>(TEXT("CAN'T I SEE?"));
+	sphere->SetupAttachment(_cardAnchor);
 }
 
 ATC_Card* ATC_Player::GetCardFromDeckByName(FString name, bool checkAllFaces)
@@ -64,8 +68,19 @@ bool ATC_Player::AddCardToDeck(ATC_Card* card)
 {
 	_playerDeck.Add(card);
 	card->AttachToComponent(_cardAnchor, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
-	card->SetActorScale3D(FVector(0.5, 0.5, 0.5));
+	card->SetActorScale3D(FVector(0.25f, 0.25f, 0.25f));
+
+	ShowDeckOnCamera();
 	return true;
+}
+
+void ATC_Player::ShowDeckOnCamera()
+{
+	for (auto card : _playerDeck)
+	{
+		//card->SetActorRelativeLocation(FVector(185, 50, -80));
+		card->SetActorRelativeRotation(FRotator(69, 0, 0));
+	}
 }
 
 // Called when the game starts or when spawned

@@ -30,6 +30,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool AddCardToDeck(ATC_Card* card);
+	UFUNCTION(BlueprintCallable)
+	void ShowDeckOnCamera();
 
 
 protected:
