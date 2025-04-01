@@ -130,9 +130,11 @@ private:
 	UTC_Face* _cardCurrentFace;
 	TArray<UTC_Face*> _cardFaceList;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	ETC_CardType _cardType;
 	TArray<ETC_CardType> _cardTypeList;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	ETC_CardID _cardId;
 
 	UTexture2D* _cardIllustration;
