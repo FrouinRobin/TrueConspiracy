@@ -9,7 +9,10 @@
 #include "TC_DefendFace.h"
 #include "TC_CardType.h"
 #include "TC_CardID.h"
+#include "Board/TC_Board.h"
 #include "TC_Card.generated.h"
+
+class ATC_Player;
 
 UCLASS()
 class TRUECONSPIRACY_API ATC_Card : public AActor
@@ -28,7 +31,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category = "Card Faces")
 	UTC_DefendFace* CardDefendFace;
-
 
 
 protected:
@@ -67,6 +69,14 @@ public:
 	float GetCardMana();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	float GetCardScore();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ATC_Player* GetPlayer();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ATC_Board* GetBoard();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ATC_BoardSlot* GetBoardSlot();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ATC_Slot* GetSlot();
 
 
 	/*SETTER*/
@@ -94,6 +104,14 @@ public:
 	void SetCardMana(float newMana);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardScore(float newScore);
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	void SetPlayer(ATC_Player* newPlayer);
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	void SetBoard(ATC_Board* newBoard);
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	void SetBoardSlot(ATC_BoardSlot* newBoardSlot);
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	void SetSlot(ATC_Slot* newSlot);
 
 
 	/*CUSTOM EVENT*/
@@ -145,5 +163,10 @@ private:
 	uint8 _cardMana;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	uint8 _cardScore;
+
+	ATC_Player* _cardPlayer;
+	ATC_Board* _cardBoard;
+	ATC_BoardSlot* _cardBoardSlot;
+	ATC_Slot* _cardSlot;
 
 };

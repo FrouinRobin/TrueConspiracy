@@ -2,9 +2,11 @@
 
 
 #include "Board/TC_Board.h"
+#include "TC_Card.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/World.h"
 #include "Kismet/KismetSystemLibrary.h"
+
 
 ATC_Board::ATC_Board()
 {

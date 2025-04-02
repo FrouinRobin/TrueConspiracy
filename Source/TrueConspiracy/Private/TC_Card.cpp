@@ -2,7 +2,7 @@
 
 
 #include "TC_Card.h"
-
+#include "TC_Player.h"
 
 ATC_Card::ATC_Card()
 {
@@ -88,6 +88,26 @@ float ATC_Card::GetCardScore()
 	return _cardScore;
 }
 
+ATC_Player* ATC_Card::GetPlayer()
+{
+	return _cardPlayer;
+}
+
+ATC_Board* ATC_Card::GetBoard()
+{
+	return _cardBoard;
+}
+
+ATC_BoardSlot* ATC_Card::GetBoardSlot()
+{
+	return _cardBoardSlot;
+}
+
+ATC_Slot* ATC_Card::GetSlot()
+{
+	return _cardSlot;
+}
+
 /*----------------------------------------------------------------------------------*/
 
 /*SETTER*/
@@ -145,6 +165,26 @@ void ATC_Card::SetCardMana(float newMana)
 void ATC_Card::SetCardScore(float newScore)
 {
 	_cardScore = newScore;
+}
+
+void ATC_Card::SetPlayer(ATC_Player* newPlayer)
+{
+	_cardPlayer = newPlayer;
+}
+
+void ATC_Card::SetBoard(ATC_Board* newBoard)
+{
+	_cardBoard = newBoard;
+}
+
+void ATC_Card::SetBoardSlot(ATC_BoardSlot* newBoardSlot)
+{
+	_cardBoardSlot = newBoardSlot;
+}
+
+void ATC_Card::SetSlot(ATC_Slot* newSlot)
+{
+	_cardSlot = newSlot;
 }
 
 

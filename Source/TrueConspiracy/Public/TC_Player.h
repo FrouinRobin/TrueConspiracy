@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include <TC_Card.h>
+#include "TC_Card.h"
 #include "TC_Player.generated.h"
 
 UCLASS()

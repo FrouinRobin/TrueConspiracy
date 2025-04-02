@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "TC_Card.h"
 #include "TC_Slot.generated.h"
 
 UENUM(BlueprintType)
