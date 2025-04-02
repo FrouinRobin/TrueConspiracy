@@ -21,10 +21,23 @@ ATC_Player::ATC_Player()
 
 	_cardAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("CardAnchor"));
 	_cardAnchor->SetupAttachment(_playerCamera);
-	_cardAnchor->SetRelativeLocation(FVector((125, 0, -65)));
+	_cardAnchor->SetRelativeLocation(FVector(150, 0, -120));
 
-	USphereComponent* sphere = CreateDefaultSubobject<USphereComponent>(TEXT("CAN'T I SEE?"));
+	UStaticMeshComponent* sphere = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WHY CAN'T I SEE?"));
 	sphere->SetupAttachment(_cardAnchor);
+
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("StaticMesh'/Engine/EditorMeshes/EditorSphere.EditorSphere'"));
+
+	if (SphereMesh.Succeeded())
+	{
+		// Apply the mesh to the sphere component
+		sphere->SetStaticMesh(SphereMesh.Object);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Sphere mesh not found!"));
+	}
+	sphere->SetRelativeScale3D(FVector(0.05f));
 }
 
 ATC_Card* ATC_Player::GetCardFromDeckByName(FString name, bool checkAllFaces)
@@ -69,6 +82,16 @@ bool ATC_Player::AddCardToDeck(ATC_Card* card)
 	_playerDeck.Add(card);
 	card->AttachToComponent(_cardAnchor, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
 	card->SetActorScale3D(FVector(0.25f, 0.25f, 0.25f));
+
+	FVector origin;
+	FVector box;
+	card->GetActorBounds(false, origin, box, false);
+
+	UE_LOG(LogTemp, Warning, TEXT("Origin is %s"), *origin.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("Box is %s"), *box.ToString());
+
+	card->SetActorLocation(card->GetActorLocation() + FVector(0, 0, box.Y));
+
 
 	ShowDeckOnCamera();
 	return true;
