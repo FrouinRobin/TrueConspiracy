@@ -127,7 +127,7 @@ TArray<ATC_Card*> ATC_Player::GetAvailableCards()
 	return cards;
 }
 
-bool ATC_Player::CanPlayACard()
+bool ATC_Player::CanPlayAnyCard()
 {
 	return GetAvailableCards().Num() > 0;
 }
