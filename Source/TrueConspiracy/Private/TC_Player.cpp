@@ -83,25 +83,31 @@ bool ATC_Player::AddCardToDeck(ATC_Card* card)
 	card->AttachToComponent(_cardAnchor, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
 	card->SetActorScale3D(FVector(0.25f, 0.25f, 0.25f));
 
-	FVector origin;
-	FVector box;
-	card->GetActorBounds(false, origin, box, false);
-
-	UE_LOG(LogTemp, Warning, TEXT("Origin is %s"), *origin.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("Box is %s"), *box.ToString());
-
-	card->SetActorLocation(card->GetActorLocation() + FVector(0, 0, box.Y));
-
-
 	ShowDeckOnCamera();
 	return true;
 }
 
 void ATC_Player::ShowDeckOnCamera()
 {
-	for (auto card : _playerDeck)
+	for (size_t i = 0; i < _playerDeck.Num(); i++)
 	{
-		//card->SetActorRelativeLocation(FVector(185, 50, -80));
+		auto card = _playerDeck[i];
+		card->SetActorRelativeLocation(FVector::ZeroVector);
+
+		FVector origin;
+		FVector box;
+		card->GetActorBounds(false, origin, box, false);
+
+		UE_LOG(LogTemp, Warning, TEXT("Origin is %s"), *origin.ToString());
+		UE_LOG(LogTemp, Warning, TEXT("Box is %s"), *box.ToString());
+
+		FVector base = FVector::ZeroVector;
+		if (_playerDeck.Num() % 2 == 0)
+			base = FVector(0, -20, 0);
+
+		float interval = ((float)i - ((float)_playerDeck.Num() - 1) / 2) * 50;
+
+		card->SetActorLocation(card->GetActorLocation() + base + FVector(0, 0, box.Y) + FVector(0, interval, 0));
 		card->SetActorRelativeRotation(FRotator(69, 0, 0));
 	}
 }
