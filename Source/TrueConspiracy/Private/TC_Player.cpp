@@ -77,6 +77,11 @@ ATC_Card* ATC_Player::GetCardFromDeckById(FString id)
 	return nullptr;
 }
 
+TArray<ATC_Card*> ATC_Player::GetDeck()
+{
+	return _playerDeck;
+}
+
 bool ATC_Player::AddCardToDeck(ATC_Card* card)
 {
 	_playerDeck.Add(card);

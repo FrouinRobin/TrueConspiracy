@@ -26,7 +26,8 @@ public:
 
 	//ATC_Card* GetCardFromDeckByCondition();
 
-	//TArray<ATC_Card*> GetDeck();
+	UFUNCTION(BlueprintCallable)
+	TArray<ATC_Card*> GetDeck();
 
 	UFUNCTION(BlueprintCallable)
 	bool AddCardToDeck(ATC_Card* card);
