@@ -87,6 +87,16 @@ TArray<ATC_Card*> ATC_Player::GetDeck()
 	return _playerDeck;
 }
 
+void ATC_Player::SetPlayerMana(uint8 mana)
+{
+	_playerMana = mana;
+}
+
+uint8 ATC_Player::GetPlayerMana() const
+{
+	return _playerMana;
+}
+
 bool ATC_Player::AddCardToDeck(ATC_Card* card)
 {
 	_playerDeck.Add(card);

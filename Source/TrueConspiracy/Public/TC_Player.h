@@ -32,6 +32,11 @@ public:
 	TArray<ATC_Card*> GetDeck();
 
 	UFUNCTION(BlueprintCallable)
+	void SetPlayerMana(uint8 mana);
+	UFUNCTION(BlueprintCallable)
+	uint8 GetPlayerMana() const;
+
+	UFUNCTION(BlueprintCallable)
 	bool AddCardToDeck(ATC_Card* card);
 	UFUNCTION(BlueprintCallable)
 	void ShowDeckOnCamera();
@@ -42,6 +47,8 @@ protected:
 	virtual void BeginPlay() override;
 
 	TArray<ATC_Card*> _playerDeck;
+
+	uint8 _playerMana;
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
