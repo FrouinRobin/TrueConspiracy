@@ -14,7 +14,7 @@ TArray<FAIActions> TC_ActionsSystem::GenerateAllValidActions(const TC_GameStates
 {
 	TArray<FAIActions> ValidActions;
 
-	const bool bIsPlayer1 = InGameState.bIsPlayer1Turn;
+	const bool bIsPlayer1 = InGameState.GetIsPlayer1Turn();
 
 	return TArray<FAIActions>();
 }
@@ -88,11 +88,11 @@ void TC_ActionsSystem::MoveCard(TC_GameStates& GameState, const FAIActions& Acti
 
 void TC_ActionsSystem::EndTurn(TC_GameStates& GameState)
 {
-	if (!GameState.bIsPlayer1Turn)
+	if (!GameState.GetIsPlayer1Turn())
 	{
-		GameState.CurrentTurn++;
+		GameState.SetCurrentTurn(GameState.GetCurrentTurn() +1);
 	}
-	GameState.bIsPlayer1Turn = !GameState.bIsPlayer1Turn;
+	GameState.SetIsPlayer1Turn(!GameState.GetIsPlayer1Turn());
 }
 
 void TC_ActionsSystem::ApplyAction(TC_GameStates& InGameState, const FAIActions& InAction)

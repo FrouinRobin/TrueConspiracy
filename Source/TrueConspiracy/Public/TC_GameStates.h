@@ -28,24 +28,31 @@ struct FGameFormat
 
 class TRUECONSPIRACY_API TC_GameStates
 {
+private :
+	FGameFormat _GameFormat;
+	EGameModeFormat _FormatType = EGameModeFormat::BO7;
+
+	//POSSEDE PAR LE PLAYER
+	TArray<ATC_Card*> _Player1Hand;
+	TArray<ATC_Card*> _Player2Hand;
+
+	//POSSEDE PAR LE PLAYER
+	TArray<ATC_Card*> _Player1BoardCard;
+	TArray<ATC_Card*> _Player2BoardCard;
+
+	int32 _CurrentTurn = 0;
+	//NOMBRE DE ROUND GAGNÉS
+	int32 _Player1Score = 0;
+	int32 _Player2Score = 0;
+
+	//A clear
+	int32 _Player1Mana = 0;
+	int32 _Player2Mana = 0;
+
+	bool _IsPlayer1Turn;
+
 public:
-	FGameFormat GameFormat;
-	EGameModeFormat FormatType = EGameModeFormat::BO7;
-
-	TArray<ATC_Card*> Player1Hand;
-	TArray<ATC_Card*> Player2Hand;
 	
-	TArray<ATC_Card*> Player1BoardCard;
-	TArray<ATC_Card*> Player2BoardCard;
-
-	int32 CurrentTurn = 0;
-	int32 Player1Score = 0;
-	int32 Player2Score = 0;
-
-	int32 Player1Mana = 0;
-	int32 Player2Mana = 0;
-
-	bool bIsPlayer1Turn = true;
 
 	// --- Constructor(s) ---
 	TC_GameStates(); //Default constructor
@@ -66,4 +73,33 @@ public:
 
 	// --- Tool(s) Function(s) ---
 	TC_GameStates Clone() const;
+
+	// --- Setter(s) / Getter(s) ---
+	void SetGameFormat(FGameFormat InGameFormat);
+	FGameFormat GetGameFormat() const;
+
+	void SetGameModeFormat(EGameModeFormat InGameModeFormat);
+	EGameModeFormat GetGameModeFormat() const;
+
+	void SetCurrentTurn(int32 InTurn);
+	int32 GetCurrentTurn() const;
+
+	void SetPlayer1Score(int32 InScore);
+	int32 GetPlayer1Score() const;
+
+	void SetPlayer2Score(int32 InScore);
+	int32 GetPlayer2Score() const;
+
+	void SetPlayer1Mana(int32 InMana);
+	int32 GetPlayer1Mana() const;
+
+	void SetPlayer2Mana(int32 InMana);
+	int32 GetPlayer2Mana() const;
+
+	void SetIsPlayer1Turn(bool InIsPlayer1Turn);
+	bool GetIsPlayer1Turn() const;
+
+	//int32 GetCurrentPlayerID() const { return IsPlayer1Turn ? 1 : 2; }
+
+	//int32& GetCurrentPlayerMana() { return IsPlayer1Turn ? Player1Mana : Player2Mana; }
 };
