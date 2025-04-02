@@ -143,7 +143,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	uint8 _cardMana;
-	uint8 _cardScore;
 	UPROPERTY(EditDefaultsOnly, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	uint16 _cardScore;
 
 };
