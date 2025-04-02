@@ -2,8 +2,9 @@
 
 #pragma once
 
+
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
+#include "GameFramework/Actor.h"
 #include "TC_BoardSlot.h"
 #include "TC_BoardZone.generated.h"
 
@@ -11,14 +12,19 @@
  *
  */
 UCLASS(Blueprintable, BlueprintType)
-class TRUECONSPIRACY_API UTC_BoardZone : public UObject
+class TRUECONSPIRACY_API ATC_BoardZone : public AActor
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<UTC_BoardSlot*> BoardSlot;
+	ATC_BoardZone();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool PlayerID;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardZone")
+	TArray<ATC_BoardSlot*> BoardSlots;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardZone")
+	int32 PlayerID;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BoardZone")
+	USceneComponent* BoardZoneRoot;
 };

@@ -15,7 +15,7 @@ UCLASS()
 class TRUECONSPIRACY_API ATC_Card : public AActor
 {
 	GENERATED_BODY()
-	
+
 public:
 
 	ATC_Card();
@@ -141,7 +141,9 @@ private:
 	UTexture2D* _cardBackground;
 	FString _cardDescription;
 
-	float _cardMana;
-	float _cardScore;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	uint8 _cardMana;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	uint8 _cardScore;
 
 };
