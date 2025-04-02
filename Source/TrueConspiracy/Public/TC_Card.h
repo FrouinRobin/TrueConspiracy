@@ -130,20 +130,20 @@ private:
 	UTC_Face* _cardCurrentFace;
 	TArray<UTC_Face*> _cardFaceList;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditDefaultsOnly, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	ETC_CardType _cardType;
 	TArray<ETC_CardType> _cardTypeList;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditDefaultsOnly, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	ETC_CardID _cardId;
 
 	UTexture2D* _cardIllustration;
 	UTexture2D* _cardBackground;
 	FString _cardDescription;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditDefaultsOnly, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	uint8 _cardMana;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	uint8 _cardScore;
+	UPROPERTY(EditDefaultsOnly, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 
 };
