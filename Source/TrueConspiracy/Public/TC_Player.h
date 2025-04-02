@@ -51,7 +51,6 @@ protected:
 	uint8 _playerMana;
 
 private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* _playerCamera;
 	class USceneComponent* _cardAnchor;
 
