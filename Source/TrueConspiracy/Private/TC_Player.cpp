@@ -77,6 +77,11 @@ ATC_Card* ATC_Player::GetCardFromDeckById(FString id)
 	return nullptr;
 }
 
+void ATC_Player::SetDeck(TArray<ATC_Card*> newDeck)
+{
+	_playerDeck = newDeck;
+}
+
 TArray<ATC_Card*> ATC_Player::GetDeck()
 {
 	return _playerDeck;

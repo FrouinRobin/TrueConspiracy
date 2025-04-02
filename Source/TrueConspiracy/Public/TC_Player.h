@@ -25,7 +25,9 @@ public:
 	ATC_Card* GetCardFromDeckById(FString id);
 
 	//ATC_Card* GetCardFromDeckByCondition();
-
+		
+	UFUNCTION(BlueprintCallable)
+	void SetDeck(TArray<ATC_Card*> newDeck);
 	UFUNCTION(BlueprintCallable)
 	TArray<ATC_Card*> GetDeck();
 
@@ -39,7 +41,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY()
 	TArray<ATC_Card*> _playerDeck;
 
 private:
