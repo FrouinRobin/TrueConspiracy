@@ -22,22 +22,6 @@ ATC_Player::ATC_Player()
 	_cardAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("CardAnchor"));
 	_cardAnchor->SetupAttachment(_playerCamera);
 	_cardAnchor->SetRelativeLocation(FVector(150, 0, -120));
-
-	UStaticMeshComponent* sphere = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WHY CAN'T I SEE?"));
-	sphere->SetupAttachment(_cardAnchor);
-
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("StaticMesh'/Engine/EditorMeshes/EditorSphere.EditorSphere'"));
-
-	if (SphereMesh.Succeeded())
-	{
-		// Apply the mesh to the sphere component
-		sphere->SetStaticMesh(SphereMesh.Object);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Sphere mesh not found!"));
-	}
-	sphere->SetRelativeScale3D(FVector(0.05f));
 }
 
 ATC_Card* ATC_Player::GetCardFromDeckByName(FString name, bool checkAllFaces)
