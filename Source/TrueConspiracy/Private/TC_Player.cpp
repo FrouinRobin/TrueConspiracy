@@ -116,6 +116,27 @@ void ATC_Player::ShowDeckOnCamera()
 	}
 }
 
+TArray<ATC_Card*> ATC_Player::GetAvailableCards()
+{
+	TArray<ATC_Card*> cards;
+	for(auto card : GetDeck())
+	{
+		if (card->GetCardMana() >= GetPlayerMana())
+			cards.Add(card);
+	}
+	return cards;
+}
+
+bool ATC_Player::CanPlayACard()
+{
+	return GetAvailableCards().Num() > 0;
+}
+
+bool ATC_Player::CanPlayCard(ATC_Card* card)
+{
+	return card->GetCardMana() >= GetPlayerMana();
+}
+
 // Called when the game starts or when spawned
 void ATC_Player::BeginPlay()
 {

@@ -41,6 +41,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Player Deck")
 	void ShowDeckOnCamera();
 
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
+	TArray<ATC_Card*> GetAvailableCards();
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
+	bool CanPlayACard();
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
+	bool CanPlayCard(ATC_Card* card);
+
 
 protected:
 	// Called when the game starts or when spawned
