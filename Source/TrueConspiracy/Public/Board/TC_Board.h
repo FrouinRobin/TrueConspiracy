@@ -5,7 +5,7 @@
 #include "GameFramework/Actor.h"
 #include "TC_BoardZone.h"
 #include "TC_FightZone.h"
-#include "TC_LandCard.h"
+#include "TC_LandCardSlot.h"
 #include "TC_BoardSlot.h"
 #include "TC_Slot.h"
 #include "TC_Card.h"
@@ -26,7 +26,7 @@ public:
 	TArray<ATC_FightZone*> FightZones; // 6 FightZones (3 par joueur)
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
-	TArray<ATC_LandCard*> LandCards; // 6 LandCards (1 par FightZone)
+	TArray<ATC_LandCardSlot*> LandCards; // 6 LandCards (1 par FightZone)
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
 	TArray<ATC_BoardSlot*> BoardSlots; // 6 BoardSlots (3 par joueur)

@@ -72,7 +72,7 @@ void ATC_Board::InitializeBoard()
 	for (int i = 0; i < 6; i++)
 	{
 		FActorSpawnParameters SpawnParams;
-		ATC_LandCard* NewLandCard = GetWorld()->SpawnActor<ATC_LandCard>(ATC_LandCard::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+		ATC_LandCardSlot* NewLandCard = GetWorld()->SpawnActor<ATC_LandCardSlot>(ATC_LandCardSlot::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
 		if (NewLandCard)
 		{
 			NewLandCard->AttachToComponent(_fightZonesRoot, FAttachmentTransformRules::KeepRelativeTransform);
