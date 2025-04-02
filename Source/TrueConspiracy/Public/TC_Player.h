@@ -16,29 +16,29 @@ public:
 	// Sets default values for this pawn's properties
 	ATC_Player();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
 	ATC_Card* GetCardFromDeckByName(FString name, bool checkAllFaces);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
 	// To know: how IDs would work for cards
 	// Would a card have an ID for both faces or would each faces have their unique IDs?
 	ATC_Card* GetCardFromDeckById(FString id);
 
 	//ATC_Card* GetCardFromDeckByCondition();
 		
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
 	void SetDeck(TArray<ATC_Card*> newDeck);
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
 	TArray<ATC_Card*> GetDeck();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Player Mana")
 	void SetPlayerMana(uint8 mana);
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Player Mana")
 	uint8 GetPlayerMana() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
 	bool AddCardToDeck(ATC_Card* card);
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
 	void ShowDeckOnCamera();
 
 
