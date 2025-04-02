@@ -8,7 +8,7 @@ ATC_Card::ATC_Card()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	CardMesh = CreateDefaultSubobject<UStaticMeshComponent>("Card Mesh", false);
-	RootComponent = CardMesh;
+	SetRootComponent(CardMesh);
 
 
 }
@@ -56,6 +56,11 @@ ETC_CardType ATC_Card::GetCardType()
 TArray<ETC_CardType> ATC_Card::GetCardTypeList()
 {
 	return _cardTypeList;
+}
+
+ETC_CardID ATC_Card::GetCardID()
+{
+	return _cardId;
 }
 
 UTexture2D* ATC_Card::GetCardIllustration()
@@ -163,4 +168,3 @@ void ATC_Card::SwitchPhase()
 	SwitchFace();
 	OnCardStartPhase();
 }
-

@@ -8,13 +8,14 @@
 #include "TC_AttackFace.h"
 #include "TC_DefendFace.h"
 #include "TC_CardType.h"
+#include "TC_CardID.h"
 #include "TC_Card.generated.h"
 
 UCLASS()
 class TRUECONSPIRACY_API ATC_Card : public AActor
 {
 	GENERATED_BODY()
-	
+
 public:
 
 	ATC_Card();
@@ -53,6 +54,8 @@ public:
 	ETC_CardType GetCardType();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	TArray<ETC_CardType> GetCardTypeList();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ETC_CardID GetCardID();
 
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	UTexture2D* GetCardIllustration();
@@ -127,14 +130,20 @@ private:
 	UTC_Face* _cardCurrentFace;
 	TArray<UTC_Face*> _cardFaceList;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	ETC_CardType _cardType;
 	TArray<ETC_CardType> _cardTypeList;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	ETC_CardID _cardId;
 
 	UTexture2D* _cardIllustration;
 	UTexture2D* _cardBackground;
 	FString _cardDescription;
 
-	float _cardMana;
-	float _cardScore;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	uint8 _cardMana;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	uint8 _cardScore;
 
 };
