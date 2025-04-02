@@ -1,9 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Board/TC_LandCard.h"
+#include "Board/TC_LandCardSlot.h"
 
-ATC_LandCard::ATC_LandCard()
+// Sets default values
+ATC_LandCardSlot::ATC_LandCardSlot()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
@@ -11,12 +12,3 @@ ATC_LandCard::ATC_LandCard()
 	RootComponent = LandCardRoot;
 }
 
-void ATC_LandCard::ApplyBonus()
-{
-	//  bonus
-}
-
-void ATC_LandCard::ApplyMalus()
-{
-	//  malus
-}
