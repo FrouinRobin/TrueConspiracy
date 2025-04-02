@@ -20,9 +20,7 @@ public:
 	ATC_Card* GetCardFromDeckByName(FString name, bool checkAllFaces);
 
 	UFUNCTION(BlueprintCallable, Category = "Player Deck")
-	// To know: how IDs would work for cards
-	// Would a card have an ID for both faces or would each faces have their unique IDs?
-	ATC_Card* GetCardFromDeckById(FString id);
+	ATC_Card* GetCardFromDeckById(ETC_CardID id);
 
 	//ATC_Card* GetCardFromDeckByCondition();
 		

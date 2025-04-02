@@ -50,11 +50,11 @@ ATC_Card* ATC_Player::GetCardFromDeckByName(FString name, bool checkAllFaces)
 	return nullptr;
 }
 
-ATC_Card* ATC_Player::GetCardFromDeckById(FString id)
+ATC_Card* ATC_Player::GetCardFromDeckById(ETC_CardID id)
 {
 	for (ATC_Card* card : _playerDeck)
 	{
-		if (/*card->id == id*/ false) // TODO: See how IDs and names will be implemented
+		if (card->GetCardID() == id)
 			return card;
 	}
 	UE_LOG(LogTemp, Warning, TEXT("GetCardFromDeckById() did not return any card!"));
