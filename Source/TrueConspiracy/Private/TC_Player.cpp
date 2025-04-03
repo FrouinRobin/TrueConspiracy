@@ -26,7 +26,7 @@ ATC_Player::ATC_Player()
 
 ATC_Card* ATC_Player::GetCardFromDeckByName(FString name, bool checkAllFaces)
 {
-	for (ATC_Card* card : _playerDeck)
+	for (ATC_Card* card : GetDeck())
 	{
 		if (!checkAllFaces) {
 			UTC_Face* cardFace = card->GetCardCurrentFace();
@@ -52,7 +52,44 @@ ATC_Card* ATC_Player::GetCardFromDeckByName(FString name, bool checkAllFaces)
 
 ATC_Card* ATC_Player::GetCardFromDeckById(ETC_CardID id)
 {
-	for (ATC_Card* card : _playerDeck)
+	for (ATC_Card* card : GetDeck())
+	{
+		if (card->GetCardID() == id)
+			return card;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("GetCardFromDeckById() did not return any card!"));
+	return nullptr;
+}
+
+ATC_Card* ATC_Player::GetCardFromHandByName(FString name, bool checkAllFaces)
+{
+	for (ATC_Card* card : GetHand())
+	{
+		if (!checkAllFaces) {
+			UTC_Face* cardFace = card->GetCardCurrentFace();
+
+			if (/*cardFace->name == name */ false) // TODO: See how IDs and names will be implemented
+				return card;
+		}
+		else
+		{
+			// Why is there a need for more than two faces I don't know but just in case
+			TArray<UTC_Face*> cardFaces = card->GetCardFaceList();
+
+			for (auto face : cardFaces)
+			{
+				if (/*face->name == name */ false) // TODO: Ditto
+					return card;
+			}
+		}
+	}
+	UE_LOG(LogTemp, Warning, TEXT("GetCardFromDeckById() did not return any card!"));
+	return nullptr;
+}
+
+ATC_Card* ATC_Player::GetCardFromHandById(ETC_CardID id)
+{
+	for (ATC_Card* card : GetHand())
 	{
 		if (card->GetCardID() == id)
 			return card;
@@ -71,31 +108,48 @@ TArray<ATC_Card*> ATC_Player::GetDeck()
 	return _playerDeck;
 }
 
+bool ATC_Player::AddCardToDeck(ATC_Card* card)
+{
+	_playerHand.Add(card);
+	card->AttachToComponent(_cardAnchor, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
+	card->SetActorScale3D(FVector(0.25f, 0.25f, 0.25f));
+
+	ShowHandOnCamera();
+	return true;
+}
+
+bool ATC_Player::AddCardToHand(ATC_Card* card)
+{
+	_playerHand.Add(card);
+
+	return true;
+}
+
+void ATC_Player::SetHand(TArray<ATC_Card*> newDeck)
+{
+	_playerHand = newDeck;
+}
+
+TArray<ATC_Card*> ATC_Player::GetHand()
+{
+	return _playerHand;
+}
+
 void ATC_Player::SetPlayerMana(uint8 mana)
 {
-	_playerMana = mana;
+	_playerCurrentMana = mana;
 }
 
 uint8 ATC_Player::GetPlayerMana() const
 {
-	return _playerMana;
+	return _playerCurrentMana;
 }
 
-bool ATC_Player::AddCardToDeck(ATC_Card* card)
+void ATC_Player::ShowHandOnCamera()
 {
-	_playerDeck.Add(card);
-	card->AttachToComponent(_cardAnchor, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
-	card->SetActorScale3D(FVector(0.25f, 0.25f, 0.25f));
-
-	ShowDeckOnCamera();
-	return true;
-}
-
-void ATC_Player::ShowDeckOnCamera()
-{
-	for (size_t i = 0; i < _playerDeck.Num(); i++)
+	for (size_t i = 0; i < _playerHand.Num(); i++)
 	{
-		auto card = _playerDeck[i];
+		auto card = _playerHand[i];
 		card->SetActorRelativeLocation(FVector::ZeroVector);
 
 		FVector origin;
@@ -109,7 +163,7 @@ void ATC_Player::ShowDeckOnCamera()
 		if (_playerDeck.Num() % 2 == 0)
 			base = FVector(0, -20, 0);
 
-		float interval = ((float)i - ((float)_playerDeck.Num() - 1) / 2) * 50;
+		float interval = ((float)i - ((float)_playerHand.Num() - 1) / 2) * 50;
 
 		card->SetActorLocation(card->GetActorLocation() + base + FVector(0, 0, box.Y) + FVector(0, interval, 0));
 		card->SetActorRelativeRotation(FRotator(69, 0, 0));
@@ -119,9 +173,9 @@ void ATC_Player::ShowDeckOnCamera()
 TArray<ATC_Card*> ATC_Player::GetAvailableCards()
 {
 	TArray<ATC_Card*> cards;
-	for(auto card : GetDeck())
+	for(auto card : GetHand())
 	{
-		if (card->GetCardMana() >= GetPlayerMana())
+		if (card->GetCardCurrentMana() >= GetPlayerMana())
 			cards.Add(card);
 	}
 	return cards;
@@ -134,7 +188,7 @@ bool ATC_Player::CanPlayAnyCard()
 
 bool ATC_Player::CanPlayCard(ATC_Card* card)
 {
-	return card->GetCardMana() >= GetPlayerMana();
+	return card->GetCardCurrentMana() >= GetPlayerMana();
 }
 
 // Called when the game starts or when spawned
@@ -156,5 +210,19 @@ void ATC_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+uint8 ATC_Player::IncreaseManaLimit(uint8 value)
+{
+	_playerMaxMana += value;
+	return _playerMaxMana;
+}
+
+uint8 ATC_Player::ChangeMana(uint8 value, bool allowOverflow)
+{
+	_playerCurrentMana += value;
+	if (!allowOverflow && _playerCurrentMana > _playerMaxMana)
+		_playerCurrentMana = _playerMaxMana;
+	return _playerCurrentMana;
 }
 

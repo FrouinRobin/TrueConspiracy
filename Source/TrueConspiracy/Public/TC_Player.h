@@ -16,44 +16,21 @@ public:
 	// Sets default values for this pawn's properties
 	ATC_Player();
 
-	UFUNCTION(BlueprintCallable, Category = "Player Deck")
-	ATC_Card* GetCardFromDeckByName(FString name, bool checkAllFaces);
-
-	UFUNCTION(BlueprintCallable, Category = "Player Deck")
-	ATC_Card* GetCardFromDeckById(ETC_CardID id);
-
-	//ATC_Card* GetCardFromDeckByCondition();
-		
-	UFUNCTION(BlueprintCallable, Category = "Player Deck")
-	void SetDeck(TArray<ATC_Card*> newDeck);
-	UFUNCTION(BlueprintCallable, Category = "Player Deck")
-	TArray<ATC_Card*> GetDeck();
-
-	UFUNCTION(BlueprintCallable, Category = "Player Mana")
-	void SetPlayerMana(uint8 mana);
-	UFUNCTION(BlueprintCallable, Category = "Player Mana")
-	uint8 GetPlayerMana() const;
-
-	UFUNCTION(BlueprintCallable, Category = "Player Deck")
-	bool AddCardToDeck(ATC_Card* card);
-	UFUNCTION(BlueprintCallable, Category = "Player Deck")
-	void ShowDeckOnCamera();
-
-	UFUNCTION(BlueprintCallable, Category = "Player Deck")
-	TArray<ATC_Card*> GetAvailableCards();
-	UFUNCTION(BlueprintCallable, Category = "Player Deck")
-	bool CanPlayAnyCard();
-	UFUNCTION(BlueprintCallable, Category = "Player Deck")
-	bool CanPlayCard(ATC_Card* card);
+	UPROPERTY(BlueprintReadWrite)
+	uint8 PlayerID;
+	UPROPERTY(BlueprintReadWrite)
+	ATC_Card* SelectedCard;
 
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	TArray<ATC_Card*> _playerHand;
 	TArray<ATC_Card*> _playerDeck;
 
-	uint8 _playerMana;
+	uint8 _playerCurrentMana;
+	uint8 _playerMaxMana;
 
 private:
 	class UCameraComponent* _playerCamera;
@@ -65,5 +42,46 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
+	ATC_Card* GetCardFromDeckByName(FString name, bool checkAllFaces);
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
+	ATC_Card* GetCardFromDeckById(ETC_CardID id);
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
+	void SetDeck(TArray<ATC_Card*> newDeck);
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
+	TArray<ATC_Card*> GetDeck();
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
+	bool AddCardToDeck(ATC_Card* card);
+
+	UFUNCTION(BlueprintCallable, Category = "Player Hand")
+	void SetHand(TArray<ATC_Card*> newDeck);
+	UFUNCTION(BlueprintCallable, Category = "Player Hand")
+	TArray<ATC_Card*> GetHand();
+	UFUNCTION(BlueprintCallable, Category = "Player Hand")
+	ATC_Card* GetCardFromHandByName(FString name, bool checkAllFaces);
+	UFUNCTION(BlueprintCallable, Category = "Player Hand")
+	ATC_Card* GetCardFromHandById(ETC_CardID id);
+	UFUNCTION(BlueprintCallable, Category = "Player Hand")
+	void ShowHandOnCamera();
+	UFUNCTION(BlueprintCallable, Category = "Player Hand")
+	bool AddCardToHand(ATC_Card* card);
+
+	UFUNCTION(BlueprintCallable, Category = "Player Hand")
+	TArray<ATC_Card*> GetAvailableCards();
+	UFUNCTION(BlueprintCallable, Category = "Player Hand")
+	bool CanPlayAnyCard();
+	UFUNCTION(BlueprintCallable, Category = "Player Hand")
+	bool CanPlayCard(ATC_Card* card);
+
+	UFUNCTION(BlueprintCallable, Category = "Player Mana")
+	void SetPlayerMana(uint8 mana);
+	UFUNCTION(BlueprintCallable, Category = "Player Mana")
+	uint8 GetPlayerMana() const;
+	UFUNCTION(BlueprintCallable, Category = "Player Mana")
+	uint8 IncreaseManaLimit(uint8 value);
+	UFUNCTION(BlueprintCallable, Category = "Player Mana")
+	uint8 ChangeMana(uint8 value, bool allowOverflow);
+
 
 };
