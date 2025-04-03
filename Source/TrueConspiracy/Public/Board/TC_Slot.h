@@ -15,11 +15,34 @@ class TRUECONSPIRACY_API ATC_Slot : public AActor
 
 public:
 	ATC_Slot();
-
-	bool HasCard() const { return OccupyingCard != nullptr; }
-	void SetCard(ATC_Card* Card);
+protected:
 
 public:
-	UPROPERTY()
-	ATC_Card* OccupyingCard;
+
+	UFUNCTION(BlueprintCallable)
+	bool HasCard();
+
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ATC_Card* GetSlotCard();
+
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ATC_BoardSlot* GetSlaotBoardSlot();
+
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ETC_CardType GetSlotCardType();
+
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetSlotCard(ATC_Card* newSlotCard);
+
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetSlotBoardSlot(ATC_BoardSlot* newSlotBoardSlot);
+
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	void SetSlotCardType(ETC_CardType newSlotCardType);
+
+
+private:
+	ATC_BoardSlot* _slotBoardSlot;
+	ATC_Card* _slotCard;
+	ETC_CardType _slotCardType;
 };

@@ -10,15 +10,42 @@ ATC_Slot::ATC_Slot()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	USceneComponent* Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-	RootComponent = Root;
-
 	UStaticMeshComponent* SlotVisual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SlotVisual"));
-	SlotVisual->SetupAttachment(Root);
 }
 
-void ATC_Slot::SetCard(ATC_Card* Card)
+bool ATC_Slot::HasCard()
 {
-	OccupyingCard = Card;
+	if (_slotCard != nullptr) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+ATC_Card* ATC_Slot::GetSlotCard() {
+	return _slotCard;
+}
+ATC_BoardSlot* ATC_Slot::GetSlaotBoardSlot()
+{
+	return _slotBoardSlot;
+}
+ETC_CardType ATC_Slot::GetSlotCardType()
+{
+	return _slotCardType;
+}
+void ATC_Slot::SetSlotCard(ATC_Card* newSlotCard)
+{
+	_slotCard = newSlotCard;
+}
+
+void ATC_Slot::SetSlotBoardSlot(ATC_BoardSlot* newSlotBoardSlot)
+{
+	_slotBoardSlot = newSlotBoardSlot;
+}
+
+void ATC_Slot::SetSlotCardType(ETC_CardType newSlotCardType)
+{
+	_slotCardType = newSlotCardType;
 }
 

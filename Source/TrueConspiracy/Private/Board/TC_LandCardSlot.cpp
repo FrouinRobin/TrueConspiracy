@@ -8,15 +8,4 @@
 ATC_LandCardSlot::ATC_LandCardSlot()
 {
 	PrimaryActorTick.bCanEverTick = false;
-
-	USceneComponent* Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-	RootComponent = Root;
-
-	UStaticMeshComponent* LandVisual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LandVisual"));
-	LandVisual->SetupAttachment(Root);
-}
-
-bool ATC_LandCardSlot::IsUsableBy(APlayerController* Player) const
-{
-	return !LandCard || LandOwner == Player;
 }

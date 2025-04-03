@@ -3,26 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Board/TC_Slot.h"
 #include "TC_LandCardSlot.generated.h"
 
 class ATC_LandCard;
 
 UCLASS()
-class TRUECONSPIRACY_API ATC_LandCardSlot : public AActor
+class TRUECONSPIRACY_API ATC_LandCardSlot : public ATC_Slot
 {
 	GENERATED_BODY()
 
 public:
 	ATC_LandCardSlot();
-
-	bool IsOccupied() const { return LandCard != nullptr; }
-	bool IsUsableBy(APlayerController* Player) const;
-
 public:
-	UPROPERTY()
-	ATC_LandCard* LandCard;
-
-	UPROPERTY()
-	APlayerController* LandOwner;
 };

@@ -8,36 +8,38 @@
 
 ATC_BoardSlot::ATC_BoardSlot()
 {
-	PrimaryActorTick.bCanEverTick = false;
-
-	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-	RootComponent = Root;
-
-	SlotVisual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SlotVisual"));
-	SlotVisual->SetupAttachment(Root);
+	PrimaryActorTick.bCanEverTick = true;
+	SlotOneAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("SlotOneAnchor"));
+	SlotTwoAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("SlotTwoAnchor"));
+	SlotThreeAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("SlotThreeAnchor"));
+	SlotFourAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("SlotFourAnchor"));
 }
 
-void ATC_BoardSlot::InitializeSlots()
+void ATC_BoardSlot::BeginPlay()
 {
-	if (!SlotClass || !GetWorld()) return;
-
-	const float OffsetX = 100.f;
-	const float OffsetY = 100.f;
-
-	for (int32 Row = 0; Row < 2; Row++)
+	Super::BeginPlay();
+	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotOneAnchor->GetComponentLocation(), SlotOneAnchor->GetComponentRotation()));
+	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotTwoAnchor->GetComponentLocation(), SlotTwoAnchor->GetComponentRotation()));
+	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotThreeAnchor->GetComponentLocation(), SlotThreeAnchor->GetComponentRotation()));
+	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotFourAnchor->GetComponentLocation(), SlotFourAnchor->GetComponentRotation()));
+	for (ATC_Slot* Slot : _boardSlotSlots)
 	{
-		for (int32 Col = 0; Col < 2; Col++)
-		{
-			FVector LocalPos(Row * OffsetX, Col * OffsetY, 0.f);
-			FActorSpawnParameters Params;
-
-			ATC_Slot* NewSlot = GetWorld()->SpawnActor<ATC_Slot>(SlotClass, FVector::ZeroVector, FRotator::ZeroRotator, Params);
-			if (!NewSlot) continue;
-
-			NewSlot->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-			NewSlot->SetActorRelativeLocation(LocalPos);
-
-			Slots.Add(NewSlot);
-		}
+		Slot->SetSlotBoardSlot(this);
 	}
 }
+
+ATC_Board* ATC_BoardSlot::GetBoardSlotBoard()
+{
+	return _boardSlotBoard;
+}
+
+TArray<ATC_Slot*> ATC_BoardSlot::GetBoardSlotSlots()
+{
+	return _boardSlotSlots;
+}
+
+void ATC_BoardSlot::SetBoardSlotBoard(ATC_Board* newBoard)
+{
+	_boardSlotBoard = newBoard;
+}
+
