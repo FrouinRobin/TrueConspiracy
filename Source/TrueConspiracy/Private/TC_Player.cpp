@@ -108,7 +108,7 @@ TArray<ATC_Card*> ATC_Player::GetDeck()
 	return _playerDeck;
 }
 
-bool ATC_Player::AddCardToDeck(ATC_Card* card)
+bool ATC_Player::AddCardToHand(ATC_Card* card)
 {
 	_playerHand.Add(card);
 	card->AttachToComponent(_cardAnchor, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
@@ -118,9 +118,9 @@ bool ATC_Player::AddCardToDeck(ATC_Card* card)
 	return true;
 }
 
-bool ATC_Player::AddCardToHand(ATC_Card* card)
+bool ATC_Player::AddCardToDeck(ATC_Card* card)
 {
-	_playerHand.Add(card);
+	_playerDeck.Add(card);
 
 	return true;
 }
