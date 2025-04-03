@@ -36,12 +36,10 @@ TC_GameStates::TC_GameStates(EGameModeFormat InGameModeFormat)
 	Init();
 }
 
-TC_GameStates::TC_GameStates(const FGameFormat& InFormat, EGameModeFormat InFormatType)
+TC_GameStates::TC_GameStates(const FGameFormat& InFormat)
 {
-	SetGameFormat(InFormat);
-	SetGameModeFormat(InFormatType);
+	Init(InFormat);
 }
-
 
 TC_GameStates::~TC_GameStates()
 {

@@ -24,16 +24,15 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// === GAME CONTROL ===
-	void InitGame();
+	void Init();
 	void CoinFlip();
-	void StartGame(EGameModeFormat InFormat);
+	void StartGame();
 	void StartTurn();
-	void SwitchPhase();
 	void PlayAction(const FAIActions& InActionToPlay);
 	void EndTurn();
 	void EndGame();
 
 	// --- Setter(s) / Getter(s) ---
 	void SetCurrentGameState(TC_GameStates InCurrentGameState);
-	TC_GameStates GetCurrentGameState();
+	TC_GameStates GetCurrentGameState();                  // pour modification / version modifiable
 };

@@ -52,11 +52,12 @@ private :
 	bool _IsPlayer1Turn;
 
 public:
+	
 
 	// --- Constructor(s) ---
 	TC_GameStates(); //Default constructor
-	TC_GameStates(EGameModeFormat InGameModeFormat); 
-	TC_GameStates(const FGameFormat& InFormat, EGameModeFormat InFormatType);
+	TC_GameStates(EGameModeFormat InGameModeFormat);
+	TC_GameStates(const FGameFormat& InFormat);
 	~TC_GameStates();
 
 	// --- Initiator(s) ---
