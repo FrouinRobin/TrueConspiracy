@@ -4,15 +4,30 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "TC_BoardZone.h"
-#include "TC_FightZone.h"
 #include "TC_LandCardSlot.h"
 #include "TC_BoardSlot.h"
 #include "TC_Slot.h"
 #include "TC_Board.generated.h"
 
+class ATC_BoardSlot;
+class ATC_LandCardSlot;
+class ATC_Slot;
 class ATC_Card;
+class ATC_BoardZone;
 
-UCLASS(Blueprintable, BlueprintType)
+USTRUCT(BlueprintType)
+struct FBoardZone
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	int32 OwnerPlayerIndex;
+
+	UPROPERTY()
+	TArray<ATC_BoardSlot*> Slots; // 3 slots par joueur
+};
+
+UCLASS()
 class TRUECONSPIRACY_API ATC_Board : public AActor
 {
 	GENERATED_BODY()
@@ -20,44 +35,44 @@ class TRUECONSPIRACY_API ATC_Board : public AActor
 public:
 	ATC_Board();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
-	TArray<ATC_BoardZone*> BoardZones; // 2 zones (1 par joueur)
+	void InitializeBoard();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
-	TArray<ATC_FightZone*> FightZones; // 6 FightZones (3 par joueur)
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
-	TArray<ATC_LandCardSlot*> LandCards; // 6 LandCards (1 par FightZone)
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
-	TArray<ATC_BoardSlot*> BoardSlots; // 6 BoardSlots (3 par joueur)
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
-	TArray<ATC_Slot*> Slots; // 24 Slots (4 par BoardSlot)
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Board", meta = (AllowPrivateAccess = "true"))
-	USceneComponent* _boardRoot;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Board", meta = (AllowPrivateAccess = "true"))
-	USceneComponent* _boardZonesRoot;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Board", meta = (AllowPrivateAccess = "true"))
-	USceneComponent* _fightZonesRoot;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Board", meta = (AllowPrivateAccess = "true"))
-	USceneComponent* _slotsRoot;
+	bool TryPlaceCard(APlayerController* Player, ATC_Card* Card, ATC_Slot* Slot);
 
 protected:
 	virtual void BeginPlay() override;
 
 public:
-	virtual void Tick(float DeltaTime) override;
+	// Chaque joueur possède une zone regroupant 3 BoardSlots
+	UPROPERTY()
+	TArray<ATC_BoardZone*> PlayerZones;
 
-	UFUNCTION(BlueprintCallable)
-	void InitializeBoard();
+	// 3 lands partagés au centre
+	UPROPERTY()
+	TArray<ATC_LandCardSlot*> SharedLands;
 
-	/*UFUNCTION(BlueprintCallable)
-	bool PlaceCard(ATC_Card* Card, ATC_Slot* Slot);*/
+	UPROPERTY(EditAnywhere, Category = "Spawnables")
+	TSubclassOf<ATC_BoardSlot> BoardSlotClass;
 
+	UPROPERTY(EditAnywhere, Category = "Spawnables")
+	TSubclassOf<ATC_Slot> SlotClass;
+
+	UPROPERTY(EditAnywhere, Category = "Spawnables")
+	TSubclassOf<ATC_LandCardSlot> LandSlotClass;
+
+	UPROPERTY(EditAnywhere, Category = "Spawnables")
+	TSubclassOf<ATC_BoardZone> BoardZoneClass;
+
+	UPROPERTY(VisibleAnywhere, Category = "Layout")
+	USceneComponent* LayoutRoot;
+
+	UPROPERTY(VisibleAnywhere, Category = "Anchors")
+	USceneComponent* P1_ZoneAnchor;
+
+	UPROPERTY(VisibleAnywhere, Category = "Anchors")
+	USceneComponent* P0_ZoneAnchor;
+
+	UPROPERTY(VisibleAnywhere, Category = "Anchors")
+	TArray<USceneComponent*> LandAnchors;
 
 };

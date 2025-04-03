@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "TC_Face.h"
-#include "TC_AttackFace.h"
-#include "TC_DefendFace.h"
+#include "Cards/Faces/TC_Face.h"
+#include "Cards/Faces/TC_AttackFace.h"
+#include "Cards/Faces/TC_DefendFace.h"
 #include "TC_CardType.h"
 #include "TC_CardAttribute.h"
 #include "TC_CardID.h"

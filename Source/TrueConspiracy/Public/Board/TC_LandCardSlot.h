@@ -12,25 +12,17 @@ UCLASS()
 class TRUECONSPIRACY_API ATC_LandCardSlot : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
+
+public:
 	ATC_LandCardSlot();
 
-	//bool IsOccupied() const { return LandCard != nullptr; }
-	bool IsUsableBy(APlayerController* Player)const;
+	bool IsOccupied() const { return LandCard != nullptr; }
+	bool IsUsableBy(APlayerController* Player) const;
 
-	//UPROPERTY()
-	//ATC_LandCard* LandCard;
-
+public:
+	UPROPERTY()
+	ATC_LandCard* LandCard;
 
 	UPROPERTY()
-	APlayerController* indexOwner;
-
-protected:
-
-
-public:	
-
-
+	APlayerController* LandOwner;
 };

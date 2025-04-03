@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TC_Card.h"
+#include "Cards/TC_Card.h"
 #include "TC_Player.h"
 
 ATC_Card::ATC_Card()

@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TC_CardAttribute.h"
-
+#include "Cards/TC_CardEffect.h"
+#include "Cards/TC_Card.h"

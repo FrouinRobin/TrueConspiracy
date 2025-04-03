@@ -8,10 +8,9 @@
 #include "TC_BoardSlot.h"
 #include "TC_BoardZone.generated.h"
 
-/**
- *
- */
-UCLASS(Blueprintable, BlueprintType)
+class ATC_BoardSlot;
+
+UCLASS()
 class TRUECONSPIRACY_API ATC_BoardZone : public AActor
 {
 	GENERATED_BODY()
@@ -19,12 +18,25 @@ class TRUECONSPIRACY_API ATC_BoardZone : public AActor
 public:
 	ATC_BoardZone();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardZone")
+	void InitializeBoardSlots(TSubclassOf<ATC_BoardSlot> BoardSlotClass, TSubclassOf<ATC_Slot> SlotClass);
+
+protected:
+	virtual void BeginPlay() override;
+
+public:
+	// Le joueur auquel cette zone appartient (0 ou 1)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zone")
+	int32 OwnerPlayerIndex;
+
+	// Slots appartenant à cette zone
+	UPROPERTY()
 	TArray<ATC_BoardSlot*> BoardSlots;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardZone")
-	int32 PlayerID;
+	// Visuel de la zone (ex: cadre, fond...)
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* Root;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BoardZone")
-	USceneComponent* BoardZoneRoot;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UStaticMeshComponent* ZoneVisual;
+
 };

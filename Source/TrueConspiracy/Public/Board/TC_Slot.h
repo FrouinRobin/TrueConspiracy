@@ -8,7 +8,7 @@
 
 class ATC_Card;
 
-UCLASS(Blueprintable, BlueprintType)
+UCLASS()
 class TRUECONSPIRACY_API ATC_Slot : public AActor
 {
 	GENERATED_BODY()
@@ -16,10 +16,10 @@ class TRUECONSPIRACY_API ATC_Slot : public AActor
 public:
 	ATC_Slot();
 
-	bool HasCard() const { return OccupyingCard != nullptr;  }
+	bool HasCard() const { return OccupyingCard != nullptr; }
 	void SetCard(ATC_Card* Card);
 
+public:
 	UPROPERTY()
 	ATC_Card* OccupyingCard;
-
 };

@@ -8,7 +8,7 @@
 
 class ATC_Slot;
 
-UCLASS(Blueprintable, BlueprintType)
+UCLASS()
 class TRUECONSPIRACY_API ATC_BoardSlot : public AActor
 {
 	GENERATED_BODY()
@@ -16,13 +16,25 @@ class TRUECONSPIRACY_API ATC_BoardSlot : public AActor
 public:
 	ATC_BoardSlot();
 
+	UFUNCTION()
+	void InitializeSlots();
+
+public:
 	UPROPERTY()
 	int32 OwnerPlayerIndex;
 
+	// Composant racine
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* Root;
+
+	// Représentation visuelle du BoardSlot
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UStaticMeshComponent* SlotVisual;
+
+	// Chaque BoardSlot contient 4 emplacements de carte
 	UPROPERTY()
 	TArray<ATC_Slot*> Slots;
 
-
-protected:
-
+	UPROPERTY(EditAnywhere, Category = "Config")
+	TSubclassOf<ATC_Slot> SlotClass;
 };
