@@ -2,6 +2,7 @@
 
 
 #include "Board/TC_Board.h"
+#include "TC_Card.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/World.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -26,12 +27,6 @@ void ATC_Board::Tick(float DeltaTime)
 void ATC_Board::InitializeBoard()
 {
 
-}
-
-bool ATC_Board::TryPlaceCard(APlayerController* Player, ATC_Card* Card, ATC_Slot* Slot)
-{
-
-	return false;
 }
 
 

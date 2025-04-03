@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "TC_CardType.h"
+#include "TC_EffectLocalisation.h"
+#include "TC_CardAttribute.h"
 #include "TC_TargetType.h"
-#include "TC_DataType.h"
+#include "TC_DataTypeStruct.h"
 #include "TC_CardEffect.generated.h"
 
 class ATC_Card;
@@ -17,11 +18,13 @@ class TRUECONSPIRACY_API UTC_CardEffect : public UObject
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<ETC_CardType> TargetCardType;
+	ETC_EffectLocalisation EffectLocalisation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<ETC_TargetType> TargetType;
+	TArray<ETC_CardAttribute> TargetCardAttribute;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<ETC_DataType> DataType;
+	ETC_TargetType TargetType;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FTC_DataTypeStruct> DataType;
 public:
 
 	UFUNCTION(BlueprintImplementableEvent)

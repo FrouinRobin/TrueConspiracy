@@ -7,12 +7,8 @@
 UENUM(BlueprintType)  // Makes it visible in Blueprints
 enum class ETC_CardType : uint8
 {
-    None            UMETA(DisplayName = "None"),
-    Monstre         UMETA(DisplayName = "Monstre"),
-    Humain           UMETA(DisplayName = "Humain"),
-    Technologie      UMETA(DisplayName = "Technologie"),
-    Gouvernement    UMETA(DisplayName = "Gouvernement"),
-    Apparition      UMETA(DisplayName = "Apparition"),
-    ForceOcculte    UMETA(DisplayName = "Force Occulte")
+    ClassicCard            UMETA(DisplayName = "ClassicCard"),
+    LandCard               UMETA(DisplayName = "LandCard"),
+    SpellCard              UMETA(DisplayName = "SpellCard")
 };
 

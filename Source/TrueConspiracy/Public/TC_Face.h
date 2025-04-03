@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "TC_EffectType.h"
-#include "TC_CardType.h"
+#include "TC_CardAttribute.h"
 #include "TC_Face.generated.h"
 
 /**
@@ -18,9 +18,7 @@ class TRUECONSPIRACY_API UTC_Face : public UObject
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	ETC_CardType GetCardType();
-	UFUNCTION(BlueprintCallable, Category = "Getters")
-	TArray<ETC_CardType> GetCardTypeList();
+	TArray<ETC_CardAttribute> GetFaceAttribute();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	UTexture2D* GetCardIllustration();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
@@ -33,9 +31,7 @@ public:
 	float GetCardScore();
 
 	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetCardType(ETC_CardType newType);
-	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetCardTypeList(TArray<ETC_CardType> newTypeList);
+	void SetCardTypeList(TArray<ETC_CardAttribute> newFaceAttribute);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardIllustration(UTexture2D* newImage);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
@@ -75,9 +71,7 @@ public:
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Type")
-	ETC_CardType FaceType;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Type")
-	TArray<ETC_CardType> FaceTypeList;
+	TArray<ETC_CardAttribute> FaceAttribute;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Illustration")
 	UTexture2D* FaceIllustration;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Background")
