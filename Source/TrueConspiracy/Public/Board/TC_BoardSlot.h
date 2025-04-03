@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "TC_Slot.h"
 #include "TC_BoardSlot.generated.h"
+
+class ATC_Slot;
 
 UCLASS(Blueprintable, BlueprintType)
 class TRUECONSPIRACY_API ATC_BoardSlot : public AActor
@@ -15,20 +16,12 @@ class TRUECONSPIRACY_API ATC_BoardSlot : public AActor
 public:
 	ATC_BoardSlot();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardSlot")
-	int32 PlayerID;
+	UPROPERTY()
+	int32 OwnerPlayerIndex;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardSlot")
+	UPROPERTY()
 	TArray<ATC_Slot*> Slots;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BoardSlot")
-	USceneComponent* BoardSlotRoot;
-
-	UFUNCTION(BlueprintCallable)
-	TArray<ATC_Slot*> GetSlots();
-
-	UFUNCTION()
-	void OnBoardSlotOverlap(AActor* OverlappedActor, AActor* OtherActor);
 
 protected:
 
