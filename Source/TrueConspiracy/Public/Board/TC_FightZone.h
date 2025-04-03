@@ -19,10 +19,5 @@ public:
 
 	ATC_FightZone();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FightZone")
-	TArray<ATC_BoardSlot*> BoardSlots;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FightZone")
-	USceneComponent* FightZoneRoot;
 };
 

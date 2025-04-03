@@ -8,7 +8,10 @@ ATC_LandCardSlot::ATC_LandCardSlot()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	LandCardRoot = CreateDefaultSubobject<USceneComponent>(TEXT("LandCardRoot"));
-	RootComponent = LandCardRoot;
+}
+
+bool ATC_LandCardSlot::IsUsableBy(APlayerController* Player) const
+{
+	return false;
 }
 

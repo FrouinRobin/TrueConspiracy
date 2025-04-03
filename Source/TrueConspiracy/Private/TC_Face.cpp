@@ -3,14 +3,10 @@
 
 #include "TC_Face.h"
 
-ETC_CardType UTC_Face::GetCardType()
-{
-	return FaceType;
-}
 
-TArray<ETC_CardType> UTC_Face::GetCardTypeList()
+TArray<ETC_CardAttribute> UTC_Face::GetFaceAttribute()
 {
-	return FaceTypeList;
+	return FaceAttribute;
 }
 
 UTexture2D* UTC_Face::GetCardIllustration()
@@ -42,14 +38,9 @@ float UTC_Face::GetCardScore()
 
 /*SETTER*/
 
-void UTC_Face::SetCardType(ETC_CardType newType)
+void UTC_Face::SetCardTypeList(TArray<ETC_CardAttribute> newFaceAttribute)
 {
-	FaceType = newType;
-}
-
-void UTC_Face::SetCardTypeList(TArray<ETC_CardType> newTypeList)
-{
-	FaceTypeList = newTypeList;
+	FaceAttribute = newFaceAttribute;
 }
 void UTC_Face::SetCardIllustration(UTexture2D* newImage)
 {

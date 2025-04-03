@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "TC_BoardSlot.h"
 #include "TC_LandCardSlot.generated.h"
+
+class ATC_LandCard;
 
 UCLASS()
 class TRUECONSPIRACY_API ATC_LandCardSlot : public AActor
@@ -16,11 +17,16 @@ public:
 	// Sets default values for this actor's properties
 	ATC_LandCardSlot();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCard")
-	TArray<ATC_BoardSlot*> BoardSlots;
+	//bool IsOccupied() const { return LandCard != nullptr; }
+	bool IsUsableBy(APlayerController* Player)const;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "LandCard")
-	USceneComponent* LandCardRoot;
+	//UPROPERTY()
+	//ATC_LandCard* LandCard;
+
+
+	UPROPERTY()
+	APlayerController* indexOwner;
+
 protected:
 
 

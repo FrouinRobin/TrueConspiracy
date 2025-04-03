@@ -8,8 +8,9 @@
 #include "TC_LandCardSlot.h"
 #include "TC_BoardSlot.h"
 #include "TC_Slot.h"
-#include "TC_Card.h"
 #include "TC_Board.generated.h"
+
+class ATC_Card;
 
 UCLASS(Blueprintable, BlueprintType)
 class TRUECONSPIRACY_API ATC_Board : public AActor

@@ -2,7 +2,10 @@
 
 
 #include "TC_Player.h"
+#include "Camera/CameraComponent.h"
+#include <Components/CapsuleComponent.h>
 #include <TC_Face.h>
+#include <Components/SphereComponent.h>
 
 // Sets default values
 ATC_Player::ATC_Player()
@@ -10,6 +13,15 @@ ATC_Player::ATC_Player()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	RootComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
+
+	_playerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
+	_playerCamera->SetupAttachment(RootComponent);
+	_playerCamera->bUsePawnControlRotation = false;
+
+	_cardAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("CardAnchor"));
+	_cardAnchor->SetupAttachment(_playerCamera);
+	_cardAnchor->SetRelativeLocation(FVector(150, 0, -120));
 }
 
 ATC_Card* ATC_Player::GetCardFromDeckByName(FString name, bool checkAllFaces)
@@ -38,15 +50,91 @@ ATC_Card* ATC_Player::GetCardFromDeckByName(FString name, bool checkAllFaces)
 	return nullptr;
 }
 
-ATC_Card* ATC_Player::GetCardFromDeckById(FString id)
+ATC_Card* ATC_Player::GetCardFromDeckById(ETC_CardID id)
 {
 	for (ATC_Card* card : _playerDeck)
 	{
-		if (/*card->id == id*/ false) // TODO: See how IDs and names will be implemented
+		if (card->GetCardID() == id)
 			return card;
 	}
 	UE_LOG(LogTemp, Warning, TEXT("GetCardFromDeckById() did not return any card!"));
 	return nullptr;
+}
+
+void ATC_Player::SetDeck(TArray<ATC_Card*> newDeck)
+{
+	_playerDeck = newDeck;
+}
+
+TArray<ATC_Card*> ATC_Player::GetDeck()
+{
+	return _playerDeck;
+}
+
+void ATC_Player::SetPlayerMana(uint8 mana)
+{
+	_playerMana = mana;
+}
+
+uint8 ATC_Player::GetPlayerMana() const
+{
+	return _playerMana;
+}
+
+bool ATC_Player::AddCardToDeck(ATC_Card* card)
+{
+	_playerDeck.Add(card);
+	card->AttachToComponent(_cardAnchor, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
+	card->SetActorScale3D(FVector(0.25f, 0.25f, 0.25f));
+
+	ShowDeckOnCamera();
+	return true;
+}
+
+void ATC_Player::ShowDeckOnCamera()
+{
+	for (size_t i = 0; i < _playerDeck.Num(); i++)
+	{
+		auto card = _playerDeck[i];
+		card->SetActorRelativeLocation(FVector::ZeroVector);
+
+		FVector origin;
+		FVector box;
+		card->GetActorBounds(false, origin, box, false);
+
+		UE_LOG(LogTemp, Warning, TEXT("Origin is %s"), *origin.ToString());
+		UE_LOG(LogTemp, Warning, TEXT("Box is %s"), *box.ToString());
+
+		FVector base = FVector::ZeroVector;
+		if (_playerDeck.Num() % 2 == 0)
+			base = FVector(0, -20, 0);
+
+		float interval = ((float)i - ((float)_playerDeck.Num() - 1) / 2) * 50;
+
+		card->SetActorLocation(card->GetActorLocation() + base + FVector(0, 0, box.Y) + FVector(0, interval, 0));
+		card->SetActorRelativeRotation(FRotator(69, 0, 0));
+	}
+}
+
+TArray<ATC_Card*> ATC_Player::GetAvailableCards()
+{
+	TArray<ATC_Card*> cards;
+	for(auto card : GetDeck())
+	{
+		if (card->GetCardMana() >= GetPlayerMana())
+			cards.Add(card);
+	}
+	return cards;
+}
+
+bool ATC_Player::CanPlayAnyCard()
+{
+	return GetAvailableCards().Num() > 0;
+}
+
+bool ATC_Player::CanPlayCard(ATC_Card* card)
+{
+	return card->GetCardMana() >= GetPlayerMana();
 }
 
 // Called when the game starts or when spawned
