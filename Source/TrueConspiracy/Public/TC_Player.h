@@ -16,21 +16,48 @@ public:
 	// Sets default values for this pawn's properties
 	ATC_Player();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
 	ATC_Card* GetCardFromDeckByName(FString name, bool checkAllFaces);
 
-	UFUNCTION(BlueprintCallable)
-	// To know: how IDs would work for cards
-	// Would a card have an ID for both faces or would each faces have their unique IDs?
-	ATC_Card* GetCardFromDeckById(FString id);
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
+	ATC_Card* GetCardFromDeckById(ETC_CardID id);
+
+	//ATC_Card* GetCardFromDeckByCondition();
+		
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
+	void SetDeck(TArray<ATC_Card*> newDeck);
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
+	TArray<ATC_Card*> GetDeck();
+
+	UFUNCTION(BlueprintCallable, Category = "Player Mana")
+	void SetPlayerMana(uint8 mana);
+	UFUNCTION(BlueprintCallable, Category = "Player Mana")
+	uint8 GetPlayerMana() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
+	bool AddCardToDeck(ATC_Card* card);
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
+	void ShowDeckOnCamera();
+
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
+	TArray<ATC_Card*> GetAvailableCards();
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
+	bool CanPlayAnyCard();
+	UFUNCTION(BlueprintCallable, Category = "Player Deck")
+	bool CanPlayCard(ATC_Card* card);
 
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY()
 	TArray<ATC_Card*> _playerDeck;
+
+	uint8 _playerMana;
+
+private:
+	class UCameraComponent* _playerCamera;
+	class USceneComponent* _cardAnchor;
 
 public:	
 	// Called every frame
