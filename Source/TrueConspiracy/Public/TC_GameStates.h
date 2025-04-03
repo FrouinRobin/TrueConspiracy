@@ -4,6 +4,7 @@
 
 class ATC_Card;
 struct FAIActions;
+class ATC_Player;
 
 UENUM(BlueprintType)
 enum class EGameModeFormat : uint8
@@ -32,26 +33,34 @@ private :
 	FGameFormat _GameFormat;
 	EGameModeFormat _FormatType = EGameModeFormat::BO7;
 
-	//POSSEDE PAR LE PLAYER
-	TArray<ATC_Card*> _Player1Hand;
-	TArray<ATC_Card*> _Player2Hand;
+	
 
 	//POSSEDE PAR LE PLAYER
-	TArray<ATC_Card*> _Player1BoardCard;
-	TArray<ATC_Card*> _Player2BoardCard;
+	//TArray<ATC_Card*> _Player1Hand;
+	//TArray<ATC_Card*> _Player2Hand;
+	//
+	////POSSEDE PAR LE PLAYER
+	//TArray<ATC_Card*> _Player1BoardCard;
+	//TArray<ATC_Card*> _Player2BoardCard;
 
 	int32 _CurrentTurn = 0;
 	//NOMBRE DE ROUND GAGNÉS
 	int32 _Player1Score = 0;
 	int32 _Player2Score = 0;
 
-	//A clear
-	int32 _Player1Mana = 0;
-	int32 _Player2Mana = 0;
+	////A clear
+	//int32 _Player1Mana = 0;
+	//int32 _Player2Mana = 0;
 
 	bool _IsPlayer1Turn;
 
 public:
+
+	UPROPERTY()
+	ATC_Player* Player1;
+
+	UPROPERTY()
+	ATC_Player* Player2;
 
 	// --- Constructor(s) ---
 	TC_GameStates(); //Default constructor
@@ -89,14 +98,20 @@ public:
 	void SetPlayer2Score(int32 InScore);
 	int32 GetPlayer2Score() const;
 
-	void SetPlayer1Mana(int32 InMana);
-	int32 GetPlayer1Mana() const;
-
-	void SetPlayer2Mana(int32 InMana);
-	int32 GetPlayer2Mana() const;
+	//void SetPlayer1Mana(int32 InMana);
+	//int32 GetPlayer1Mana() const;
+	//
+	//void SetPlayer2Mana(int32 InMana);
+	//int32 GetPlayer2Mana() const;
 
 	void SetIsPlayer1Turn(bool InIsPlayer1Turn);
-	bool GetIsPlayer1Turn() const;
+	bool GetIsPlayer1Turn() const; 
+
+	void SetPlayer1(ATC_Player* InPlayer) { Player1 = InPlayer; }
+	void SetPlayer2(ATC_Player* InPlayer) { Player2 = InPlayer; }
+
+	ATC_Player* GetPlayer1() const { return Player1; }
+	ATC_Player* GetPlayer2() const { return Player2; }
 
 	//int32 GetCurrentPlayerID() const { return IsPlayer1Turn ? 1 : 2; }
 

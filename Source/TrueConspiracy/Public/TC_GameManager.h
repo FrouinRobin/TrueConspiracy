@@ -28,6 +28,8 @@ public:
 	void CoinFlip();
 	void StartGame(EGameModeFormat InFormat);
 	void StartTurn();
+	void StartPhase();
+	void EndPhase();
 	void SwitchPhase();
 	void PlayAction(const FAIActions& InActionToPlay);
 	void EndTurn();

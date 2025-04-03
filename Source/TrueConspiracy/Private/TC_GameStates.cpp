@@ -1,6 +1,7 @@
 #include "TC_GameStates.h"
 #include "TC_AIActions.h"
 #include "TC_ActionsSystem.h"
+#include "TC_Player.h"
 
 // --- Game Format(s) ---
 
@@ -116,13 +117,23 @@ void TC_GameStates::ApplyAction(const FAIActions& InAction)
 
 TC_GameStates TC_GameStates::Clone() const
 {
+	//TC_GameStates clone;
+	//clone._Player1Hand = _Player1Hand;
+	//clone._Player2Hand = _Player2Hand;
+	//clone._Player1BoardCard = _Player1BoardCard;
+	//clone._Player2BoardCard = _Player2BoardCard;
+	//clone.SetPlayer1Mana(GetPlayer1Mana());
+	//clone.SetPlayer2Mana(GetPlayer2Mana());
+	//clone.SetIsPlayer1Turn(GetIsPlayer1Turn());
+	//return clone;
+	
 	TC_GameStates clone;
-	clone._Player1Hand = _Player1Hand;
-	clone._Player2Hand = _Player2Hand;
-	clone._Player1BoardCard = _Player1BoardCard;
-	clone._Player2BoardCard = _Player2BoardCard;
-	clone.SetPlayer1Mana(GetPlayer1Mana());
-	clone.SetPlayer2Mana(GetPlayer2Mana());
+	clone.Player1->SetHand(Player1->GetHand());
+	clone.Player2->SetHand(Player2->GetHand());
+	//clone._Player1BoardCard = _Player1BoardCard;
+	//clone._Player2BoardCard = _Player2BoardCard;
+	clone.Player1->SetPlayerMana(Player1->GetPlayerMana());
+	clone.Player2->SetPlayerMana(Player2->GetPlayerMana());
 	clone.SetIsPlayer1Turn(GetIsPlayer1Turn());
 	return clone;
 }
@@ -179,25 +190,25 @@ int32 TC_GameStates::GetPlayer2Score() const
 	return _Player2Score;
 }
 
-void TC_GameStates::SetPlayer1Mana(int32 InMana)
-{
-	_Player1Mana = InMana;
-}
-
-int32 TC_GameStates::GetPlayer1Mana() const
-{
-	return _Player1Mana;
-}
-
-void TC_GameStates::SetPlayer2Mana(int32 InMana)
-{
-	_Player2Mana = InMana;
-}
-
-int32 TC_GameStates::GetPlayer2Mana() const
-{
-	return _Player2Mana;
-}
+//void TC_GameStates::SetPlayer1Mana(int32 InMana)
+//{
+//	_Player1Mana = InMana;
+//}
+//
+//int32 TC_GameStates::GetPlayer1Mana() const
+//{
+//	return _Player1Mana;
+//}
+//
+//void TC_GameStates::SetPlayer2Mana(int32 InMana)
+//{
+//	_Player2Mana = InMana;
+//}
+//
+//int32 TC_GameStates::GetPlayer2Mana() const
+//{
+//	return _Player2Mana;
+//}
 
 void TC_GameStates::SetIsPlayer1Turn(bool InIsPlayer1Turn)
 {

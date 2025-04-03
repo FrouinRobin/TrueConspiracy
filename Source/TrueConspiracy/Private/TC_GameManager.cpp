@@ -1,6 +1,8 @@
 #include "TC_GameManager.h"
 #include "TC_GameInstance.h"
 #include "TC_GameStates.h"
+#include "TC_Player.h"
+#include "Kismet/GameplayStatics.h"
 
 ATC_GameManager::ATC_GameManager()
 {
@@ -29,8 +31,8 @@ void ATC_GameManager::InitGame()
 		//DrawCard for player2
 	}
 	//Give the max mana to each player
-	GetCurrentGameState().SetPlayer1Mana(3);
-	GetCurrentGameState().SetPlayer2Mana(3);
+	//GetCurrentGameState().SetPlayer1Mana(3);
+	//GetCurrentGameState().SetPlayer2Mana(3);
 	//Start the first round
 	StartTurn();
 }
@@ -50,6 +52,23 @@ void ATC_GameManager::StartGame(EGameModeFormat InFormat) //Bouton de lancement 
 	}
 	GameInstance->SetSelectedFormat(InFormat);
 	GetCurrentGameState() = TC_GameStates(GameInstance->GetSelectedFormat());
+	
+	TArray<AActor*> FoundPlayers;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATC_Player::StaticClass(), FoundPlayers);
+	for (AActor* Actor : FoundPlayers)
+	{
+		ATC_Player* Player = Cast<ATC_Player>(Actor);
+		if (!Player) continue;
+
+		if (Player->PlayerID == 1)
+		{
+			GetCurrentGameState().SetPlayer1(Player);
+		}
+		else if (Player->PlayerID == 2)
+		{
+			GetCurrentGameState().SetPlayer2(Player);
+		}
+	}
 	InitGame();
 }
 
@@ -60,8 +79,9 @@ void ATC_GameManager::StartTurn()
 		//Switch att/def players (cards)
 		SwitchPhase();
 		//Reset mana x2players +1
-		GetCurrentGameState().SetPlayer1Mana(GetCurrentGameState().GetPlayer1Mana() + 1);
-		GetCurrentGameState().SetPlayer2Mana(GetCurrentGameState().GetPlayer2Mana() + 1);
+		
+		//GetCurrentGameState().SetPlayer1Mana(GetCurrentGameState().GetPlayer1Mana() + 1);
+		//GetCurrentGameState().SetPlayer2Mana(GetCurrentGameState().GetPlayer2Mana() + 1);
 		//Switch priority playing players
 		//Invoke card OnStartTurn
 	}
