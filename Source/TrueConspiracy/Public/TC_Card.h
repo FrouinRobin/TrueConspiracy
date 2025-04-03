@@ -8,6 +8,7 @@
 #include "TC_AttackFace.h"
 #include "TC_DefendFace.h"
 #include "TC_CardType.h"
+#include "TC_CardAttribute.h"
 #include "TC_CardID.h"
 #include "Board/TC_Board.h"
 #include "TC_Card.generated.h"
@@ -55,7 +56,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ETC_CardType GetCardType();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	TArray<ETC_CardType> GetCardTypeList();
+	TArray<ETC_CardAttribute> GetCardAttribute();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ETC_CardID GetCardID();
 
@@ -66,9 +67,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	FString GetCardDescription();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	float GetCardMana();
+	float GetCardMaxMana();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	float GetCardScore();
+	float GetCardCurrentMana();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	float GetCardMaxScore();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	float GetCardCurrentScore();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_Player* GetPlayer();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
@@ -92,7 +97,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardType(ETC_CardType newType);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetCardTypeList(TArray<ETC_CardType> newTypeList);
+	void SetCardAttributeList(TArray<ETC_CardAttribute> newTypeList);
 
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardIllustration(UTexture2D* newImage);
@@ -101,9 +106,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardDescription(FString newDescription);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetCardMana(float newMana);
+	void SetCardMaxMana(float newMana);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetCardScore(float newScore);
+	void SetCardCurrentMana(float newMana);
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetCardMaxScore(float newScore);
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetCardCurrentScore(float newScore);
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	void SetPlayer(ATC_Player* newPlayer);
 	UFUNCTION(BlueprintCallable, Category = "Getters")
@@ -150,7 +159,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	ETC_CardType _cardType;
-	TArray<ETC_CardType> _cardTypeList;
+	TArray<ETC_CardAttribute> _cardAttribute;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	ETC_CardID _cardId;
@@ -160,9 +169,13 @@ private:
 	FString _cardDescription;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
-	uint8 _cardMana;
+	uint8 _cardMaxMana;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
-	uint8 _cardScore;
+	uint8 _cardCurrentMana;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	uint8 _cardMaxScore;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	uint8 _cardCurrentScore;
 
 	ATC_Player* _cardPlayer;
 	ATC_Board* _cardBoard;

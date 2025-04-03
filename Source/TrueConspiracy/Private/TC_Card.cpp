@@ -53,9 +53,9 @@ ETC_CardType ATC_Card::GetCardType()
 	return _cardType;
 }
 
-TArray<ETC_CardType> ATC_Card::GetCardTypeList()
+TArray<ETC_CardAttribute> ATC_Card::GetCardAttribute()
 {
-	return _cardTypeList;
+	return _cardAttribute;
 }
 
 ETC_CardID ATC_Card::GetCardID()
@@ -78,14 +78,24 @@ FString ATC_Card::GetCardDescription()
 	return _cardDescription;
 }
 
-float ATC_Card::GetCardMana()
+float ATC_Card::GetCardMaxMana()
 {
-	return _cardMana;
+	return _cardMaxMana;
 }
 
-float ATC_Card::GetCardScore()
+float ATC_Card::GetCardCurrentMana()
 {
-	return _cardScore;
+	return _cardCurrentMana;
+}
+
+float ATC_Card::GetCardMaxScore()
+{
+	return _cardMaxScore;
+}
+
+float ATC_Card::GetCardCurrentScore()
+{
+	return _cardCurrentScore;
 }
 
 ATC_Player* ATC_Card::GetPlayer()
@@ -137,9 +147,9 @@ void ATC_Card::SetCardType(ETC_CardType newType)
 	_cardType = newType;
 }
 
-void ATC_Card::SetCardTypeList(TArray<ETC_CardType> newTypeList)
+void ATC_Card::SetCardAttributeList(TArray<ETC_CardAttribute> newAttributeList)
 {
-	_cardTypeList = newTypeList;
+	_cardAttribute = newAttributeList;
 }
 
 void ATC_Card::SetCardIllustration(UTexture2D* newImage)
@@ -157,14 +167,24 @@ void ATC_Card::SetCardDescription(FString newDescription)
 	_cardDescription = newDescription;
 }
 
-void ATC_Card::SetCardMana(float newMana)
+void ATC_Card::SetCardMaxMana(float newMana)
 {
-	_cardMana = newMana;
+	_cardMaxMana = newMana;
 }
 
-void ATC_Card::SetCardScore(float newScore)
+void ATC_Card::SetCardCurrentMana(float newMana)
 {
-	_cardScore = newScore;
+	_cardCurrentMana = newMana;
+}
+
+void ATC_Card::SetCardMaxScore(float newScore)
+{
+	_cardMaxScore = newScore;
+}
+
+void ATC_Card::SetCardCurrentScore(float newScore)
+{
+	_cardCurrentScore = newScore;
 }
 
 void ATC_Card::SetPlayer(ATC_Player* newPlayer)

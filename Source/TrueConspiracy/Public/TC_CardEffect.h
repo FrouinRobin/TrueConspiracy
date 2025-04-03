@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "TC_EffectLocalisation.h"
-#include "TC_CardType.h"
+#include "TC_CardAttribute.h"
 #include "TC_TargetType.h"
 #include "TC_DataTypeStruct.h"
 #include "TC_CardEffect.generated.h"
@@ -20,7 +20,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ETC_EffectLocalisation EffectLocalisation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<ETC_CardType> TargetCardType;
+	TArray<ETC_CardAttribute> TargetCardAttribute;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ETC_TargetType TargetType;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
