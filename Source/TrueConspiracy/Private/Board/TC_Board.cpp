@@ -29,4 +29,10 @@ void ATC_Board::InitializeBoard()
 
 }
 
+bool ATC_Board::TryPlaceCard(APlayerController* Player, ATC_Card* Card, ATC_Slot* Slot)
+{
+
+	return false;
+}
+
 

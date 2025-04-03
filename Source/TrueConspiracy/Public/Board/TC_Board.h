@@ -56,8 +56,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void InitializeBoard();
 
-	/*UFUNCTION(BlueprintCallable)
-	bool PlaceCard(ATC_Card* Card, ATC_Slot* Slot);*/
+	UFUNCTION(BlueprintCallable)
+	bool PlaceCard(ATC_Card* Card, ATC_Slot* Slot);
 
 
 };

@@ -121,7 +121,7 @@ TArray<ATC_Card*> ATC_Player::GetAvailableCards()
 	TArray<ATC_Card*> cards;
 	for(auto card : GetDeck())
 	{
-		if (card->GetCardCurrentMana() >= GetPlayerMana())
+		if (card->GetCardMana() >= GetPlayerMana())
 			cards.Add(card);
 	}
 	return cards;
@@ -134,7 +134,7 @@ bool ATC_Player::CanPlayAnyCard()
 
 bool ATC_Player::CanPlayCard(ATC_Card* card)
 {
-	return card->GetCardCurrentMana() >= GetPlayerMana();
+	return card->GetCardMana() >= GetPlayerMana();
 }
 
 // Called when the game starts or when spawned
