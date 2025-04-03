@@ -6,12 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "TC_Slot.generated.h"
 
-UENUM(BlueprintType)
-enum class ETC_SlotState : uint8
-{
-	Empty,
-	Occupied
-};
+class ATC_Card;
 
 UCLASS(Blueprintable, BlueprintType)
 class TRUECONSPIRACY_API ATC_Slot : public AActor
@@ -21,24 +16,10 @@ class TRUECONSPIRACY_API ATC_Slot : public AActor
 public:
 	ATC_Slot();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Slot")
-	ETC_SlotState SlotState;
+	bool HasCard() const { return OccupyingCard != nullptr;  }
+	void SetCard(ATC_Card* Card);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Slot")
-	ATC_Card* _card;
+	UPROPERTY()
+	ATC_Card* OccupyingCard;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Slot")
-	USceneComponent* SlotRoot;
-
-	UFUNCTION(BlueprintCallable)
-	ATC_Card* GetCard();
-
-	UFUNCTION(BlueprintCallable)
-	void SetCard(ATC_Card* NewCard);
-
-	UFUNCTION(BlueprintCallable)
-	bool HasCard();
-
-	UFUNCTION()
-	void OnSlotOverlap(AActor* OverlappedActor, AActor* OtherActor);
 };
