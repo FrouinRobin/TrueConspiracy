@@ -67,16 +67,5 @@ USceneComponent* ATC_BoardSlot::CreateSlotAnchorWithMesh(FName AnchorName, FVect
 	Anchor->SetupAttachment(RootComponent);
 	Anchor->SetRelativeLocation(RelativeLocation);
 
-	UStaticMeshComponent* VisualMesh = CreateDefaultSubobject<UStaticMeshComponent>(*FString::Printf(TEXT("%s_Mesh"), *AnchorName.ToString()));
-	VisualMesh->SetupAttachment(Anchor);
-	VisualMesh->SetRelativeLocation(FVector::ZeroVector);
-	VisualMesh->SetWorldScale3D(FVector(0.4f, 0.8f, 0.02f));
-	VisualMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-	if (_cardMesh)
-	{
-		VisualMesh->SetStaticMesh(_cardMesh);
-	}
-
 	return Anchor;
 }

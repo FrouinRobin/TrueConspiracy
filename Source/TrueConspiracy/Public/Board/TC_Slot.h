@@ -15,6 +15,9 @@ class TRUECONSPIRACY_API ATC_Slot : public AActor
 
 public:
 	ATC_Slot();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UStaticMeshComponent* visualMesh;
 protected:
 
 public:

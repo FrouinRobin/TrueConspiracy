@@ -110,12 +110,13 @@ void ATC_Player::SetDeck(TArray<ATC_Card*> newDeck)
 
 TArray<ATC_Card*> ATC_Player::GetDeck()
 {
-	if (_playerDeck.Num() == 0)
+	return TArray<ATC_Card*>();
+	/*if (_playerDeck.Num() == 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("GetDeck() did not return any card!"));
 		return TArray<ATC_Card*>();
 	}
-	return _playerDeck;
+	return _playerDeck;*/
 }
 
 bool ATC_Player::AddCardToHand(ATC_Card* card)
@@ -286,3 +287,7 @@ void ATC_Player::PlayCard(ATC_Card* Card, ATC_Slot* Slot)
 	TC_ActionsSystem::PlayCard(GameManager->GetCurrentGameState(), Card, Slot);*/
 }
 
+void ATC_Player::SwitchFace(ATC_Card* Card)
+{
+	Card->SwitchPhase();
+}

@@ -10,7 +10,18 @@ ATC_Slot::ATC_Slot()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	UStaticMeshComponent* SlotVisual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SlotVisual"));
+	visualMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SlotVisual"));
+	RootComponent = visualMesh;
+
+	// Set the mesh to a basic cube (engine default)
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
+	if (CubeMesh.Succeeded())
+	{
+		visualMesh->SetStaticMesh(CubeMesh.Object);
+	}
+
+	// Set the relative scale of the mesh
+	visualMesh->SetRelativeScale3D(FVector(0.2f, 0.3f, 0.01f));
 }
 
 bool ATC_Slot::HasCard()
