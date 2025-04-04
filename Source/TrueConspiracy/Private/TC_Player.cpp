@@ -226,3 +226,19 @@ uint8 ATC_Player::ChangeMana(uint8 value, bool allowOverflow)
 	return _playerCurrentMana;
 }
 
+void ATC_Player::SetSelectedCard(ATC_Card* card)
+{
+	if (_selectedCard == card)
+		return;
+
+	ATC_Card* oldCard = _selectedCard;
+	_selectedCard = card;
+
+	OnSelectCard(card, oldCard);
+}
+
+ATC_Card* ATC_Player::GetSelectedCard()
+{
+	return _selectedCard;
+}
+

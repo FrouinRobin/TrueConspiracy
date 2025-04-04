@@ -18,8 +18,6 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	uint8 PlayerID;
-	UPROPERTY(BlueprintReadWrite)
-	ATC_Card* SelectedCard;
 
 
 protected:
@@ -31,6 +29,8 @@ protected:
 
 	uint8 _playerCurrentMana;
 	uint8 _playerMaxMana;
+
+	ATC_Card* _selectedCard;
 
 private:
 	class UCameraComponent* _playerCamera;
@@ -83,5 +83,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Player Mana")
 	uint8 ChangeMana(uint8 value, bool allowOverflow);
 
+	UFUNCTION(BlueprintCallable, Category = "Player Card")
+	void SetSelectedCard(ATC_Card* card);
+	UFUNCTION(BlueprintPure, Category = "Player Card", meta = (ReturnDisplayName = "Selected Card"))
+	ATC_Card* GetSelectedCard();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnSelectCard(ATC_Card* card, ATC_Card* oldCard);
 
 };
