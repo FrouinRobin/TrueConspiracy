@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TC_DefendFace.h"
+#include "Cards/Faces/TC_AttackFace.h"
 

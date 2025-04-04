@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TC_Face.h"
+#include "Cards/Faces/TC_Face.h"
 
 
 TArray<ETC_CardAttribute> UTC_Face::GetFaceAttribute()

@@ -2,7 +2,6 @@
 
 #include "Board/TC_Board.h"
 #include "TC_Player.h"
-#include "Board/TC_Plate.h"
 #include "Board/TC_BoardSlot.h"
 
 
@@ -35,11 +34,6 @@ void ATC_Board::BeginPlay()
         _boardSlots.Add(GetWorld()->SpawnActor<ATC_BoardSlot>(BoardSlotOneAnchor->GetComponentLocation(), GetActorRotation()));
         _boardSlots[j]->SetBoardSlotBoard(this);
     }
-}
-
-ATC_Plate* ATC_Board::GetBoardPlate()
-{
-    return _boardPlate;
 }
 
 ATC_Player* ATC_Board::GetBoardPlayer()
@@ -172,11 +166,6 @@ ATC_Card* ATC_Board::GetBoardDiscardGameCardLastCard()
 
 
 
-
-void ATC_Board::SetBoardPlater(ATC_Plate* newBoardPlate)
-{
-    _boardPlate = newBoardPlate;
-}
 
 // Setters
 void ATC_Board::SetBoardPlayer(ATC_Player* newPlayer)

@@ -4,13 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "TC_Face.h"
-#include "TC_AttackFace.h"
-#include "TC_DefendFace.h"
+#include "Cards/Faces/TC_Face.h"
+#include "Cards/Faces/TC_AttackFace.h"
+#include "Cards/Faces/TC_DefendFace.h"
 #include "TC_CardType.h"
 #include "TC_CardAttribute.h"
 #include "TC_CardID.h"
-#include "Board/TC_Board.h"
 #include "TC_Card.generated.h"
 
 class ATC_Player;
@@ -59,7 +58,6 @@ public:
 	TArray<ETC_CardAttribute> GetCardAttribute();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ETC_CardID GetCardID();
-
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	UTexture2D* GetCardIllustration();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
@@ -76,10 +74,6 @@ public:
 	float GetCardCurrentScore();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_Player* GetPlayer();
-	UFUNCTION(BlueprintCallable, Category = "Getters")
-	ATC_Board* GetBoard();
-	UFUNCTION(BlueprintCallable, Category = "Getters")
-	ATC_BoardSlot* GetBoardSlot();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_Slot* GetSlot();
 
@@ -98,7 +92,8 @@ public:
 	void SetCardType(ETC_CardType newType);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardAttributeList(TArray<ETC_CardAttribute> newTypeList);
-
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	void SetCardID(ETC_CardID newID);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardIllustration(UTexture2D* newImage);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
@@ -115,10 +110,6 @@ public:
 	void SetCardCurrentScore(float newScore);
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	void SetPlayer(ATC_Player* newPlayer);
-	UFUNCTION(BlueprintCallable, Category = "Getters")
-	void SetBoard(ATC_Board* newBoard);
-	UFUNCTION(BlueprintCallable, Category = "Getters")
-	void SetBoardSlot(ATC_BoardSlot* newBoardSlot);
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	void SetSlot(ATC_Slot* newSlot);
 
@@ -178,8 +169,6 @@ private:
 	uint8 _cardCurrentScore;
 
 	ATC_Player* _cardPlayer;
-	ATC_Board* _cardBoard;
-	ATC_BoardSlot* _cardBoardSlot;
 	ATC_Slot* _cardSlot;
 
 };

@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
-#include "TC_Card.h"
+#include "Cards/TC_Card.h"
 #include "TC_DeckZone.generated.h"
 
 UCLASS()

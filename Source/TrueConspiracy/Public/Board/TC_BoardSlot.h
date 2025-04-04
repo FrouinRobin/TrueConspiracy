@@ -8,21 +8,33 @@
 
 class ATC_Slot;
 
-UCLASS(Blueprintable, BlueprintType)
+UCLASS()
 class TRUECONSPIRACY_API ATC_BoardSlot : public AActor
 {
 	GENERATED_BODY()
 
 public:
 	ATC_BoardSlot();
-
-	UPROPERTY()
-	int32 OwnerPlayerIndex;
-
-	UPROPERTY()
-	TArray<ATC_Slot*> Slots;
-
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotOneAnchor")
+	USceneComponent* SlotOneAnchor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotTwoAnchor")
+	USceneComponent* SlotTwoAnchor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotThreeAnchor")
+	USceneComponent* SlotThreeAnchor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotFourAnchor")
+	USceneComponent* SlotFourAnchor;
 protected:
+	virtual void BeginPlay() override;
+public:
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ATC_Board* GetBoardSlotBoard();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	TArray<ATC_Slot*> GetBoardSlotSlots();
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetBoardSlotBoard(ATC_Board* newBoard);
 
+private:
+
+	ATC_Board* _boardSlotBoard;
+	TArray<ATC_Slot*> _boardSlotSlots;
 };
