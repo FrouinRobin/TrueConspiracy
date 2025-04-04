@@ -23,6 +23,7 @@ public:
 	USceneComponent* SlotThreeAnchor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotFourAnchor")
 	USceneComponent* SlotFourAnchor;
+	
 protected:
 	virtual void BeginPlay() override;
 public:
@@ -33,8 +34,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetBoardSlotBoard(ATC_Board* newBoard);
 
+	UFUNCTION(BlueprintCallable, Category = "Init")
+	void Init();
+
+	UFUNCTION(BlueprintCallable, Category = "Mesh")
+	USceneComponent* CreateSlotAnchorWithMesh(FName AnchorName, FVector RelativeLocation);
+
 private:
 
 	ATC_Board* _boardSlotBoard;
 	TArray<ATC_Slot*> _boardSlotSlots;
+	UStaticMesh* _cardMesh;
 };

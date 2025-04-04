@@ -62,10 +62,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetBoardPlayerTwo(ATC_Board* newBoardPlayerTwo);
 
+	UFUNCTION(BlueprintCallable, Category = "Init")
+	void Init();
+
 private:
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true))
 	ATC_Player* _playerOne;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true))
 	ATC_Player* _playerTwo;
+
 	ATC_Board* _boardPlayerOne;
 	ATC_Board* _boardPlayerTwo;
 	TArray<ATC_LandCardSlot*> _landCardSlots;
