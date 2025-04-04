@@ -367,7 +367,7 @@ void ATC_Board::Init()
     for (int j = 0; j < 3; j++) {
         _boardSlots.Add(GetWorld()->SpawnActor<ATC_BoardSlot>(BoardSlotOneAnchor->GetComponentLocation(), GetActorRotation()));
         _boardSlots[j]->SetBoardSlotBoard(this);
-        _boardSlots[j]->Init()
+        _boardSlots[j]->Init();
         
     }
 }
