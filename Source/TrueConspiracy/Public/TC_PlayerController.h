@@ -9,6 +9,8 @@
 #include "TC_Player.h"
 #include "TC_PlayerController.generated.h"
 
+class UEnhancedInputComponent;
+
 /**
  * 
  */
@@ -20,16 +22,20 @@ class TRUECONSPIRACY_API ATC_PlayerController : public APlayerController
 public:
 	ATC_PlayerController();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	float ShortPressThreshold;
+	void BeginPlay() override;
 
 protected:
 	void SetupInputComponent() override;
 
+	void INTERNAL_OnTouchTriggered(const FInputActionValue& Value);
+	void INTERNAL_OnTouchReleased();
+
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnInputStart();
+	void OnInputStart(UEnhancedInputComponent* EnhancedInputComponent);
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnTouchTriggered();
+	void OnTouchTriggered(FHitResult hit, bool didHit);
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnTouchHold(FHitResult hit, bool didHit);
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnTouchReleased();
 
@@ -37,6 +43,8 @@ protected:
 	ATC_Player* GetMyPawn();
 
 private:
+	bool _isTouching;
+
 	UPROPERTY(EditDefaultsOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
 

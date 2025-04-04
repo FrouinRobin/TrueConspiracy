@@ -12,6 +12,14 @@ ATC_PlayerController::ATC_PlayerController()
 	DefaultMouseCursor = EMouseCursor::Default;
 }
 
+void ATC_PlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	bShowMouseCursor = true;
+	DefaultMouseCursor = EMouseCursor::Default;
+}
+
 void ATC_PlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
@@ -23,11 +31,35 @@ void ATC_PlayerController::SetupInputComponent()
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
 	{
-		EnhancedInputComponent->BindAction(TouchAction, ETriggerEvent::Started, this, &ATC_PlayerController::OnInputStart);
-		EnhancedInputComponent->BindAction(TouchAction, ETriggerEvent::Triggered, this, &ATC_PlayerController::OnTouchTriggered);
-		EnhancedInputComponent->BindAction(TouchAction, ETriggerEvent::Completed, this, &ATC_PlayerController::OnTouchReleased);
-		EnhancedInputComponent->BindAction(TouchAction, ETriggerEvent::Canceled, this, &ATC_PlayerController::OnTouchReleased);
+		EnhancedInputComponent->BindAction(TouchAction, ETriggerEvent::Triggered, this, &ATC_PlayerController::INTERNAL_OnTouchTriggered);
+		EnhancedInputComponent->BindAction(TouchAction, ETriggerEvent::Completed, this, &ATC_PlayerController::INTERNAL_OnTouchReleased);
+		EnhancedInputComponent->BindAction(TouchAction, ETriggerEvent::Canceled, this, &ATC_PlayerController::INTERNAL_OnTouchReleased);
+
+		OnInputStart(EnhancedInputComponent);
 	}
+
+}
+
+void ATC_PlayerController::INTERNAL_OnTouchTriggered(const FInputActionValue& Value)
+{
+	FHitResult hit;
+	bool didHit = GetHitResultUnderFingerByChannel(ETouchIndex::Touch1, UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_MAX), true, hit);
+
+	if (!didHit)
+		didHit = GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_MAX), true, hit);
+
+	if (_isTouching)
+		OnTouchHold(hit, didHit);
+	else
+		OnTouchTriggered(hit, didHit);
+
+	_isTouching = true;
+}
+
+void ATC_PlayerController::INTERNAL_OnTouchReleased()
+{
+	_isTouching = false;
+	OnTouchReleased();
 }
 
 ATC_Player* ATC_PlayerController::GetMyPawn()
