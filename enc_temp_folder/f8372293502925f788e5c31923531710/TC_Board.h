@@ -7,7 +7,6 @@
 
 class ATC_Player;
 class ATC_BoardSlot;
-class ATC_Plate;
 
 UCLASS()
 class TRUECONSPIRACY_API ATC_Board : public AActor
@@ -33,8 +32,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "Getters")
-	ATC_Plate* GetBoardPlate();
+
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_Player* GetBoardPlayer();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
@@ -69,8 +67,6 @@ public:
 	ATC_Card* GetBoardDiscardGameCardLastCard();
 
 
-	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetBoardPlater(ATC_Plate* newBoardPlate);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetBoardPlayer(ATC_Player* player);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
@@ -111,7 +107,7 @@ public:
 	void OnDrawCard(ATC_Card* CardToDraw);
 
 private:
-	ATC_Plate* _boardPlate;
+
 	ATC_Player* _boardPlayer;
 	TArray<ATC_BoardSlot*> _boardSlots;
 	TArray<ATC_Card*> _boardDraw;

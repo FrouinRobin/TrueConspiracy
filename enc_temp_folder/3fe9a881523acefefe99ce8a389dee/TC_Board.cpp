@@ -36,11 +36,6 @@ void ATC_Board::BeginPlay()
     }
 }
 
-ATC_Plate* ATC_Board::GetBoardPlate()
-{
-    return _boardPlate;
-}
-
 ATC_Player* ATC_Board::GetBoardPlayer()
 {
 	return _boardPlayer;
@@ -171,11 +166,6 @@ ATC_Card* ATC_Board::GetBoardDiscardGameCardLastCard()
 
 
 
-
-void ATC_Board::SetBoardPlater(ATC_Plate* newBoardPlate)
-{
-    _boardPlate = newBoardPlate;
-}
 
 // Setters
 void ATC_Board::SetBoardPlayer(ATC_Player* newPlayer)
