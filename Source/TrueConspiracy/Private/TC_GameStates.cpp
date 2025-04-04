@@ -2,6 +2,7 @@
 #include "TC_AIActions.h"
 #include "TC_ActionsSystem.h"
 #include "TC_Player.h"
+#include "Board/TC_Plate.h"
 
 // --- Game Format(s) ---
 

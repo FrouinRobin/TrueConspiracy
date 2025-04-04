@@ -6,6 +6,8 @@
 
 #include "TC_GameManager.generated.h"
 
+class ATC_Plate;
+
 struct FAIActions;
 
 UCLASS()
@@ -37,5 +39,5 @@ public:
 
 	// --- Setter(s) / Getter(s) ---
 	void SetCurrentGameState(TC_GameStates InCurrentGameState);
-	TC_GameStates GetCurrentGameState();
+	TC_GameStates& GetCurrentGameState();
 };

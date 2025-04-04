@@ -2,6 +2,9 @@
 #include "TC_GameInstance.h"
 #include "TC_GameStates.h"
 #include "TC_Player.h"
+#include "TC_ActionsSystem.h"
+#include "Board/TC_Plate.h"
+#include "Board/TC_BoardSlot.h"
 #include "Kismet/GameplayStatics.h"
 
 ATC_GameManager::ATC_GameManager()
@@ -27,12 +30,12 @@ void ATC_GameManager::InitGame()
 	//Draw 5 cards for each players
 	for (int32 i = 0; i < 5; ++i)
 	{
-		//DrawCard for player1
-		//DrawCard for player2
+		TC_ActionsSystem::DrawCard(GetCurrentGameState(), GetCurrentGameState().GetPlayer1());
+		TC_ActionsSystem::DrawCard(GetCurrentGameState(), GetCurrentGameState().GetPlayer2());
 	}
 	//Give the max mana to each player
-	//GetCurrentGameState().SetPlayer1Mana(3);
-	//GetCurrentGameState().SetPlayer2Mana(3);
+	GetCurrentGameState().GetPlayer1()->SetPlayerMana(3);
+	GetCurrentGameState().GetPlayer2()->SetPlayerMana(3);
 	//Start the first round
 	StartTurn();
 }
@@ -69,6 +72,7 @@ void ATC_GameManager::StartGame(EGameModeFormat InFormat) //Bouton de lancement 
 			GetCurrentGameState().SetPlayer2(Player);
 		}
 	}
+	GetCurrentGameState().SetGamePlate(GameInstance->GetWorld()->SpawnActor<ATC_Plate>(FVector::ZeroVector, FRotator::ZeroRotator));
 	InitGame();
 }
 
@@ -78,15 +82,28 @@ void ATC_GameManager::StartTurn()
 	{
 		//Switch att/def players (cards)
 		SwitchPhase();
-		//Reset mana x2players +1
+		//Reset ManaMax
 		GetCurrentGameState().GetPlayer1()->SetPlayerMana(GetCurrentGameState().GetPlayer1()->GetPlayerMana() + 1);
 		GetCurrentGameState().GetPlayer2()->SetPlayerMana(GetCurrentGameState().GetPlayer2()->GetPlayerMana() + 1);
-		
-		//GetCurrentGameState().SetPlayer1Mana(GetCurrentGameState().GetPlayer1Mana() + 1);
-		//GetCurrentGameState().SetPlayer2Mana(GetCurrentGameState().GetPlayer2Mana() + 1);
-		// 
 		//Switch priority playing players
+		GetCurrentGameState().SetIsPlayer1Turn(!GetCurrentGameState().GetIsPlayer1Turn());
 		//Invoke card OnStartTurn
+		for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
+		{
+			
+			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+			{
+				Slot->GetSlotCard()->OnCardStartTurn();
+			}
+		}
+		for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerTwo()->GetBoardSlots())
+		{
+
+			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+			{
+				Slot->GetSlotCard()->OnCardStartTurn();
+			}
+		}
 	}
 	
 	StartPhase();
@@ -103,26 +120,74 @@ void ATC_GameManager::StartPhase()
 	{
 		CurrentPlayer = GetCurrentGameState().GetPlayer2();
 	}
-	
-	
+
+	GetCurrentGameState().SetActivePlayer(CurrentPlayer);
+	TC_ActionsSystem::DrawCard(GetCurrentGameState(), CurrentPlayer);
+
+	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
+	{
+		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		{
+			Slot->GetSlotCard()->OnCardStartPhase();
+		}
+	}
+	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerTwo()->GetBoardSlots())
+	{
+		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		{
+			Slot->GetSlotCard()->OnCardStartPhase();
+		}
+	}
+
+	//Generer toutes les actions valides par mon joueur
+	// lorsqu'aucune action est valide on appelle EndPhase
+	//GenerateAllValidActions()
+	//EndPhase();
 }
 
 void ATC_GameManager::EndPhase()
 {
+	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
+	{
+		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		{
+			Slot->GetSlotCard()->OnCardEndPhase();
+		}
+	}
+	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerTwo()->GetBoardSlots())
+	{
+		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		{
+			Slot->GetSlotCard()->OnCardEndPhase();
+
 }
 
 void ATC_GameManager::SwitchPhase()
 {
-	//Get the player who plays the phase ?
-	//Is this an attacking phase or a defenssing phase ?
-	// 
-	//Draw card
-	//Add mana
+	for (ATC_Card* Card : GetCurrentGameState().GetPlayer1()->GetHand())
+	{
+		Card->SwitchPhase();
+	}
+	for (ATC_Card* Card : GetCurrentGameState().GetPlayer2()->GetHand())
+	{
+		Card->SwitchPhase();
+	}
+	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
+	{
 
-	//for each player
-	// TArray<ATC_Card*> PlayerCard = GetBoard->GetCard()
-	// for each Card in PlayerCard
-	//	Card->SwitchPhase()
+		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		{
+			Slot->GetSlotCard()->SwitchPhase();
+		}
+	}
+	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerTwo()->GetBoardSlots())
+	{
+
+		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		{
+			Slot->GetSlotCard()->SwitchPhase();
+		}
+	}
 }
 
 void ATC_GameManager::PlayAction(const FAIActions& InActionToPlay)
@@ -146,7 +211,7 @@ void ATC_GameManager::SetCurrentGameState(TC_GameStates InCurrentGameState)
 	_CurrentGameState = InCurrentGameState;
 }
 
-TC_GameStates ATC_GameManager::GetCurrentGameState()
+TC_GameStates& ATC_GameManager::GetCurrentGameState()
 {
 	return _CurrentGameState;
 }

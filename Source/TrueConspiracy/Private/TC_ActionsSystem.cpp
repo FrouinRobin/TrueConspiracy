@@ -2,6 +2,7 @@
 #include "TC_GameStates.h"
 #include "TC_AIActions.h"
 #include "TC_Player.h"
+#include "Board/TC_Plate.h"
 
 TC_ActionsSystem::TC_ActionsSystem()
 {
@@ -56,18 +57,26 @@ void TC_ActionsSystem::DrawCard(TC_GameStates& GameState, ATC_Player* InCurrentP
 		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Joueur invalide."));
 		return;
 	}
+	ATC_Board* CurrentPlayerBoard;
+	if (GameState.GetGamePlate() && GameState.GetGamePlate()->GetBoardPlayerOne()->GetBoardPlayer() == InCurrentPlayer) {
+		CurrentPlayerBoard = GameState.GetGamePlate()->GetBoardPlayerOne();
+	}
+	else if (GameState.GetGamePlate() && GameState.GetGamePlate()->GetBoardPlayerTwo()->GetBoardPlayer() == InCurrentPlayer)
+	{
+		CurrentPlayerBoard = GameState.GetGamePlate()->GetBoardPlayerTwo();
+	}
 
-	TArray<ATC_Card*> Deck = InCurrentPlayer->GetDeck();
+	TArray<ATC_Card*> BoardPlayerDrawDeck = CurrentPlayerBoard->GetBoardDraw();
 	TArray<ATC_Card*> Hand = InCurrentPlayer->GetHand();
 
-	if (Deck.Num() == 0)
+	if (BoardPlayerDrawDeck.Num() == 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Deck vide, pioche impossible."));
 		return;
 	}
 
-	ATC_Card* DrawnCard = Deck[0];
-	Deck.RemoveAt(0);
+	//DrawCard from last index on the list
+	ATC_Card* DrawnCard = CurrentPlayerBoard->GetBoardDrawGameFirstCard();
 
 	if (!DrawnCard)
 	{
@@ -75,16 +84,17 @@ void TC_ActionsSystem::DrawCard(TC_GameStates& GameState, ATC_Player* InCurrentP
 		return;
 	}
 
+	//Adding card to hand
 	bool isCardAdded = InCurrentPlayer->AddCardToHand(DrawnCard);
 
 	if (isCardAdded)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Carte %s ajoutee a la main."), DrawnCard->GetName());
+		CurrentPlayerBoard->OnDrawCard(DrawnCard);
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Echec lors de l'ajout a la main."), DrawnCard->GetName());
-		Deck.Insert(DrawnCard, 0);
 	}
 }
 

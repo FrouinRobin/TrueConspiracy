@@ -5,6 +5,7 @@
 class ATC_Card;
 struct FAIActions;
 class ATC_Player;
+class ATC_Plate;
 
 UENUM(BlueprintType)
 enum class EGameModeFormat : uint8
@@ -33,6 +34,9 @@ private :
 	FGameFormat _GameFormat;
 	EGameModeFormat _FormatType = EGameModeFormat::BO7;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GamePlate")
+	ATC_Plate* _GamePlate;
+
 	//POSSEDE PAR LE PLAYER
 	//TArray<ATC_Card*> _Player1Hand;
 	//TArray<ATC_Card*> _Player2Hand;
@@ -59,6 +63,9 @@ public:
 
 	UPROPERTY()
 	ATC_Player* Player2;
+	ATC_Player* ActivePlayer;
+
+
 
 	// --- Constructor(s) ---
 	TC_GameStates(); //Default constructor
@@ -107,9 +114,14 @@ public:
 
 	void SetPlayer1(ATC_Player* InPlayer) { Player1 = InPlayer; }
 	void SetPlayer2(ATC_Player* InPlayer) { Player2 = InPlayer; }
+	void SetActivePlayer(ATC_Player* InPlayer) { ActivePlayer = InPlayer; }
 
 	ATC_Player* GetPlayer1() const { return Player1; }
 	ATC_Player* GetPlayer2() const { return Player2; }
+	ATC_Player* GetActivePlayer() const { return ActivePlayer; }
+
+	ATC_Plate* GetGamePlate() { return _GamePlate; }
+	void SetGamePlate(ATC_Plate* InPlate) { _GamePlate = InPlate; }
 
 	//int32 GetCurrentPlayerID() const { return IsPlayer1Turn ? 1 : 2; }
 
