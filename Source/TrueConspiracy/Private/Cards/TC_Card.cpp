@@ -3,8 +3,6 @@
 
 #include "Cards/TC_Card.h"
 #include "TC_Player.h"
-#include "Board/TC_Plate.h"
-#include "Board/TC_Board.h"
 
 ATC_Card::ATC_Card()
 {

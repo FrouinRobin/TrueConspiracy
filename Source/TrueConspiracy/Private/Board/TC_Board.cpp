@@ -2,6 +2,7 @@
 
 #include "Board/TC_Board.h"
 #include "TC_Player.h"
+#include "Board/TC_Plate.h"
 #include "Board/TC_BoardSlot.h"
 
 
