@@ -2,16 +2,10 @@
 
 
 #include "Board/TC_LandCardSlot.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/SceneComponent.h"
 
-// Sets default values
 ATC_LandCardSlot::ATC_LandCardSlot()
 {
 	PrimaryActorTick.bCanEverTick = false;
-
 }
-
-bool ATC_LandCardSlot::IsUsableBy(APlayerController* Player) const
-{
-	return false;
-}
-

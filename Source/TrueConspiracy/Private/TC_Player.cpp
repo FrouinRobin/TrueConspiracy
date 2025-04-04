@@ -4,7 +4,7 @@
 #include "TC_Player.h"
 #include "Camera/CameraComponent.h"
 #include <Components/CapsuleComponent.h>
-#include <TC_Face.h>
+#include <Cards/Faces/TC_Face.h>
 #include <Components/SphereComponent.h>
 
 // Sets default values

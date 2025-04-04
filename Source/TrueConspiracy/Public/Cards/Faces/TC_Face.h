@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "TC_EffectType.h"
-#include "TC_CardAttribute.h"
+#include "../TC_CardAttribute.h"
 #include "TC_Face.generated.h"
 
 /**

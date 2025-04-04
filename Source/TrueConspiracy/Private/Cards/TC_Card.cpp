@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TC_Card.h"
+#include "Cards/TC_Card.h"
 #include "TC_Player.h"
-
+#include "Board/TC_Board.h"
 ATC_Card::ATC_Card()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -103,16 +103,6 @@ ATC_Player* ATC_Card::GetPlayer()
 	return _cardPlayer;
 }
 
-ATC_Board* ATC_Card::GetBoard()
-{
-	return _cardBoard;
-}
-
-ATC_BoardSlot* ATC_Card::GetBoardSlot()
-{
-	return _cardBoardSlot;
-}
-
 ATC_Slot* ATC_Card::GetSlot()
 {
 	return _cardSlot;
@@ -150,6 +140,11 @@ void ATC_Card::SetCardType(ETC_CardType newType)
 void ATC_Card::SetCardAttributeList(TArray<ETC_CardAttribute> newAttributeList)
 {
 	_cardAttribute = newAttributeList;
+}
+
+void ATC_Card::SetCardID(ETC_CardID newID)
+{
+	_cardId = newID;
 }
 
 void ATC_Card::SetCardIllustration(UTexture2D* newImage)
@@ -190,16 +185,6 @@ void ATC_Card::SetCardCurrentScore(float newScore)
 void ATC_Card::SetPlayer(ATC_Player* newPlayer)
 {
 	_cardPlayer = newPlayer;
-}
-
-void ATC_Card::SetBoard(ATC_Board* newBoard)
-{
-	_cardBoard = newBoard;
-}
-
-void ATC_Card::SetBoardSlot(ATC_BoardSlot* newBoardSlot)
-{
-	_cardBoardSlot = newBoardSlot;
 }
 
 void ATC_Card::SetSlot(ATC_Slot* newSlot)
