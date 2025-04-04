@@ -147,6 +147,7 @@ void ATC_GameManager::StartPhase()
 
 void ATC_GameManager::EndPhase()
 {
+	bool EndingTurn;
 	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
 	{
 		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
@@ -159,7 +160,18 @@ void ATC_GameManager::EndPhase()
 		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
 		{
 			Slot->GetSlotCard()->OnCardEndPhase();
-
+		}
+	}
+	if (EndingTurn == false)
+	{
+		EndingTurn = true;
+		StartPhase();
+	}
+	else 
+	{
+		EndingTurn = false;
+		EndTurn();
+	}
 }
 
 void ATC_GameManager::SwitchPhase()
