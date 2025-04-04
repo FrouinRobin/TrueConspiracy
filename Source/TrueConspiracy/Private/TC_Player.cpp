@@ -17,7 +17,7 @@ ATC_Player::ATC_Player()
 
 	_playerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
 	_playerCamera->SetupAttachment(RootComponent);
-	_playerCamera->bUsePawnControlRotation = false;
+	_playerCamera->bUsePawnControlRotation = true;
 
 	_cardAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("CardAnchor"));
 	_cardAnchor->SetupAttachment(_playerCamera);
@@ -195,7 +195,8 @@ bool ATC_Player::CanPlayCard(ATC_Card* card)
 void ATC_Player::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	_playerCamera->SetRelativeRotation(FRotator(-90, 180, 0));
 }
 
 // Called every frame
@@ -224,5 +225,21 @@ uint8 ATC_Player::ChangeMana(uint8 value, bool allowOverflow)
 	if (!allowOverflow && _playerCurrentMana > _playerMaxMana)
 		_playerCurrentMana = _playerMaxMana;
 	return _playerCurrentMana;
+}
+
+void ATC_Player::SetSelectedCard(ATC_Card* card)
+{
+	if (_selectedCard == card)
+		return;
+
+	ATC_Card* oldCard = _selectedCard;
+	_selectedCard = card;
+
+	OnSelectCard(card, oldCard);
+}
+
+ATC_Card* ATC_Player::GetSelectedCard()
+{
+	return _selectedCard;
 }
 

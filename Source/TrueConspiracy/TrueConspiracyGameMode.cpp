@@ -18,7 +18,7 @@ ATrueConspiracyGameMode::ATrueConspiracyGameMode()
 	}
 
 	// set default controller to our Blueprinted controller
-	static ConstructorHelpers::FClassFinder<APlayerController> PlayerControllerBPClass(TEXT("/Game/TopDown/Blueprints/BP_TopDownPlayerController"));
+	static ConstructorHelpers::FClassFinder<APlayerController> PlayerControllerBPClass(TEXT("/Game/TrueConspiracy/Player/BP_PlayerController"));
 	if(PlayerControllerBPClass.Class != NULL)
 	{
 		PlayerControllerClass = PlayerControllerBPClass.Class;
