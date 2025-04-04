@@ -90,7 +90,6 @@ void ATC_GameManager::StartTurn()
 		//Invoke card OnStartTurn
 		for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
 		{
-			
 			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
 			{
 				Slot->GetSlotCard()->OnCardStartTurn();
@@ -105,7 +104,6 @@ void ATC_GameManager::StartTurn()
 			}
 		}
 	}
-	
 	StartPhase();
 }
 
@@ -147,7 +145,6 @@ void ATC_GameManager::StartPhase()
 
 void ATC_GameManager::EndPhase()
 {
-	bool EndingTurn;
 	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
 	{
 		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
@@ -162,15 +159,13 @@ void ATC_GameManager::EndPhase()
 			Slot->GetSlotCard()->OnCardEndPhase();
 		}
 	}
-	if (EndingTurn == false)
+	if (GetCurrentGameState().GetActivePlayer()->GetPhaseState() == ETC_PhaseState::Defense)
 	{
-		EndingTurn = true;
-		StartPhase();
+		EndTurn();
 	}
 	else 
 	{
-		EndingTurn = false;
-		EndTurn();
+		EndPhase();
 	}
 }
 
@@ -208,14 +203,25 @@ void ATC_GameManager::PlayAction(const FAIActions& InActionToPlay)
 
 void ATC_GameManager::EndTurn()
 {
-	//for each player
-	// TArray<ATC_Card*> PlayerCard = GetBoard->GetCard()
-	// for each Card in PlayerCard
-	//	Card->OnEndTurn()
+	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
+	{
+		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		{
+			Slot->GetSlotCard()->OnCardEndTurn();
+		}
+	}
+	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerTwo()->GetBoardSlots())
+	{
+		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		{
+			Slot->GetSlotCard()->OnCardEndTurn();
+		}
+	}
 }
 
 void ATC_GameManager::EndGame()
 {
+
 }
 
 void ATC_GameManager::SetCurrentGameState(TC_GameStates InCurrentGameState)

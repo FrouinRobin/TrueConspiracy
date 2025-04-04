@@ -7,6 +7,12 @@
 #include "Cards/TC_Card.h"
 #include "TC_Player.generated.h"
 
+enum class ETC_PhaseState : uint8
+{
+	Attack,
+	Defense,
+};
+
 UCLASS()
 class TRUECONSPIRACY_API ATC_Player : public APawn
 {
@@ -35,6 +41,7 @@ protected:
 private:
 	class UCameraComponent* _playerCamera;
 	class USceneComponent* _cardAnchor;
+	ETC_PhaseState _PhaseState;
 
 public:	
 	// Called every frame
@@ -90,5 +97,14 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnSelectCard(ATC_Card* card, ATC_Card* oldCard);
+
+	void SetPhaseState(ETC_PhaseState InPhaseState);
+	ETC_PhaseState GetPhaseState() const;
+
+	void SetPlayerMaxMana(uint8 InManaMax);
+	uint8 GetPlayerMaxMana() const;
+
+	UFUNCTION(BlueprintCallable)
+	void PlayCard(ATC_Card* Card, ATC_Slot* Slot);
 
 };

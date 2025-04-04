@@ -6,6 +6,11 @@
 #include <Components/CapsuleComponent.h>
 #include <Cards/Faces/TC_Face.h>
 #include <Components/SphereComponent.h>
+#include <TC_GameInstance.h>
+#include <TC_ActionsSystem.h>
+#include <Kismet/GameplayStatics.h>
+#include "TC_GameManager.h"
+#include "Board/TC_Slot.h"
 
 // Sets default values
 ATC_Player::ATC_Player()
@@ -241,5 +246,38 @@ void ATC_Player::SetSelectedCard(ATC_Card* card)
 ATC_Card* ATC_Player::GetSelectedCard()
 {
 	return _selectedCard;
+}
+
+void ATC_Player::SetPhaseState(ETC_PhaseState InPhaseState)
+{
+	_PhaseState = InPhaseState;
+}
+
+ETC_PhaseState ATC_Player::GetPhaseState() const
+{
+	return _PhaseState;
+}
+
+void ATC_Player::SetPlayerMaxMana(uint8 InMaxMana)
+{
+	_playerMaxMana = InMaxMana;
+}
+
+uint8 ATC_Player::GetPlayerMaxMana() const
+{
+	return _playerMaxMana;
+}
+
+void ATC_Player::PlayCard(ATC_Card* Card, ATC_Slot* Slot)
+{
+	ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(Slot->GetActorLocation(), Slot->GetActorRotation());
+	//NewCard->InitCard()
+	NewCard->SetCardAttackFace(Card->GetCardAttackFace());
+	NewCard->SetCardDefendFace(Card->GetCardDefendFace());
+	NewCard->SetCardType(Card->GetCardType());
+	/*AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
+	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
+	
+	TC_ActionsSystem::PlayCard(GameManager->GetCurrentGameState(), Card, Slot);*/
 }
 

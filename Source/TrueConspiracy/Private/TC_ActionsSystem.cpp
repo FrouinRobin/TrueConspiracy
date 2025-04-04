@@ -3,6 +3,7 @@
 #include "TC_AIActions.h"
 #include "TC_Player.h"
 #include "Board/TC_Plate.h"
+#include "TC_GameInstance.h"
 
 TC_ActionsSystem::TC_ActionsSystem()
 {
@@ -21,32 +22,22 @@ TArray<FAIActions> TC_ActionsSystem::GenerateAllValidActions(const TC_GameStates
 	return TArray<FAIActions>();
 }
 
+void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, ATC_Card* InCard, ATC_Slot* InSlot)
+{
+	InGameState.GetActivePlayer()->SetPlayerMana(InGameState.GetActivePlayer()->GetPlayerMana() - InCard->GetCardCurrentMana());
+
+	UTC_GameInstance* GameInstance = UTC_GameInstance::GetInstance(InSlot);
+	ATC_Card* NewCard = GameInstance->GetWorld()->SpawnActor<ATC_Card>(InSlot->GetActorLocation(), InSlot->GetActorRotation());
+	//NewCard->InitCard()
+	NewCard->SetCardAttackFace(InCard->GetCardAttackFace());
+	NewCard->SetCardDefendFace(InCard->GetCardDefendFace());
+	NewCard->SetCardType(InCard->GetCardType());
+	//Fin NewCard->InitCard()
+}
+
 void TC_ActionsSystem::PlayCard(TC_GameStates& GameState, const FAIActions& Action, ATC_Player* InCurrentPlayer)
 {
-	// Récupérer le joueur actif
-	//hand = joueurActif == P1 ? Player1Hand : Player2Hand
-	//	board = joueurActif == P1 ? Player1BoardCard : Player2BoardCard
-	//	mana = joueurActif == P1 ? Player1Mana : Player2Mana
-	//
-	//	// Vérifier si l’index de la carte en main est valide
-	//	si Action.CardIndexInHand est invalide :
-	//return
-	//
-	//	// Récupérer la carte à jouer
-	//	carte = hand[Action.CardIndexInHand]
-	//
-	//	// Vérifier si le joueur a assez de mana
-	//	si carte.ManaCost > mana :
-	//return
-	//
-	//	// Vérifier si le plateau a moins de 12 cartes
-	//	si board contient déjà 12 cartes :
-	//	return
-	//
-	//	// Appliquer l’action :
-	//	-retirer la carte de la main
-	//	- soustraire le coût en mana
-	//	- ajouter la carte au plateau
+
 }
 
 void TC_ActionsSystem::DrawCard(TC_GameStates& GameState, ATC_Player* InCurrentPlayer)
@@ -61,7 +52,7 @@ void TC_ActionsSystem::DrawCard(TC_GameStates& GameState, ATC_Player* InCurrentP
 	if (GameState.GetGamePlate() && GameState.GetGamePlate()->GetBoardPlayerOne()->GetBoardPlayer() == InCurrentPlayer) {
 		CurrentPlayerBoard = GameState.GetGamePlate()->GetBoardPlayerOne();
 	}
-	else if (GameState.GetGamePlate() && GameState.GetGamePlate()->GetBoardPlayerTwo()->GetBoardPlayer() == InCurrentPlayer)
+	else
 	{
 		CurrentPlayerBoard = GameState.GetGamePlate()->GetBoardPlayerTwo();
 	}
@@ -89,12 +80,12 @@ void TC_ActionsSystem::DrawCard(TC_GameStates& GameState, ATC_Player* InCurrentP
 
 	if (isCardAdded)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Carte %s ajoutee a la main."), DrawnCard->GetName());
+		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Carte %s ajoutee a la main."), *DrawnCard->GetName());
 		CurrentPlayerBoard->OnDrawCard(DrawnCard);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Echec lors de l'ajout a la main."), DrawnCard->GetName());
+		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Echec lors de l'ajout a la main. %s"), *DrawnCard->GetName());
 	}
 }
 

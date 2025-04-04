@@ -63,9 +63,8 @@ public:
 
 	UPROPERTY()
 	ATC_Player* Player2;
+
 	ATC_Player* ActivePlayer;
-
-
 
 	// --- Constructor(s) ---
 	TC_GameStates(); //Default constructor
@@ -82,7 +81,7 @@ public:
 
 	// --- Generating Futur State(s) ---
 	TArray<TC_GameStates> GetNextStates() const;
-	void ApplyAction(const FAIActions& InAction);
+	void ApplyAction(const FAIActions& InAction, ATC_Player* InCurrentPlayer);
 
 	// --- Tool(s) Function(s) ---
 	TC_GameStates Clone() const;
