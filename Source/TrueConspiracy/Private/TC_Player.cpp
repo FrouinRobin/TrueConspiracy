@@ -105,6 +105,11 @@ void ATC_Player::SetDeck(TArray<ATC_Card*> newDeck)
 
 TArray<ATC_Card*> ATC_Player::GetDeck()
 {
+	if (_playerDeck.Num() == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("GetDeck() did not return any card!"));
+		return TArray<ATC_Card*>();
+	}
 	return _playerDeck;
 }
 

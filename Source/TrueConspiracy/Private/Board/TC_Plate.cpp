@@ -97,11 +97,13 @@ void ATC_Plate::Init()
 	_landCardSlots.Add(GetWorld()->SpawnActor<ATC_LandCardSlot>(LandCardSlotOneAnchor->GetComponentLocation(), LandCardSlotOneAnchor->GetComponentRotation()));
 	_landCardSlots.Add(GetWorld()->SpawnActor<ATC_LandCardSlot>(LandCardSlotTwoAnchor->GetComponentLocation(), LandCardSlotTwoAnchor->GetComponentRotation()));
 	_landCardSlots.Add(GetWorld()->SpawnActor<ATC_LandCardSlot>(LandCardSlotThreeAnchor->GetComponentLocation(), LandCardSlotThreeAnchor->GetComponentRotation()));
+
 	for (int i = 0; i < _landCardSlots.Num(); i++)
 	{
 		_landCardSlots[i]->Init();
 		_landCardSlots[i]->SetSlotCardType(ETC_CardType::LandCard);
 	}
+
 	_boardPlayerOne->Init();
 	_boardPlayerTwo->Init();
 }

@@ -9,18 +9,29 @@
 ATC_Board::ATC_Board()
 {
 	PrimaryActorTick.bCanEverTick = false;
+
+    USceneComponent* Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+    RootComponent = Root;
     
     BoardSlotOneAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("BoardSlotOneAnchor"));
+    BoardSlotOneAnchor->SetupAttachment(RootComponent);
     BoardSlotTwoAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("BoardSlotTwoAnchor"));
+    BoardSlotTwoAnchor->SetupAttachment(RootComponent);
+    BoardSlotTwoAnchor->SetRelativeLocation(FVector(150, 0, 0));
     BoardSlotThreeAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("BoardSlotThreeAnchor"));
+    BoardSlotThreeAnchor->SetupAttachment(RootComponent);
+    BoardSlotThreeAnchor->SetRelativeLocation(FVector(300, 0, 0));
     BoardDrawAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("BoardDrawAnchor"));
+    BoardDrawAnchor->SetupAttachment(RootComponent);
+    BoardDrawAnchor->SetRelativeLocation(FVector(375, -50, 0));
     BoardDiscardAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("BoardDiscardAnchor"));
+    BoardDiscardAnchor->SetupAttachment(RootComponent);
+    BoardDiscardAnchor->SetRelativeLocation(FVector(375, 50, 0));
 }
 
 void ATC_Board::BeginPlay()
 {
-	Super::BeginPlay();
-    
+	Super::BeginPlay(); 
 }
 
 ATC_Plate* ATC_Board::GetBoardPlate()
@@ -364,10 +375,17 @@ void ATC_Board::Init()
         NewCard->SetCardType(Card->GetCardType());
         i += 0.5f;
     }
-    for (int j = 0; j < 3; j++) {
-        _boardSlots.Add(GetWorld()->SpawnActor<ATC_BoardSlot>(BoardSlotOneAnchor->GetComponentLocation(), GetActorRotation()));
-        _boardSlots[j]->SetBoardSlotBoard(this);
-        _boardSlots[j]->Init();
-        
+
+    _boardDraw.Add(GetWorld()->SpawnActor<ATC_Card>(BoardDrawAnchor->GetComponentLocation(), BoardDrawAnchor->GetComponentRotation()));
+    _boardDiscard.Add(GetWorld()->SpawnActor<ATC_Card>(BoardDiscardAnchor->GetComponentLocation(), BoardDiscardAnchor->GetComponentRotation()));
+
+    _boardSlots.Add(GetWorld()->SpawnActor<ATC_BoardSlot>(BoardSlotOneAnchor->GetComponentLocation(), BoardSlotOneAnchor->GetComponentRotation()));
+    _boardSlots.Add(GetWorld()->SpawnActor<ATC_BoardSlot>(BoardSlotTwoAnchor->GetComponentLocation(), BoardSlotTwoAnchor->GetComponentRotation()));
+    _boardSlots.Add(GetWorld()->SpawnActor<ATC_BoardSlot>(BoardSlotThreeAnchor->GetComponentLocation(), BoardSlotThreeAnchor->GetComponentRotation()));
+
+    for (ATC_BoardSlot* BoardSlot : _boardSlots)
+    {
+        BoardSlot->SetBoardSlotBoard(this);
+        BoardSlot->Init();
     }
 }
