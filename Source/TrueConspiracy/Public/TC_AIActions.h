@@ -21,10 +21,10 @@ struct FAIActions //-> represente une seule action
     static constexpr int32 INVALID_INDEX = -1;
 
     EActionType Type;
-    int32 CardIndexInHand = INVALID_INDEX;
-    int32 TerrainIndex = INVALID_INDEX;
-    int32 BoardCardIndex = INVALID_INDEX;
-    int32 DestinationTerrainIndex = INVALID_INDEX;
+    uint32 CardIndexInHand = INVALID_INDEX;
+    uint32 TerrainIndex = INVALID_INDEX;
+    uint32 BoardCardIndex = INVALID_INDEX;
+    uint32 DestinationTerrainIndex = INVALID_INDEX;
 
     FAIActions() {}
     FAIActions(EActionType InType) : Type(InType) {}

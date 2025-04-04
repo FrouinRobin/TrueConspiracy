@@ -33,8 +33,6 @@ private :
 	FGameFormat _GameFormat;
 	EGameModeFormat _FormatType = EGameModeFormat::BO7;
 
-	
-
 	//POSSEDE PAR LE PLAYER
 	//TArray<ATC_Card*> _Player1Hand;
 	//TArray<ATC_Card*> _Player2Hand;

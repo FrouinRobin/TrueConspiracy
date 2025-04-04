@@ -79,9 +79,12 @@ void ATC_GameManager::StartTurn()
 		//Switch att/def players (cards)
 		SwitchPhase();
 		//Reset mana x2players +1
+		GetCurrentGameState().GetPlayer1()->SetPlayerMana(GetCurrentGameState().GetPlayer1()->GetPlayerMana() + 1);
+		GetCurrentGameState().GetPlayer2()->SetPlayerMana(GetCurrentGameState().GetPlayer2()->GetPlayerMana() + 1);
 		
 		//GetCurrentGameState().SetPlayer1Mana(GetCurrentGameState().GetPlayer1Mana() + 1);
 		//GetCurrentGameState().SetPlayer2Mana(GetCurrentGameState().GetPlayer2Mana() + 1);
+		// 
 		//Switch priority playing players
 		//Invoke card OnStartTurn
 	}
@@ -91,6 +94,17 @@ void ATC_GameManager::StartTurn()
 
 void ATC_GameManager::StartPhase()
 {
+	ATC_Player* CurrentPlayer;
+	if (GetCurrentGameState().GetIsPlayer1Turn())
+	{
+		CurrentPlayer = GetCurrentGameState().GetPlayer1();
+	}
+	else
+	{
+		CurrentPlayer = GetCurrentGameState().GetPlayer2();
+	}
+	
+	
 }
 
 void ATC_GameManager::EndPhase()
