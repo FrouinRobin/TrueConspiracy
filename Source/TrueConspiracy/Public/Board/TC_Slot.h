@@ -40,6 +40,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	void SetSlotCardType(ETC_CardType newSlotCardType);
 
+	UFUNCTION(BlueprintCallable, Category = "Init")
+	void Init();
+
+
 
 private:
 	ATC_BoardSlot* _slotBoardSlot;

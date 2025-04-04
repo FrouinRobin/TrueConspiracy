@@ -18,14 +18,7 @@ ATC_BoardSlot::ATC_BoardSlot()
 void ATC_BoardSlot::BeginPlay()
 {
 	Super::BeginPlay();
-	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotOneAnchor->GetComponentLocation(), SlotOneAnchor->GetComponentRotation()));
-	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotTwoAnchor->GetComponentLocation(), SlotTwoAnchor->GetComponentRotation()));
-	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotThreeAnchor->GetComponentLocation(), SlotThreeAnchor->GetComponentRotation()));
-	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotFourAnchor->GetComponentLocation(), SlotFourAnchor->GetComponentRotation()));
-	for (ATC_Slot* Slot : _boardSlotSlots)
-	{
-		Slot->SetSlotBoardSlot(this);
-	}
+	
 }
 
 ATC_Board* ATC_BoardSlot::GetBoardSlotBoard()
@@ -41,5 +34,18 @@ TArray<ATC_Slot*> ATC_BoardSlot::GetBoardSlotSlots()
 void ATC_BoardSlot::SetBoardSlotBoard(ATC_Board* newBoard)
 {
 	_boardSlotBoard = newBoard;
+}
+
+void ATC_BoardSlot::Init()
+{
+	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotOneAnchor->GetComponentLocation(), SlotOneAnchor->GetComponentRotation()));
+	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotTwoAnchor->GetComponentLocation(), SlotTwoAnchor->GetComponentRotation()));
+	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotThreeAnchor->GetComponentLocation(), SlotThreeAnchor->GetComponentRotation()));
+	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotFourAnchor->GetComponentLocation(), SlotFourAnchor->GetComponentRotation()));
+	for (ATC_Slot* Slot : _boardSlotSlots)
+	{
+		Slot->SetSlotBoardSlot(this);
+		Slot->Init();
+	}
 }
 

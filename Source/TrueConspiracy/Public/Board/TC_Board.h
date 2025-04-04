@@ -110,6 +110,10 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDrawCard(ATC_Card* CardToDraw);
 
+	UFUNCTION(BlueprintCallable, Category = "Init")
+	void Init();
+
+
 private:
 	ATC_Plate* _boardPlate;
 	ATC_Player* _boardPlayer;

@@ -62,6 +62,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetBoardPlayerTwo(ATC_Board* newBoardPlayerTwo);
 
+	UFUNCTION(BlueprintCallable, Category = "Init")
+	void Init();
+
 private:
 
 	ATC_Player* _playerOne;

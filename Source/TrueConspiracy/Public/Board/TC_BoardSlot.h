@@ -33,6 +33,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetBoardSlotBoard(ATC_Board* newBoard);
 
+	UFUNCTION(BlueprintCallable, Category = "Init")
+	void Init();
+
+
 private:
 
 	ATC_Board* _boardSlotBoard;

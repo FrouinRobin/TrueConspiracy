@@ -20,21 +20,7 @@ ATC_Board::ATC_Board()
 void ATC_Board::BeginPlay()
 {
 	Super::BeginPlay();
-    SetBoardDraw(ShuffleCard(GetBoardPlayer()->GetDeck()));
-    int i = 0;
-    for (ATC_Card* Card : GetBoardDraw())
-    {
-        ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(Card->GetClass(), FVector(BoardDrawAnchor->GetComponentLocation().X, BoardDrawAnchor->GetComponentLocation().Y + i, BoardDrawAnchor->GetComponentLocation().Z), BoardDrawAnchor->GetComponentRotation());
-        NewCard->SetCardAttackFace(Card->GetCardAttackFace());
-        NewCard->SetCardDefendFace(Card->GetCardDefendFace());
-        NewCard->SetCardID(Card->GetCardID());
-        NewCard->SetCardType(Card->GetCardType());
-        i += 0.5f;
-    }
-    for (int j = 0; j < 3; j++) {
-        _boardSlots.Add(GetWorld()->SpawnActor<ATC_BoardSlot>(BoardSlotOneAnchor->GetComponentLocation(), GetActorRotation()));
-        _boardSlots[j]->SetBoardSlotBoard(this);
-    }
+    
 }
 
 ATC_Plate* ATC_Board::GetBoardPlate()
@@ -363,4 +349,25 @@ TArray<ATC_Card*> ATC_Board::ShuffleCard(TArray<ATC_Card*> PlayerDeckToShuffle)
         PlayerDeckToShuffle.Swap(i, RandomIndex);
     }
     return PlayerDeckToShuffle;
+}
+
+void ATC_Board::Init()
+{
+    SetBoardDraw(ShuffleCard(GetBoardPlayer()->GetDeck()));
+    int i = 0;
+    for (ATC_Card* Card : GetBoardDraw())
+    {
+        ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(Card->GetClass(), FVector(BoardDrawAnchor->GetComponentLocation().X, BoardDrawAnchor->GetComponentLocation().Y + i, BoardDrawAnchor->GetComponentLocation().Z), BoardDrawAnchor->GetComponentRotation());
+        NewCard->SetCardAttackFace(Card->GetCardAttackFace());
+        NewCard->SetCardDefendFace(Card->GetCardDefendFace());
+        NewCard->SetCardID(Card->GetCardID());
+        NewCard->SetCardType(Card->GetCardType());
+        i += 0.5f;
+    }
+    for (int j = 0; j < 3; j++) {
+        _boardSlots.Add(GetWorld()->SpawnActor<ATC_BoardSlot>(BoardSlotOneAnchor->GetComponentLocation(), GetActorRotation()));
+        _boardSlots[j]->SetBoardSlotBoard(this);
+        _boardSlots[j]->Init()
+        
+    }
 }
