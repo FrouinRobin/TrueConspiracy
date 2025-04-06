@@ -3,10 +3,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Board/TC_BoardSlot.h"
+#include "Board/TC_DrawDeck.h"
+#include "Board/TC_DiscardDeck.h"
 #include "TC_Board.generated.h"
 
 class ATC_Player;
-class ATC_BoardSlot;
 class ATC_Plate;
 
 UCLASS()
@@ -17,6 +19,9 @@ class TRUECONSPIRACY_API ATC_Board : public AActor
 public:
 
 	ATC_Board();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainAnchor")
+	USceneComponent* MainAnchor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardSlotOneAnchor")
 	USceneComponent* BoardSlotOneAnchor;
@@ -29,6 +34,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardDiscardAnchor")
 	USceneComponent* BoardDiscardAnchor;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BluePrintReference")
+	TSubclassOf<ATC_BoardSlot> BoardSlotBluePrint;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BluePrintReference")
+	TSubclassOf<ATC_DrawDeck> DrawDeckBluePrint;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BluePrintReference")
+	TSubclassOf<ATC_DiscardDeck> DiscardDeckBluePrint;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -40,33 +52,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	TArray<ATC_BoardSlot*> GetBoardSlots();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	TArray<ATC_Card*> GetBoardDraw();
+	ATC_DrawDeck* GetBoardDraw();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	ATC_Card* GetBoardDrawDataFirstCard();
-	UFUNCTION(BlueprintCallable, Category = "Getters")
-	ATC_Card* GetBoardDrawDataCardAtIndex(int index);
-	UFUNCTION(BlueprintCallable, Category = "Getters")
-	ATC_Card* GetBoardDrawDataLastCard();
-	UFUNCTION(BlueprintCallable, Category = "Getters")
-	ATC_Card* GetBoardDrawGameFirstCard();
-	UFUNCTION(BlueprintCallable, Category = "Getters")
-	ATC_Card* GetBoardDrawGameCardAtIndex(int index);
-	UFUNCTION(BlueprintCallable, Category = "Getters")
-	ATC_Card* GetBoardDrawGameCardLastCard();
-	UFUNCTION(BlueprintCallable, Category = "Getters")
-	TArray<ATC_Card*> GetBoardDiscard();
-	UFUNCTION(BlueprintCallable, Category = "Getters")
-	ATC_Card* GetBoardDiscardDataFirstCard();
-	UFUNCTION(BlueprintCallable, Category = "Getters")
-	ATC_Card* GetBoardDiscardDataCardAtIndex(int index);
-	UFUNCTION(BlueprintCallable, Category = "Getters")
-	ATC_Card* GetBoardDiscardDataLastCard();
-	UFUNCTION(BlueprintCallable, Category = "Getters")
-	ATC_Card* GetBoardDiscardGameFirstCard();
-	UFUNCTION(BlueprintCallable, Category = "Getters")
-	ATC_Card* GetBoardDiscardGameCardAtIndex(int index);
-	UFUNCTION(BlueprintCallable, Category = "Getters")
-	ATC_Card* GetBoardDiscardGameCardLastCard();
+	ATC_DiscardDeck* GetBoardDiscard();
+
 
 
 	UFUNCTION(BlueprintCallable, Category = "Setters")
@@ -74,41 +63,20 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetBoardPlayer(ATC_Player* player);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetBoardSlots(const TArray<ATC_BoardSlot*> slots);
+	void SetBoardSlots(TArray<ATC_BoardSlot*> slots);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetBoardDraw(const TArray<ATC_Card*> draw);
+	void SetBoardDraw(ATC_DrawDeck* draw);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetBoardDrawDataFirstCard(ATC_Card* card);
-	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetBoardDrawDataCardAtIndex(int index, ATC_Card* card);
-	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetBoardDrawDataLastCard(ATC_Card* card);
-	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetBoardDrawGameFirstCard(ATC_Card* card);
-	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetBoardDrawGameCardAtIndex(int index, ATC_Card* card);
-	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetBoardDrawGameCardLastCard(ATC_Card* card);
-	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetBoardDiscard(const TArray<ATC_Card*> discard);
-	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetBoardDiscardDataFirstCard(ATC_Card* card);
-	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetBoardDiscardDataCardAtIndex(int index, ATC_Card* card);
-	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetBoardDiscardDataLastCard(ATC_Card* card);
-	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetBoardDiscardGameFirstCard(ATC_Card* card);
-	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetBoardDiscardGameCardAtIndex(int index, ATC_Card* card);
-	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetBoardDiscardGameCardLastCard(ATC_Card* card);
+	void SetBoardDiscard(ATC_DiscardDeck* draw);
 
 	UFUNCTION(BlueprintCallable, Category = "ShuffleCards")
-	TArray<ATC_Card*> ShuffleCard(TArray<ATC_Card*> PlayerDeckToShuffle);
+	TArray<TSubclassOf<ATC_Card>> ShuffleCard(TArray<TSubclassOf<ATC_Card>> PlayerDeckToShuffle);
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnDrawCard(ATC_Card* CardToDraw);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnDrawNumberOfCard(int NbCardToDraw);
 
 	UFUNCTION(BlueprintCallable, Category = "Init")
 	void Init();
@@ -117,7 +85,7 @@ public:
 private:
 	ATC_Plate* _boardPlate;
 	ATC_Player* _boardPlayer;
+	ATC_DrawDeck* _boardDraw;
+	ATC_DiscardDeck* _boardDiscard;
 	TArray<ATC_BoardSlot*> _boardSlots;
-	TArray<ATC_Card*> _boardDraw;
-	TArray<ATC_Card*> _boardDiscard;
 };

@@ -11,20 +11,22 @@
 ATC_BoardSlot::ATC_BoardSlot()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	RootComponent = this->GetRootComponent();
 
-	USceneComponent* Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-	RootComponent = Root;
+	MainAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("BoardSlotOneAnchor"));
+	RootComponent = MainAnchor;
+	
+	SlotOneAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("SlotOneAnchor"));
+	SlotOneAnchor->SetupAttachment(MainAnchor);
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("/Engine/BasicShapes/Cube"));
-	if (MeshAsset.Succeeded())
-	{
-		_cardMesh = MeshAsset.Object;
-	}
+	SlotTwoAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("SlotTwoAnchor"));
+	SlotTwoAnchor->SetupAttachment(MainAnchor);
 
-	SlotOneAnchor = CreateSlotAnchorWithMesh(TEXT("SlotOneAnchor"), FVector(-25.f, -50.f, 0.f));
-	SlotTwoAnchor = CreateSlotAnchorWithMesh(TEXT("SlotTwoAnchor"), FVector(25.f, -50.f, 0.f));
-	SlotThreeAnchor = CreateSlotAnchorWithMesh(TEXT("SlotThreeAnchor"), FVector(-25.f, 50.f, 0.f));
-	SlotFourAnchor = CreateSlotAnchorWithMesh(TEXT("SlotFourAnchor"), FVector(25.f, 50.f, 0.f));
+	SlotThreeAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("SlotThreeAnchor"));
+	SlotThreeAnchor->SetupAttachment(MainAnchor);
+
+	SlotFourAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("SlotFourAnchor"));
+	SlotFourAnchor->SetupAttachment(MainAnchor);
 }
 
 
@@ -50,22 +52,14 @@ void ATC_BoardSlot::SetBoardSlotBoard(ATC_Board* newBoard)
 
 void ATC_BoardSlot::Init()
 {
-	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotOneAnchor->GetComponentLocation(), SlotOneAnchor->GetComponentRotation()));
-	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotTwoAnchor->GetComponentLocation(), SlotTwoAnchor->GetComponentRotation()));
-	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotThreeAnchor->GetComponentLocation(), SlotThreeAnchor->GetComponentRotation()));
-	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotFourAnchor->GetComponentLocation(), SlotFourAnchor->GetComponentRotation()));
+	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotBluePrint, SlotOneAnchor->GetComponentLocation(), SlotOneAnchor->GetComponentRotation()));
+	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotBluePrint, SlotTwoAnchor->GetComponentLocation(), SlotTwoAnchor->GetComponentRotation()));
+	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotBluePrint, SlotThreeAnchor->GetComponentLocation(), SlotThreeAnchor->GetComponentRotation()));
+	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotBluePrint, SlotFourAnchor->GetComponentLocation(), SlotFourAnchor->GetComponentRotation()));
 	for (ATC_Slot* Slot : _boardSlotSlots)
 	{
+		Slot->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 		Slot->SetSlotBoardSlot(this);
 		Slot->Init();
 	}
-}
-
-USceneComponent* ATC_BoardSlot::CreateSlotAnchorWithMesh(FName AnchorName, FVector RelativeLocation)
-{
-	USceneComponent* Anchor = CreateDefaultSubobject<USceneComponent>(AnchorName);
-	Anchor->SetupAttachment(RootComponent);
-	Anchor->SetRelativeLocation(RelativeLocation);
-
-	return Anchor;
 }

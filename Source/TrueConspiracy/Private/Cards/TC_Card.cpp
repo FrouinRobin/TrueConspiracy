@@ -7,8 +7,12 @@
 ATC_Card::ATC_Card()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	CardMesh = CreateDefaultSubobject<UStaticMeshComponent>("Card Mesh", false);
-	SetRootComponent(CardMesh);
+	MainAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("MainAnchor"));
+	RootComponent = MainAnchor;
+	CardAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("CardAnchor"));
+	CardAnchor->SetupAttachment(MainAnchor);
+	CardMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CardMesh"));
+	CardMesh->SetupAttachment(CardAnchor);
 
 
 }

@@ -57,7 +57,7 @@ void TC_ActionsSystem::DrawCard(TC_GameStates& GameState, ATC_Player* InCurrentP
 		CurrentPlayerBoard = GameState.GetGamePlate()->GetBoardPlayerTwo();
 	}
 
-	TArray<ATC_Card*> BoardPlayerDrawDeck = CurrentPlayerBoard->GetBoardDraw();
+	TArray<ATC_Card*> BoardPlayerDrawDeck = CurrentPlayerBoard->GetBoardDraw()->GetDrawDeck();
 	TArray<ATC_Card*> Hand = InCurrentPlayer->GetHand();
 
 	if (BoardPlayerDrawDeck.Num() == 0)
@@ -67,7 +67,7 @@ void TC_ActionsSystem::DrawCard(TC_GameStates& GameState, ATC_Player* InCurrentP
 	}
 
 	//DrawCard from last index on the list
-	ATC_Card* DrawnCard = CurrentPlayerBoard->GetBoardDrawGameFirstCard();
+	ATC_Card* DrawnCard = CurrentPlayerBoard->GetBoardDraw()->GetDrawDeckGameFirstCard();
 
 	if (!DrawnCard)
 	{
@@ -76,7 +76,7 @@ void TC_ActionsSystem::DrawCard(TC_GameStates& GameState, ATC_Player* InCurrentP
 	}
 
 	//Adding card to hand
-	bool isCardAdded = InCurrentPlayer->AddCardToHand(DrawnCard);
+	bool isCardAdded = InCurrentPlayer->AddCardToHand(DrawnCard->GetClass());
 
 	if (isCardAdded)
 	{
@@ -87,6 +87,7 @@ void TC_ActionsSystem::DrawCard(TC_GameStates& GameState, ATC_Player* InCurrentP
 	{
 		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Echec lors de l'ajout a la main. %s"), *DrawnCard->GetName());
 	}
+	InCurrentPlayer->ShowHandOnCamera();
 }
 
 void TC_ActionsSystem::MoveCard(TC_GameStates& GameState, const FAIActions& Action, ATC_Player* InCurrentPlayer)

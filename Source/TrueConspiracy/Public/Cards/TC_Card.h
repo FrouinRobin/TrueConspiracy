@@ -22,8 +22,13 @@ class TRUECONSPIRACY_API ATC_Card : public AActor
 public:
 
 	ATC_Card();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh")
+	USceneComponent* MainAnchor;
 
-	UPROPERTY(EditAnywhere, Category = "Card Mesh")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh")
+	USceneComponent* CardAnchor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh")
 	UStaticMeshComponent* CardMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category = "Card Faces")

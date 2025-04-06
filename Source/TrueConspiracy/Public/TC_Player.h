@@ -24,14 +24,17 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	uint8 PlayerID;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UCameraComponent* _playerCamera;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USceneComponent* _cardAnchor;
 
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	TArray<ATC_Card*> _playerHand;
-	TArray<ATC_Card*> _playerDeck;
+	
 
 	uint8 _playerCurrentMana;
 	uint8 _playerMaxMana;
@@ -39,10 +42,12 @@ protected:
 	ATC_Card* _selectedCard;
 
 private:
-	class UCameraComponent* _playerCamera;
-	class USceneComponent* _cardAnchor;
+	
 	ETC_PhaseState _PhaseState;
-
+	
+	TArray<ATC_Card*> _playerHand;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	TArray<TSubclassOf<ATC_Card>> _playerDeck;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -50,16 +55,16 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UFUNCTION(BlueprintCallable, Category = "Player Deck")
+	/*UFUNCTION(BlueprintCallable, Category = "Player Deck")
 	ATC_Card* GetCardFromDeckByName(FString name, bool checkAllFaces);
 	UFUNCTION(BlueprintCallable, Category = "Player Deck")
-	ATC_Card* GetCardFromDeckById(ETC_CardID id);
+	ATC_Card* GetCardFromDeckById(ETC_CardID id);*/
 	UFUNCTION(BlueprintCallable, Category = "Player Deck")
-	void SetDeck(TArray<ATC_Card*> newDeck);
+	void SetDeck(TArray<TSubclassOf<ATC_Card>> newDeck);
 	UFUNCTION(BlueprintCallable, Category = "Player Deck")
-	TArray<ATC_Card*> GetDeck();
+	TArray<TSubclassOf<ATC_Card>> GetDeck();
 	UFUNCTION(BlueprintCallable, Category = "Player Deck")
-	bool AddCardToDeck(ATC_Card* card);
+	bool AddCardToDeck(TSubclassOf<ATC_Card> card);
 
 	UFUNCTION(BlueprintCallable, Category = "Player Hand")
 	void SetHand(TArray<ATC_Card*> newDeck);
@@ -72,7 +77,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Player Hand")
 	void ShowHandOnCamera();
 	UFUNCTION(BlueprintCallable, Category = "Player Hand")
-	bool AddCardToHand(ATC_Card* card);
+	bool AddCardToHand(TSubclassOf<ATC_Card> card);
 
 	UFUNCTION(BlueprintCallable, Category = "Player Hand")
 	TArray<ATC_Card*> GetAvailableCards();
@@ -103,6 +108,9 @@ public:
 
 	void SetPlayerMaxMana(uint8 InManaMax);
 	uint8 GetPlayerMaxMana() const;
+
+	/*UFUNCTION(BlueprintCallable)
+	TSubclassOf<ATC_Card> FindCardClassFromInstance(ATC_Card* InstanceCard);*/
 
 	UFUNCTION(BlueprintCallable)
 	void PlayCard(ATC_Card* Card, ATC_Slot* Slot);

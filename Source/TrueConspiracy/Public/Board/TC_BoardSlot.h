@@ -15,6 +15,9 @@ class TRUECONSPIRACY_API ATC_BoardSlot : public AActor
 
 public:
 	ATC_BoardSlot();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainAnchor")
+	USceneComponent* MainAnchor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotOneAnchor")
 	USceneComponent* SlotOneAnchor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotTwoAnchor")
@@ -23,6 +26,9 @@ public:
 	USceneComponent* SlotThreeAnchor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotFourAnchor")
 	USceneComponent* SlotFourAnchor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BluePrintReference")
+	TSubclassOf<ATC_Slot> SlotBluePrint;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -36,9 +42,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Init")
 	void Init();
-
-	UFUNCTION(BlueprintCallable, Category = "Mesh")
-	USceneComponent* CreateSlotAnchorWithMesh(FName AnchorName, FVector RelativeLocation);
 
 private:
 

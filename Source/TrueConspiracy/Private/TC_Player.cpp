@@ -29,42 +29,42 @@ ATC_Player::ATC_Player()
 	_cardAnchor->SetRelativeLocation(FVector(150, 0, -120));
 }
 
-ATC_Card* ATC_Player::GetCardFromDeckByName(FString name, bool checkAllFaces)
-{
-	for (ATC_Card* card : GetDeck())
-	{
-		if (!checkAllFaces) {
-			UTC_Face* cardFace = card->GetCardCurrentFace();
+//ATC_Card* ATC_Player::GetCardFromDeckByName(FString name, bool checkAllFaces)
+//{
+//	for (TSubclassOf<ATC_Card> card : GetDeck())
+//	{
+//		if (!checkAllFaces) {
+//			UTC_Face* cardFace = card->GetCardCurrentFace();
+//
+//			if (/*cardFace->name == name */ false) // TODO: See how IDs and names will be implemented
+//				return card;
+//		}
+//		else
+//		{
+//			// Why is there a need for more than two faces I don't know but just in case
+//			TArray<UTC_Face*> cardFaces = card->GetCardFaceList();
+//
+//			for (auto face : cardFaces)
+//			{
+//				if (/*face->name == name */ false) // TODO: Ditto
+//					return card;
+//			}
+//		}
+//	}
+//	UE_LOG(LogTemp, Warning, TEXT("GetCardFromDeckById() did not return any card!"));
+//	return nullptr;
+//}
 
-			if (/*cardFace->name == name */ false) // TODO: See how IDs and names will be implemented
-				return card;
-		}
-		else
-		{
-			// Why is there a need for more than two faces I don't know but just in case
-			TArray<UTC_Face*> cardFaces = card->GetCardFaceList();
-
-			for (auto face : cardFaces)
-			{
-				if (/*face->name == name */ false) // TODO: Ditto
-					return card;
-			}
-		}
-	}
-	UE_LOG(LogTemp, Warning, TEXT("GetCardFromDeckById() did not return any card!"));
-	return nullptr;
-}
-
-ATC_Card* ATC_Player::GetCardFromDeckById(ETC_CardID id)
-{
-	for (ATC_Card* card : GetDeck())
-	{
-		if (card->GetCardID() == id)
-			return card;
-	}
-	UE_LOG(LogTemp, Warning, TEXT("GetCardFromDeckById() did not return any card!"));
-	return nullptr;
-}
+//ATC_Card* ATC_Player::GetCardFromDeckById(ETC_CardID id)
+//{
+//	for (TSubclassOf<ATC_Card> card : GetDeck())
+//	{
+//		if (card->GetCardID() == id)
+//			return card;
+//	}
+//	UE_LOG(LogTemp, Warning, TEXT("GetCardFromDeckById() did not return any card!"));
+//	return nullptr;
+//}
 
 ATC_Card* ATC_Player::GetCardFromHandByName(FString name, bool checkAllFaces)
 {
@@ -103,14 +103,15 @@ ATC_Card* ATC_Player::GetCardFromHandById(ETC_CardID id)
 	return nullptr;
 }
 
-void ATC_Player::SetDeck(TArray<ATC_Card*> newDeck)
+void ATC_Player::SetDeck(TArray<TSubclassOf<ATC_Card>> newDeck)
 {
 	_playerDeck = newDeck;
 }
 
-TArray<ATC_Card*> ATC_Player::GetDeck()
+TArray<TSubclassOf<ATC_Card>> ATC_Player::GetDeck()
 {
-	return TArray<ATC_Card*>();
+
+	return _playerDeck;
 	/*if (_playerDeck.Num() == 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("GetDeck() did not return any card!"));
@@ -119,17 +120,19 @@ TArray<ATC_Card*> ATC_Player::GetDeck()
 	return _playerDeck;*/
 }
 
-bool ATC_Player::AddCardToHand(ATC_Card* card)
+bool ATC_Player::AddCardToHand(TSubclassOf<ATC_Card> card)
 {
-	_playerHand.Add(card);
-	card->AttachToComponent(_cardAnchor, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
-	card->SetActorScale3D(FVector(0.25f, 0.25f, 0.25f));
+	
+	ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(card, _cardAnchor->GetComponentLocation(), _cardAnchor->GetComponentRotation());
+	_playerHand.Add(NewCard);
+	NewCard->AttachToComponent(_cardAnchor, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
+	NewCard->CardAnchor->SetWorldRotation(FRotator(-69.f,180.f,0.f));
 
 	ShowHandOnCamera();
 	return true;
 }
 
-bool ATC_Player::AddCardToDeck(ATC_Card* card)
+bool ATC_Player::AddCardToDeck(TSubclassOf<ATC_Card> card)
 {
 	_playerDeck.Add(card);
 
@@ -177,7 +180,6 @@ void ATC_Player::ShowHandOnCamera()
 		float interval = ((float)i - ((float)_playerHand.Num() - 1) / 2) * 50;
 
 		card->SetActorLocation(card->GetActorLocation() + base + FVector(0, 0, box.Y) + FVector(0, interval, 0));
-		card->SetActorRelativeRotation(FRotator(69, 0, 0));
 	}
 }
 
@@ -274,13 +276,23 @@ uint8 ATC_Player::GetPlayerMaxMana() const
 	return _playerMaxMana;
 }
 
+//TSubclassOf<ATC_Card> ATC_Player::FindCardClassFromInstance(ATC_Card* InstanceCard)
+//{
+//	if (!InstanceCard) return nullptr;
+//
+//	for (TSubclassOf<ATC_Card> CardClass : _playerHand)
+//	{
+//		if (CardClass && InstanceCard->GetClass() == CardClass)
+//		{
+//			return CardClass;
+//		}
+//	}
+//
+//	return nullptr;
+//}
 void ATC_Player::PlayCard(ATC_Card* Card, ATC_Slot* Slot)
 {
-	ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(Slot->GetActorLocation(), Slot->GetActorRotation());
-	//NewCard->InitCard()
-	NewCard->SetCardAttackFace(Card->GetCardAttackFace());
-	NewCard->SetCardDefendFace(Card->GetCardDefendFace());
-	NewCard->SetCardType(Card->GetCardType());
+	ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(Card->GetClass(), FVector(Slot->GetActorLocation().X, Slot->GetActorLocation().Y, Slot->GetActorLocation().Z + 1), Slot->GetActorRotation());
 	/*AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
 	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
 	

@@ -30,7 +30,12 @@ public:
 	USceneComponent* LandCardSlotTwoAnchor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCardSlotThreeAnchor")
 	USceneComponent* LandCardSlotThreeAnchor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCardSlotThreeAnchor")
+	TSubclassOf<ATC_Board> BoardBluePrint;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCardSlotThreeAnchor")
+	TSubclassOf<ATC_LandCardSlot> LandCardSlotBluePrint;
 
 protected:
 	// Called when the game starts or when spawned
