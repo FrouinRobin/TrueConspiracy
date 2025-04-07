@@ -7,6 +7,7 @@
 #include "TC_LandCardSlot.generated.h"
 
 class ATC_LandCard;
+class ATC_Player;
 
 UCLASS()
 class TRUECONSPIRACY_API ATC_LandCardSlot : public ATC_Slot
@@ -16,4 +17,12 @@ class TRUECONSPIRACY_API ATC_LandCardSlot : public ATC_Slot
 public:
 	ATC_LandCardSlot();
 public:
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	TArray<ATC_BoardSlot*> GetLandCardBordSlot();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ATC_BoardSlot* GetLandCardBordSlotByPlayer(ATC_Player* PlayerReference);
+
+private:
+	TArray<ATC_BoardSlot*> _landCardBoardSlots;
+
 };
