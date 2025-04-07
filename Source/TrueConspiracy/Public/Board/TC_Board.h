@@ -3,60 +3,89 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "TC_BoardZone.h"
-#include "TC_FightZone.h"
-#include "TC_LandCardSlot.h"
-#include "TC_BoardSlot.h"
-#include "TC_Slot.h"
-#include "TC_Card.h"
+#include "Board/TC_BoardSlot.h"
+#include "Board/TC_DrawDeck.h"
+#include "Board/TC_DiscardDeck.h"
 #include "TC_Board.generated.h"
 
-UCLASS(Blueprintable, BlueprintType)
+class ATC_Player;
+class ATC_Plate;
+
+UCLASS()
 class TRUECONSPIRACY_API ATC_Board : public AActor
 {
 	GENERATED_BODY()
 
 public:
+
 	ATC_Board();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
-	TArray<ATC_BoardZone*> BoardZones; // 2 zones (1 par joueur)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainAnchor")
+	USceneComponent* MainAnchor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
-	TArray<ATC_FightZone*> FightZones; // 6 FightZones (3 par joueur)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardSlotOneAnchor")
+	USceneComponent* BoardSlotOneAnchor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardSlotTwoAnchor")
+	USceneComponent* BoardSlotTwoAnchor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardSlotThreeAnchor")
+	USceneComponent* BoardSlotThreeAnchor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardDrawAnchor")
+	USceneComponent* BoardDrawAnchor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardDiscardAnchor")
+	USceneComponent* BoardDiscardAnchor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
-	TArray<ATC_LandCardSlot*> LandCards; // 6 LandCards (1 par FightZone)
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
-	TArray<ATC_BoardSlot*> BoardSlots; // 6 BoardSlots (3 par joueur)
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Board")
-	TArray<ATC_Slot*> Slots; // 24 Slots (4 par BoardSlot)
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Board", meta = (AllowPrivateAccess = "true"))
-	USceneComponent* _boardRoot;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Board", meta = (AllowPrivateAccess = "true"))
-	USceneComponent* _boardZonesRoot;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Board", meta = (AllowPrivateAccess = "true"))
-	USceneComponent* _fightZonesRoot;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Board", meta = (AllowPrivateAccess = "true"))
-	USceneComponent* _slotsRoot;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BluePrintReference")
+	TSubclassOf<ATC_BoardSlot> BoardSlotBluePrint;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BluePrintReference")
+	TSubclassOf<ATC_DrawDeck> DrawDeckBluePrint;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BluePrintReference")
+	TSubclassOf<ATC_DiscardDeck> DiscardDeckBluePrint;
 
 protected:
 	virtual void BeginPlay() override;
 
 public:
-	virtual void Tick(float DeltaTime) override;
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ATC_Plate* GetBoardPlate();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ATC_Player* GetBoardPlayer();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	TArray<ATC_BoardSlot*> GetBoardSlots();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ATC_DrawDeck* GetBoardDraw();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ATC_DiscardDeck* GetBoardDiscard();
 
-	UFUNCTION(BlueprintCallable)
-	void InitializeBoard();
-
-	UFUNCTION(BlueprintCallable)
-	bool PlaceCard(ATC_Card* Card, ATC_Slot* Slot);
 
 
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetBoardPlater(ATC_Plate* newBoardPlate);
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetBoardPlayer(ATC_Player* player);
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetBoardSlots(TArray<ATC_BoardSlot*> slots);
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetBoardDraw(ATC_DrawDeck* draw);
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetBoardDiscard(ATC_DiscardDeck* draw);
+
+	UFUNCTION(BlueprintCallable, Category = "ShuffleCards")
+	TArray<TSubclassOf<ATC_Card>> ShuffleCard(TArray<TSubclassOf<ATC_Card>> PlayerDeckToShuffle);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnDrawCard(ATC_Card* CardToDraw);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnDrawNumberOfCard(int NbCardToDraw);
+
+	UFUNCTION(BlueprintCallable, Category = "Init")
+	void Init();
+
+
+private:
+	ATC_Plate* _boardPlate;
+	ATC_Player* _boardPlayer;
+	ATC_DrawDeck* _boardDraw;
+	ATC_DiscardDeck* _boardDiscard;
+	TArray<ATC_BoardSlot*> _boardSlots;
 };

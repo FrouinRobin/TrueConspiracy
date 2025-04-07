@@ -1,4 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TC_CardID.h"
+#include "Cards/TC_CardType.h"
+

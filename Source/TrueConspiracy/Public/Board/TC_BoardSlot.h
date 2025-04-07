@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "TC_Slot.h"
 #include "TC_BoardSlot.generated.h"
 
-UCLASS(Blueprintable, BlueprintType)
+class ATC_Slot;
+
+UCLASS()
 class TRUECONSPIRACY_API ATC_BoardSlot : public AActor
 {
 	GENERATED_BODY()
@@ -15,21 +16,36 @@ class TRUECONSPIRACY_API ATC_BoardSlot : public AActor
 public:
 	ATC_BoardSlot();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardSlot")
-	int32 PlayerID;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainAnchor")
+	USceneComponent* MainAnchor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotOneAnchor")
+	USceneComponent* SlotOneAnchor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotTwoAnchor")
+	USceneComponent* SlotTwoAnchor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotThreeAnchor")
+	USceneComponent* SlotThreeAnchor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotFourAnchor")
+	USceneComponent* SlotFourAnchor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardSlot")
-	TArray<ATC_Slot*> Slots;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BoardSlot")
-	USceneComponent* BoardSlotRoot;
-
-	UFUNCTION(BlueprintCallable)
-	TArray<ATC_Slot*> GetSlots();
-
-	UFUNCTION()
-	void OnBoardSlotOverlap(AActor* OverlappedActor, AActor* OtherActor);
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BluePrintReference")
+	TSubclassOf<ATC_Slot> SlotBluePrint;
+	
 protected:
+	virtual void BeginPlay() override;
+public:
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ATC_Board* GetBoardSlotBoard();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	TArray<ATC_Slot*> GetBoardSlotSlots();
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetBoardSlotBoard(ATC_Board* newBoard);
 
+	UFUNCTION(BlueprintCallable, Category = "Init")
+	void Init();
+
+private:
+
+	ATC_Board* _boardSlotBoard;
+	TArray<ATC_Slot*> _boardSlotSlots;
+	UStaticMesh* _cardMesh;
 };

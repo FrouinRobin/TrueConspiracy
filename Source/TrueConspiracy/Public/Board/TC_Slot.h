@@ -4,17 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "TC_Card.h"
 #include "TC_Slot.generated.h"
 
-UENUM(BlueprintType)
-enum class ETC_SlotState : uint8
-{
-	Empty,
-	Occupied
-};
+class ATC_Card;
 
-UCLASS(Blueprintable, BlueprintType)
+UCLASS()
 class TRUECONSPIRACY_API ATC_Slot : public AActor
 {
 	GENERATED_BODY()
@@ -22,24 +16,40 @@ class TRUECONSPIRACY_API ATC_Slot : public AActor
 public:
 	ATC_Slot();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Slot")
-	ETC_SlotState SlotState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UStaticMeshComponent* visualMesh;
+protected:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Slot")
-	ATC_Card* _card;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Slot")
-	USceneComponent* SlotRoot;
-
-	UFUNCTION(BlueprintCallable)
-	ATC_Card* GetCard();
-
-	UFUNCTION(BlueprintCallable)
-	void SetCard(ATC_Card* NewCard);
+public:
 
 	UFUNCTION(BlueprintCallable)
 	bool HasCard();
 
-	UFUNCTION()
-	void OnSlotOverlap(AActor* OverlappedActor, AActor* OtherActor);
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ATC_Card* GetSlotCard();
+
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ATC_BoardSlot* GetSlaotBoardSlot();
+
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ETC_CardType GetSlotCardType();
+
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetSlotCard(ATC_Card* newSlotCard);
+
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetSlotBoardSlot(ATC_BoardSlot* newSlotBoardSlot);
+
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	void SetSlotCardType(ETC_CardType newSlotCardType);
+
+	UFUNCTION(BlueprintCallable, Category = "Init")
+	void Init();
+
+
+
+private:
+	ATC_BoardSlot* _slotBoardSlot;
+	ATC_Card* _slotCard;
+	ETC_CardType _slotCardType;
 };

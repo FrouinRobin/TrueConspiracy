@@ -1,6 +1,9 @@
 #include "TC_ActionsSystem.h"
 #include "TC_GameStates.h"
 #include "TC_AIActions.h"
+#include "TC_Player.h"
+#include "Board/TC_Plate.h"
+#include "TC_GameInstance.h"
 
 TC_ActionsSystem::TC_ActionsSystem()
 {
@@ -14,59 +17,80 @@ TArray<FAIActions> TC_ActionsSystem::GenerateAllValidActions(const TC_GameStates
 {
 	TArray<FAIActions> ValidActions;
 
-	const bool bIsPlayer1 = InGameState.bIsPlayer1Turn;
+	const bool bIsPlayer1 = InGameState.GetIsPlayer1Turn();
 
 	return TArray<FAIActions>();
 }
 
-void TC_ActionsSystem::PlayCard(TC_GameStates& GameState, const FAIActions& Action)
+void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, ATC_Card* InCard, ATC_Slot* InSlot)
 {
-	// Récupérer le joueur actif
-	//hand = joueurActif == P1 ? Player1Hand : Player2Hand
-	//	board = joueurActif == P1 ? Player1BoardCard : Player2BoardCard
-	//	mana = joueurActif == P1 ? Player1Mana : Player2Mana
-	//
-	//	// Vérifier si l’index de la carte en main est valide
-	//	si Action.CardIndexInHand est invalide :
-	//return
-	//
-	//	// Récupérer la carte à jouer
-	//	carte = hand[Action.CardIndexInHand]
-	//
-	//	// Vérifier si le joueur a assez de mana
-	//	si carte.ManaCost > mana :
-	//return
-	//
-	//	// Vérifier si le plateau a moins de 12 cartes
-	//	si board contient déjà 12 cartes :
-	//	return
-	//
-	//	// Appliquer l’action :
-	//	-retirer la carte de la main
-	//	- soustraire le coût en mana
-	//	- ajouter la carte au plateau
+	InGameState.GetActivePlayer()->SetPlayerMana(InGameState.GetActivePlayer()->GetPlayerMana() - InCard->GetCardCurrentMana());
+
+	UTC_GameInstance* GameInstance = UTC_GameInstance::GetInstance(InSlot);
+	ATC_Card* NewCard = GameInstance->GetWorld()->SpawnActor<ATC_Card>(InSlot->GetActorLocation(), InSlot->GetActorRotation());
+	//NewCard->InitCard()
+	NewCard->SetCardAttackFace(InCard->GetCardAttackFace());
+	NewCard->SetCardDefendFace(InCard->GetCardDefendFace());
+	NewCard->SetCardType(InCard->GetCardType());
+	//Fin NewCard->InitCard()
 }
 
-void TC_ActionsSystem::DrawCard(TC_GameStates& GameState)
+void TC_ActionsSystem::PlayCard(TC_GameStates& GameState, const FAIActions& Action, ATC_Player* InCurrentPlayer)
 {
-	//deck = joueurActif == P1 ? Player1Deck : Player2Deck
-	//	hand = joueurActif == P1 ? Player1Hand : Player2Hand
-	//
-	//	// Vérifier si la pioche est vide
-	//	si deck est vide :
-	//return
-	//
-	//	// Piocher la première carte
-	//	carte = deck[0]
-	//
-	//	// Ajouter la carte à la main
-	//	hand.Add(carte)
-	//
-	//	// Retirer la carte du deck
-	//	deck.RemoveAt(0)
+
 }
 
-void TC_ActionsSystem::MoveCard(TC_GameStates& GameState, const FAIActions& Action)
+void TC_ActionsSystem::DrawCard(TC_GameStates& GameState, ATC_Player* InCurrentPlayer)
+{
+	// /!\ N'utilise pas une copie de deck, manipule les cartes dans le deck
+	if (!InCurrentPlayer)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Joueur invalide."));
+		return;
+	}
+	ATC_Board* CurrentPlayerBoard;
+	if (GameState.GetGamePlate() && GameState.GetGamePlate()->GetBoardPlayerOne()->GetBoardPlayer() == InCurrentPlayer) {
+		CurrentPlayerBoard = GameState.GetGamePlate()->GetBoardPlayerOne();
+	}
+	else
+	{
+		CurrentPlayerBoard = GameState.GetGamePlate()->GetBoardPlayerTwo();
+	}
+
+	TArray<ATC_Card*> BoardPlayerDrawDeck = CurrentPlayerBoard->GetBoardDraw()->GetDrawDeck();
+	TArray<ATC_Card*> Hand = InCurrentPlayer->GetHand();
+
+	if (BoardPlayerDrawDeck.Num() == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Deck vide, pioche impossible."));
+		return;
+	}
+
+	//DrawCard from last index on the list
+	ATC_Card* DrawnCard = CurrentPlayerBoard->GetBoardDraw()->GetDrawDeckGameFirstCard();
+
+	if (!DrawnCard)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Carte invalide."));
+		return;
+	}
+
+	//Adding card to hand
+	bool isCardAdded = InCurrentPlayer->AddCardToHand(DrawnCard->GetClass());
+
+	if (isCardAdded)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Carte %s ajoutee a la main."), *DrawnCard->GetName());
+		CurrentPlayerBoard->OnDrawCard(DrawnCard);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Echec lors de l'ajout a la main. %s"), *DrawnCard->GetName());
+	}
+	InCurrentPlayer->ShowHandOnCamera();
+}
+
+void TC_ActionsSystem::MoveCard(TC_GameStates& GameState, const FAIActions& Action, ATC_Player* InCurrentPlayer)
 {
 	//board = joueurActif == P1 ? Player1BoardCard : Player2BoardCard
 	//
@@ -86,16 +110,16 @@ void TC_ActionsSystem::MoveCard(TC_GameStates& GameState, const FAIActions& Acti
 	//	- l’ajouter à la destination correspondante
 }
 
-void TC_ActionsSystem::EndTurn(TC_GameStates& GameState)
+void TC_ActionsSystem::EndTurn(TC_GameStates& GameState, ATC_Player* InCurrentPlayer)
 {
-	if (!GameState.bIsPlayer1Turn)
+	if (!GameState.GetIsPlayer1Turn())
 	{
-		GameState.CurrentTurn++;
+		GameState.SetCurrentTurn(GameState.GetCurrentTurn() +1);
 	}
-	GameState.bIsPlayer1Turn = !GameState.bIsPlayer1Turn;
+	GameState.SetIsPlayer1Turn(!GameState.GetIsPlayer1Turn());
 }
 
-void TC_ActionsSystem::ApplyAction(TC_GameStates& InGameState, const FAIActions& InAction)
+void TC_ActionsSystem::ApplyAction(TC_GameStates& InGameState, const FAIActions& InAction, ATC_Player* InCurrentPlayer)
 {
 	switch (InAction.Type)
 	{
@@ -107,7 +131,7 @@ void TC_ActionsSystem::ApplyAction(TC_GameStates& InGameState, const FAIActions&
 		// -> retirer la carte de la main
 		// -> ajouter au plateau
 		// -> retirer le coût en mana
-		PlayCard(InGameState, InAction);
+		PlayCard(InGameState, InAction, InCurrentPlayer);
 		break;
 	}	
 	case EActionType::DrawCard:
@@ -115,17 +139,17 @@ void TC_ActionsSystem::ApplyAction(TC_GameStates& InGameState, const FAIActions&
 		// si la pioche du joueur n’est pas vide
 		// -> retirer la première carte de la pioche
 		// -> ajouter à la main
-		DrawCard(InGameState);
+		DrawCard(InGameState, InCurrentPlayer);
 		break;
 	}
 	case EActionType::MoveCard:
 	{
-		MoveCard(InGameState, InAction);
+		MoveCard(InGameState, InAction, InCurrentPlayer);
 		break;
 	}
 	case EActionType::EndTurn:
 	{
-		EndTurn(InGameState); 
+		EndTurn(InGameState, InCurrentPlayer);
 		break;
 	}
 	default:

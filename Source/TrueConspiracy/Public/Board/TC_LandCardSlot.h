@@ -3,28 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "TC_BoardSlot.h"
+#include "Board/TC_Slot.h"
 #include "TC_LandCardSlot.generated.h"
 
+class ATC_LandCard;
+
 UCLASS()
-class TRUECONSPIRACY_API ATC_LandCardSlot : public AActor
+class TRUECONSPIRACY_API ATC_LandCardSlot : public ATC_Slot
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
+
+public:
 	ATC_LandCardSlot();
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCard")
-	TArray<ATC_BoardSlot*> BoardSlots;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "LandCard")
-	USceneComponent* LandCardRoot;
-protected:
-
-
-public:	
-
-
+public:
 };

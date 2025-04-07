@@ -1,135 +1,138 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Board/TC_Board.h"
-#include "UObject/ConstructorHelpers.h"
-#include "Engine/World.h"
-#include "Kismet/KismetSystemLibrary.h"
+#include "TC_Player.h"
+#include "Board/TC_Plate.h"
+#include "Board/TC_BoardSlot.h"
+#include "Board/TC_DrawDeck.h"
+#include "Board/TC_DiscardDeck.h"
+
 
 ATC_Board::ATC_Board()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 
-	// Créer la racine du Board
-	_boardRoot = CreateDefaultSubobject<USceneComponent>(TEXT("BoardRoot"));
-	RootComponent = _boardRoot;
+    MainAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("MainAnchor"));
+    RootComponent = MainAnchor;
+    
+    BoardSlotOneAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("BoardSlotOneAnchor"));
+    BoardSlotOneAnchor->SetupAttachment(MainAnchor);
 
-	// Créer les repères pour organiser les zones et slots
-	_boardZonesRoot = CreateDefaultSubobject<USceneComponent>(TEXT("BoardZonesRoot"));
-	_boardZonesRoot->SetupAttachment(_boardRoot);
+    BoardSlotTwoAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("BoardSlotTwoAnchor"));
+    BoardSlotTwoAnchor->SetupAttachment(MainAnchor);
 
-	_fightZonesRoot = CreateDefaultSubobject<USceneComponent>(TEXT("FightZonesRoot"));
-	_fightZonesRoot->SetupAttachment(_boardRoot);
 
-	_slotsRoot = CreateDefaultSubobject<USceneComponent>(TEXT("SlotsRoot"));
-	_slotsRoot->SetupAttachment(_boardRoot);
+    BoardSlotThreeAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("BoardSlotThreeAnchor"));
+    BoardSlotThreeAnchor->SetupAttachment(MainAnchor);
+
+
+    BoardDrawAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("BoardDrawAnchor"));
+    BoardDrawAnchor->SetupAttachment(MainAnchor);
+
+
+    BoardDiscardAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("BoardDiscardAnchor"));
+    BoardDiscardAnchor->SetupAttachment(MainAnchor);
+
 
 }
 
 void ATC_Board::BeginPlay()
 {
 	Super::BeginPlay();
-	InitializeBoard();
 }
 
-void ATC_Board::Tick(float DeltaTime)
+ATC_Plate* ATC_Board::GetBoardPlate()
 {
-	Super::Tick(DeltaTime);
+    return _boardPlate;
 }
 
-void ATC_Board::InitializeBoard()
+ATC_Player* ATC_Board::GetBoardPlayer()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Initializing Board..."));
+	return _boardPlayer;
+}
 
-	// Création des 2 BoardZones (1 par joueur)
-	for (int i = 0; i < 2; i++)
-	{
-		FActorSpawnParameters SpawnParams;
-		ATC_BoardZone* NewBoardZone = GetWorld()->SpawnActor<ATC_BoardZone>(ATC_BoardZone::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
-		if (NewBoardZone)
-		{
-			NewBoardZone->AttachToComponent(_boardZonesRoot, FAttachmentTransformRules::KeepRelativeTransform);
-			BoardZones.Add(NewBoardZone);
-			UE_LOG(LogTemp, Warning, TEXT("BoardZone %d Created"), i);
-		}
-	}
+TArray<ATC_BoardSlot*> ATC_Board::GetBoardSlots()
+{
+	return _boardSlots;
+}
 
-	// Création des 6 FightZones (3 par joueur)
-	for (int i = 0; i < 6; i++)
-	{
-		FActorSpawnParameters SpawnParams;
-		ATC_FightZone* NewFightZone = GetWorld()->SpawnActor<ATC_FightZone>(ATC_FightZone::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
-		if (NewFightZone)
-		{
-			NewFightZone->AttachToComponent(_fightZonesRoot, FAttachmentTransformRules::KeepRelativeTransform);
-			FightZones.Add(NewFightZone);
-			UE_LOG(LogTemp, Warning, TEXT("FightZone %d Created"), i);
-		}
-	}
+ATC_DrawDeck* ATC_Board::GetBoardDraw()
+{
+    return _boardDraw;
+}
 
-	// Création des 6 LandCards (1 par FightZone)
-	for (int i = 0; i < 6; i++)
-	{
-		FActorSpawnParameters SpawnParams;
-		ATC_LandCardSlot* NewLandCard = GetWorld()->SpawnActor<ATC_LandCardSlot>(ATC_LandCardSlot::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
-		if (NewLandCard)
-		{
-			NewLandCard->AttachToComponent(_fightZonesRoot, FAttachmentTransformRules::KeepRelativeTransform);
-			LandCards.Add(NewLandCard);
-			UE_LOG(LogTemp, Warning, TEXT("LandCard %d Created"), i);
-		}
-	}
-
-	// Création des 6 BoardSlots (3 par joueur)
-	for (int i = 0; i < 6; i++)
-	{
-		FActorSpawnParameters SpawnParams;
-		ATC_BoardSlot* NewBoardSlot = GetWorld()->SpawnActor<ATC_BoardSlot>(ATC_BoardSlot::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
-		if (NewBoardSlot)
-		{
-			NewBoardSlot->AttachToComponent(_slotsRoot, FAttachmentTransformRules::KeepRelativeTransform);
-			BoardSlots.Add(NewBoardSlot);
-			UE_LOG(LogTemp, Warning, TEXT("BoardSlot %d Created"), i);
-		}
-	}
-
-	// Création des 24 Slots (4 par BoardSlot)
-	for (int i = 0; i < 24; i++)
-	{
-		FActorSpawnParameters SpawnParams;
-		ATC_Slot* NewSlot = GetWorld()->SpawnActor<ATC_Slot>(ATC_Slot::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
-		if (NewSlot)
-		{
-			NewSlot->AttachToComponent(_slotsRoot, FAttachmentTransformRules::KeepRelativeTransform);
-			Slots.Add(NewSlot);
-			UE_LOG(LogTemp, Warning, TEXT("Slot %d Created"), i);
-		}
-	}
+ATC_DiscardDeck* ATC_Board::GetBoardDiscard()
+{
+    return _boardDiscard;
 }
 
 
-bool ATC_Board::PlaceCard(ATC_Card* Card, ATC_Slot* Slot)
+
+
+void ATC_Board::SetBoardPlater(ATC_Plate* newBoardPlate)
 {
-	if (!Card || !Slot)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Invalid Card or Slot!"));
-		return false;
-	}
+    _boardPlate = newBoardPlate;
+}
 
-	// Vérifier si le slot est vide
-	if (Slot->HasCard())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Slot is already occupied!"));
-		return false;
-	}
+void ATC_Board::SetBoardPlayer(ATC_Player* newPlayer)
+{
+    _boardPlayer = newPlayer;
+}
 
-	// Placer la carte dans le slot
-	Slot->SetCard(Card);
-	UE_LOG(LogTemp, Warning, TEXT("Card placed successfully!"));
+void ATC_Board::SetBoardSlots(TArray<ATC_BoardSlot*> newBoardSlots)
+{
+    _boardSlots = newBoardSlots;
+}
 
-	// Appeler l'événement OnCardPlace sur la carte
-	Card->OnCardPlace();
+void ATC_Board::SetBoardDraw(ATC_DrawDeck* newDraw)
+{
+    _boardDraw = newDraw;
+}
 
-	return true;
+
+
+void ATC_Board::SetBoardDiscard(ATC_DiscardDeck* newDiscard)
+{
+    _boardDiscard = newDiscard;
+}
+
+
+TArray<TSubclassOf<ATC_Card>> ATC_Board::ShuffleCard(TArray<TSubclassOf<ATC_Card>> PlayerDeckToShuffle)
+{
+    int32 DeckSize = PlayerDeckToShuffle.Num();
+    if (DeckSize <= 1) return PlayerDeckToShuffle;
+
+    for (int32 i = DeckSize - 1; i > 0; --i)
+    {
+        int32 RandomIndex = FMath::RandRange(0, i);
+
+        PlayerDeckToShuffle.Swap(i, RandomIndex);
+    }
+    return PlayerDeckToShuffle;
+}
+
+void ATC_Board::Init()
+{
+    float i = 0;
+    
+
+
+    _boardDraw = GetWorld()->SpawnActor<ATC_DrawDeck>(DrawDeckBluePrint, BoardDrawAnchor->GetComponentLocation(), BoardDrawAnchor->GetComponentRotation());
+    _boardDraw->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+    _boardDraw->SetDrawDeckBoard(this);
+    _boardDraw->Init(GetBoardPlayer()->GetDeck());
+    _boardDiscard = GetWorld()->SpawnActor<ATC_DiscardDeck>(DiscardDeckBluePrint, BoardDiscardAnchor->GetComponentLocation(), BoardDiscardAnchor->GetComponentRotation());
+    _boardDiscard->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+    _boardDiscard->SetDiscardDeckBoard(this);
+    _boardSlots.Add(GetWorld()->SpawnActor<ATC_BoardSlot>(BoardSlotBluePrint, BoardSlotOneAnchor->GetComponentLocation(), BoardSlotOneAnchor->GetComponentRotation()));
+    _boardSlots.Add(GetWorld()->SpawnActor<ATC_BoardSlot>(BoardSlotBluePrint, BoardSlotTwoAnchor->GetComponentLocation(), BoardSlotTwoAnchor->GetComponentRotation()));
+    _boardSlots.Add(GetWorld()->SpawnActor<ATC_BoardSlot>(BoardSlotBluePrint, BoardSlotThreeAnchor->GetComponentLocation(), BoardSlotThreeAnchor->GetComponentRotation()));
+
+    for (ATC_BoardSlot* BoardSlot : _boardSlots)
+    {
+        BoardSlot->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+        BoardSlot->SetBoardSlotBoard(this);
+        BoardSlot->Init();
+    }
 }

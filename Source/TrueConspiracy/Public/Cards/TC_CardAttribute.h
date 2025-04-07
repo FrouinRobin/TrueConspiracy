@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 
 UENUM(BlueprintType)  // Makes it visible in Blueprints
-enum class ETC_CardType : uint8
+enum class ETC_CardAttribute : uint8
 {
     None            UMETA(DisplayName = "None"),
     Monstre         UMETA(DisplayName = "Monstre"),
