@@ -303,3 +303,28 @@ void ATC_Player::SwitchFace(ATC_Card* Card)
 {
 	Card->SwitchPhase();
 }
+
+void ATC_Player::SetState(ETC_PlayerState State)
+{
+	ETC_PlayerState oldState = _PlayerState;
+	_PlayerState = State;
+	OnStateChange(_PlayerState, oldState);
+}
+
+ETC_PlayerState ATC_Player::GetState()
+{
+	return _PlayerState;
+}
+
+void ATC_Player::OnStateChange_Implementation(ETC_PlayerState newState, ETC_PlayerState oldState)
+{
+	UKismetSystemLibrary::PrintString(GetWorld(), FString("From the C++"), true, NULL, FLinearColor(0, 0, 1));
+	switch (newState)
+	{
+		case (ETC_PlayerState::SELECTHAND):
+		case (ETC_PlayerState::SELECTSLOT):
+		//case (ETC_PlayerState::WAITTURN):
+		default:
+			break;
+	}
+}

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Cards/TC_Card.h"
+#include <TC_PlayerState.h>
 #include "TC_Player.generated.h"
 
 enum class ETC_PhaseState : uint8
@@ -44,6 +45,7 @@ protected:
 private:
 	
 	ETC_PhaseState _PhaseState;
+	ETC_PlayerState _PlayerState;
 	
 	TArray<ATC_Card*> _playerHand;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
@@ -116,5 +118,12 @@ public:
 	void PlayCard(ATC_Card* Card, ATC_Slot* Slot);
 
 	void SwitchFace(ATC_Card* Card);
+
+	UFUNCTION(BlueprintCallable, Category = "Player State")
+	void SetState(ETC_PlayerState State);
+	UFUNCTION(BlueprintPure, Category = "Player State", meta = (ReturnDisplayName = "Current State"))
+	ETC_PlayerState GetState();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Player State")
+	void OnStateChange(ETC_PlayerState newState, ETC_PlayerState oldState);
 
 };
