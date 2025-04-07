@@ -27,9 +27,9 @@ struct FAIActions //-> represente une seule action
     ATC_Card* CardInHand;
     ATC_Slot* PlayingSlot;
 
-    uint8 CardIndex;
-    uint8 PlayingSlotIndex;
-    uint8 BoardSlotIndex;
+    int CardIndex;
+    int PlayingSlotIndex;
+    int BoardSlotIndex;
 
     uint32 TerrainIndex = INVALID_INDEX;
     uint32 BoardCardIndex = INVALID_INDEX;

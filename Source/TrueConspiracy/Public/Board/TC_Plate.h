@@ -58,8 +58,11 @@ public:
 	ATC_LandCardSlot* GetLandCardSlotAtIndex(int index);
 
 	UFUNCTION(BlueprintCallable, Category = "Getters")
+	TArray<ATC_Board*> GetPlateBoard();
+
+	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetPlayerOne(ATC_Player* newPlayerOne);
-	UFUNCTION(BlueprintCallable, Category = "Getters")
+	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetPlayerTwo(ATC_Player* newPlayerTwo);
 
 	UFUNCTION(BlueprintCallable, Category = "Init")

@@ -114,10 +114,6 @@ TArray<TSubclassOf<ATC_Card>> ATC_Board::ShuffleCard(TArray<TSubclassOf<ATC_Card
 
 void ATC_Board::Init()
 {
-    float i = 0;
-    
-
-
     _boardDraw = GetWorld()->SpawnActor<ATC_DrawDeck>(DrawDeckBluePrint, BoardDrawAnchor->GetComponentLocation(), BoardDrawAnchor->GetComponentRotation());
     _boardDraw->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
     _boardDraw->SetDrawDeckBoard(this);

@@ -91,44 +91,6 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 		return;
 	}
 	
-	ATC_Board* BoardOne = Plate->GetBoardPlayerOne();
-	ATC_Board* BoardTwo = Plate->GetBoardPlayerTwo();
-	
-	if (!BoardOne || !BoardTwo)
-	{
-		UE_LOG(LogTemp, Error, TEXT("PlayCard: Un des plateaux est nul. BoardOne=%p | BoardTwo=%p"), BoardOne, BoardTwo);
-		return;
-	}
-	
-	ATC_Board* CurrentBoard = nullptr;
-	if (BoardOne->GetBoardPlayer() == ActivePlayer)
-	{
-		CurrentBoard = BoardOne;
-	}
-	else if (BoardTwo->GetBoardPlayer() == ActivePlayer)
-	{
-		CurrentBoard = BoardTwo;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("PlayCard: Aucun plateau associé au joueur actif."));
-		return;
-	}
-	
-	// Trouver l'index de la slot
-	int SlotIndex = 0;
-	int BoardSlotIndex = 0;
-	
-	for (ATC_BoardSlot* BoardSlot : CurrentBoard->GetBoardSlots())
-	{
-		if (BoardSlot->GetBoardSlotSlots().Contains(InAction.PlayingSlot))
-		{
-			SlotIndex = BoardSlot->GetBoardSlotSlots().Find(InAction.PlayingSlot);
-			BoardSlotIndex = CurrentBoard->GetBoardSlots().Find(BoardSlot);
-			break;
-		}
-	}
-	
 	// Retirer la carte de la main
 	ActivePlayer->GetHand().Remove(SelectedCard);
 	
@@ -143,11 +105,12 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 		return;
 	}
 	
-	//ActivePlayer->GetPlayerBoard
+	ActivePlayer->GetPlayerBaord()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardCardIndex];
 
 	ATC_Card* SpawnedCard = GameInstance->GetWorld()->SpawnActor<ATC_Card>(
-		InAction.PlayingSlot->GetActorLocation(),
-		InAction.PlayingSlot->GetActorRotation());
+		SelectedCard->GetClass(),
+		ActivePlayer->GetPlayerBaord()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardCardIndex]->GetActorLocation(),
+		ActivePlayer->GetPlayerBaord()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardCardIndex]->GetActorRotation());
 	
 	if (!SpawnedCard)
 	{
@@ -156,11 +119,14 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 	}
 	
 	// Copier les infos de la carte jouée
-	SpawnedCard->SetCardAttackFace(InAction.CardInHand->GetCardAttackFace());
+	/*SpawnedCard->SetCardAttackFace(InAction.CardInHand->GetCardAttackFace());
 	SpawnedCard->SetCardDefendFace(InAction.CardInHand->GetCardDefendFace());
-	SpawnedCard->SetCardType(InAction.CardInHand->GetCardType());
+	SpawnedCard->SetCardType(InAction.CardInHand->GetCardType());*/
 	
 	UE_LOG(LogTemp, Log, TEXT("PlayCard: Carte %s jouée avec succès."), *SpawnedCard->GetName());
+
+	SelectedCard->Destroy();
+	SpawnedCard->OnCardPlace();
 
 
 
@@ -271,7 +237,7 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 	// Appeler le OnCardPlayed() sur le board ou la slot si besoin
 }
 
-void TC_ActionsSystem::DrawCard(TC_GameStates& GameState, ATC_Player* InCurrentPlayer)
+void TC_ActionsSystem::DrawCard(TC_GameStates& InGameState, ATC_Player* InCurrentPlayer)
 {
 
 	if (!InCurrentPlayer)
@@ -280,18 +246,18 @@ void TC_ActionsSystem::DrawCard(TC_GameStates& GameState, ATC_Player* InCurrentP
 		return;
 	}
 
-	ATC_Plate* Plate = GameState.GetGamePlate();
+	ATC_Plate* Plate = InGameState.GetGamePlate();
 	if (!Plate)
 	{
 		UE_LOG(LogTemp, Error, TEXT("DrawCard : GamePlate est nul."));
 		return;
 	}
 
-	ATC_Board* BoardOne = Plate->GetBoardPlayerOne();
-	ATC_Board* BoardTwo = Plate->GetBoardPlayerTwo();
+	ATC_Board* BoardOne = Plate->GetBoardByPlayer(InGameState.GetPlayer1());
+	ATC_Board* BoardTwo = Plate->GetBoardByPlayer(InGameState.GetPlayer2());
 
 	ATC_Board* CurrentPlayerBoard = nullptr;
-
+	/*
 	if (BoardOne && BoardOne->GetBoardPlayer() == InCurrentPlayer)
 	{
 		CurrentPlayerBoard = BoardOne;
@@ -304,12 +270,16 @@ void TC_ActionsSystem::DrawCard(TC_GameStates& GameState, ATC_Player* InCurrentP
 	{
 		UE_LOG(LogTemp, Error, TEXT("DrawCard : Aucun plateau associé au joueur actuel."));
 		return;
-	}
+	}*/
 
-	if (!CurrentPlayerBoard->GetBoardDraw())
+	if (!InCurrentPlayer->GetPlayerBaord())
 	{
 		UE_LOG(LogTemp, Error, TEXT("DrawCard : BoardDraw est nul."));
 		return;
+	}
+	else
+	{
+		CurrentPlayerBoard = InCurrentPlayer->GetPlayerBaord();
 	}
 
 	TArray<ATC_Card*> BoardPlayerDrawDeck = CurrentPlayerBoard->GetBoardDraw()->GetDrawDeck();

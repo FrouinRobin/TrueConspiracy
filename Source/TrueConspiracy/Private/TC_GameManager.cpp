@@ -104,14 +104,14 @@ void ATC_GameManager::StartTurn()
 		//Switch priority playing players
 		GetCurrentGameState().SetIsPlayer1Turn(!GetCurrentGameState().GetIsPlayer1Turn());
 		//Invoke card OnStartTurn
-		for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
+		for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardByPlayer(GetCurrentGameState().GetPlayer1())->GetBoardSlots())
 		{
 			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
 			{
 				Slot->GetSlotCard()->OnCardStartTurn();
 			}
 		}
-		for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerTwo()->GetBoardSlots())
+		for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardByPlayer(GetCurrentGameState().GetPlayer1())->GetBoardSlots())
 		{
 
 			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
@@ -140,36 +140,13 @@ void ATC_GameManager::StartPhase()
 		return;
 	}
 
-	ATC_Board* BoardOne = Plate->GetBoardPlayerOne();
-	if (BoardOne)
+	for (ATC_Board* Board : Plate->GetPlateBoard())
 	{
-		for (ATC_BoardSlot* BoardSlot : BoardOne->GetBoardSlots())
+		for (ATC_BoardSlot* BoardSlot : Board->GetBoardSlots())
 		{
-			if (!BoardSlot) continue;
 
 			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
 			{
-				if (!Slot) continue;
-
-				ATC_Card* Card = Slot->GetSlotCard();
-				if (Card)
-				{
-					Card->OnCardStartPhase();
-				}
-			}
-		}
-	}
-
-	ATC_Board* BoardTwo = Plate->GetBoardPlayerTwo();
-	if (BoardTwo)
-	{
-		for (ATC_BoardSlot* BoardSlot : BoardTwo->GetBoardSlots())
-		{
-			if (!BoardSlot) continue;
-
-			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
-			{
-				if (!Slot) continue;
 
 				ATC_Card* Card = Slot->GetSlotCard();
 				if (Card)
@@ -216,18 +193,20 @@ void ATC_GameManager::StartPhase()
 
 void ATC_GameManager::EndPhase()
 {
-	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
+	for (ATC_Board* Board : GetCurrentGameState().GetGamePlate()->GetPlateBoard())
 	{
-		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		for (ATC_BoardSlot* BoardSlot : Board->GetBoardSlots())
 		{
-			Slot->GetSlotCard()->OnCardEndPhase();
-		}
-	}
-	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerTwo()->GetBoardSlots())
-	{
-		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
-		{
-			Slot->GetSlotCard()->OnCardEndPhase();
+
+			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+			{
+
+				ATC_Card* Card = Slot->GetSlotCard();
+				if (Card)
+				{
+					Card->OnCardEndPhase();
+				}
+			}
 		}
 	}
 	if (GetCurrentGameState().GetActivePlayer()->GetPhaseState() == ETC_PhaseState::Defense)
@@ -250,20 +229,20 @@ void ATC_GameManager::SwitchPhase()
 	{
 		Card->SwitchPhase();
 	}
-	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
+	for (ATC_Board* Board : GetCurrentGameState().GetGamePlate()->GetPlateBoard())
 	{
-
-		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		for (ATC_BoardSlot* BoardSlot : Board->GetBoardSlots())
 		{
-			Slot->GetSlotCard()->SwitchPhase();
-		}
-	}
-	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerTwo()->GetBoardSlots())
-	{
 
-		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
-		{
-			Slot->GetSlotCard()->SwitchPhase();
+			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+			{
+
+				ATC_Card* Card = Slot->GetSlotCard();
+				if (Card)
+				{
+					Card->SwitchPhase();
+				}
+			}
 		}
 	}
 }
@@ -274,18 +253,20 @@ void ATC_GameManager::PlayAction(const FAIActions& InActionToPlay)
 
 void ATC_GameManager::EndTurn()
 {
-	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
+	for (ATC_Board* Board : GetCurrentGameState().GetGamePlate()->GetPlateBoard())
 	{
-		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		for (ATC_BoardSlot* BoardSlot : Board->GetBoardSlots())
 		{
-			Slot->GetSlotCard()->OnCardEndTurn();
-		}
-	}
-	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerTwo()->GetBoardSlots())
-	{
-		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
-		{
-			Slot->GetSlotCard()->OnCardEndTurn();
+
+			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+			{
+
+				ATC_Card* Card = Slot->GetSlotCard();
+				if (Card)
+				{
+					Card->OnCardEndTurn();
+				}
+			}
 		}
 	}
 }
