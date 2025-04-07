@@ -27,6 +27,8 @@ ATC_Player::ATC_Player()
 	_cardAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("CardAnchor"));
 	_cardAnchor->SetupAttachment(_playerCamera);
 	_cardAnchor->SetRelativeLocation(FVector(150, 0, -120));
+
+	//_playerTransform.Add(ETC_PlayerState::SELECTHAND, FTransform())
 }
 
 //ATC_Card* ATC_Player::GetCardFromDeckByName(FString name, bool checkAllFaces)
@@ -297,6 +299,16 @@ void ATC_Player::PlayCard(ATC_Card* Card, ATC_Slot* Slot)
 	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
 	
 	TC_ActionsSystem::PlayCard(GameManager->GetCurrentGameState(), Card, Slot);*/
+	RemoveCardFromHand(Card);
+}
+
+void ATC_Player::RemoveCardFromHand(ATC_Card* Card)
+{
+	if (!_playerHand.Contains(Card)) return;
+
+	_playerHand.Remove(Card);
+	Card->Destroy();
+	ShowHandOnCamera();
 }
 
 void ATC_Player::SwitchFace(ATC_Card* Card)
@@ -319,6 +331,8 @@ ETC_PlayerState ATC_Player::GetState()
 void ATC_Player::OnStateChange_Implementation(ETC_PlayerState newState, ETC_PlayerState oldState)
 {
 	UKismetSystemLibrary::PrintString(GetWorld(), FString("From the C++"), true, NULL, FLinearColor(0, 0, 1));
+	//if (_playerTransform.Contains(newState))
+	//	SetActorTransform(_playerTransform[newState]);
 	switch (newState)
 	{
 		case (ETC_PlayerState::SELECTHAND):

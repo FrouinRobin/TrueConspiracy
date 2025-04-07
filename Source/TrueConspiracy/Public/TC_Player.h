@@ -43,7 +43,9 @@ protected:
 	ATC_Card* _selectedCard;
 
 private:
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TMap<ETC_PlayerState, FTransform> _playerTransform;
+
 	ETC_PhaseState _PhaseState;
 	ETC_PlayerState _PlayerState;
 	
@@ -116,6 +118,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void PlayCard(ATC_Card* Card, ATC_Slot* Slot);
+	UFUNCTION(BlueprintCallable)
+	void RemoveCardFromHand(ATC_Card* Card);
 
 	void SwitchFace(ATC_Card* Card);
 
