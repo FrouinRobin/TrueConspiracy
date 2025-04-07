@@ -135,4 +135,5 @@ void ATC_Board::Init()
         BoardSlot->SetBoardSlotBoard(this);
         BoardSlot->Init();
     }
+    
 }

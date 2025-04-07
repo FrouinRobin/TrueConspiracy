@@ -7,6 +7,8 @@
 #include "Cards/TC_Card.h"
 #include "TC_Player.generated.h"
 
+class ATC_Board;
+
 enum class ETC_PhaseState : uint8
 {
 	Attack,
@@ -45,6 +47,8 @@ private:
 	
 	ETC_PhaseState _PhaseState;
 	
+	ATC_Board* _playerBoard;
+
 	TArray<ATC_Card*> _playerHand;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TArray<TSubclassOf<ATC_Card>> _playerDeck;
@@ -59,6 +63,10 @@ public:
 	ATC_Card* GetCardFromDeckByName(FString name, bool checkAllFaces);
 	UFUNCTION(BlueprintCallable, Category = "Player Deck")
 	ATC_Card* GetCardFromDeckById(ETC_CardID id);*/
+	UFUNCTION(BlueprintCallable, Category = "Player Board")
+	ATC_Board* GetPlayerBaord();
+	UFUNCTION(BlueprintCallable, Category = "Player Board")
+	void SetPlayerBoard(ATC_Board* newBoard);
 	UFUNCTION(BlueprintCallable, Category = "Player Deck")
 	void SetDeck(TArray<TSubclassOf<ATC_Card>> newDeck);
 	UFUNCTION(BlueprintCallable, Category = "Player Deck")

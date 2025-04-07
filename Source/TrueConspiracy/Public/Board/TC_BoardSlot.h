@@ -37,8 +37,13 @@ public:
 	ATC_Board* GetBoardSlotBoard();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	TArray<ATC_Slot*> GetBoardSlotSlots();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ATC_BoardSlot* GetBoardSlotOppositeBoard();
+
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetBoardSlotBoard(ATC_Board* newBoard);
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetBoardSlotOppositeBoard(ATC_BoardSlot* newOppositeBoard);
 
 	UFUNCTION(BlueprintCallable, Category = "Init")
 	void Init();
@@ -46,6 +51,7 @@ public:
 private:
 
 	ATC_Board* _boardSlotBoard;
+	ATC_BoardSlot* _boardSlotOppositeBoard;
 	TArray<ATC_Slot*> _boardSlotSlots;
 	UStaticMesh* _cardMesh;
 };
