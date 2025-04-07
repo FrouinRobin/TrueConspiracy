@@ -7,6 +7,7 @@
 #include <Cards/Faces/TC_Face.h>
 #include <Components/SphereComponent.h>
 #include <TC_GameInstance.h>
+#include "TC_AIActions.h"
 #include <TC_ActionsSystem.h>
 #include <Kismet/GameplayStatics.h>
 #include "TC_GameManager.h"
@@ -292,11 +293,36 @@ uint8 ATC_Player::GetPlayerMaxMana() const
 //}
 void ATC_Player::PlayCard(ATC_Card* Card, ATC_Slot* Slot)
 {
-	ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(Card->GetClass(), FVector(Slot->GetActorLocation().X, Slot->GetActorLocation().Y, Slot->GetActorLocation().Z + 1), Slot->GetActorRotation());
+	//ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(Card->GetClass(), FVector(Slot->GetActorLocation().X, Slot->GetActorLocation().Y, Slot->GetActorLocation().Z + 1), Slot->GetActorRotation());
 	/*AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
 	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
 	
 	TC_ActionsSystem::PlayCard(GameManager->GetCurrentGameState(), Card, Slot);*/
+
+	if (!Card || !Slot)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Paramètre invalide (carte ou slot)."));
+		return;
+	}
+
+	// Crée une action PlayCard
+	FAIActions PlayAction(EActionType::PlayCard);
+	PlayAction.CardInHand = Card;
+	PlayAction.PlayingSlot = Slot;
+	PlayAction.CardIndex = _playerHand.Find(Card);
+
+	// Récupère le GameManager actif
+	AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
+	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
+	if (!GameManager)
+	{
+		UE_LOG(LogTemp, Error, TEXT("PlayCard: GameManager introuvable."));
+		return;
+	}
+
+	// Applique l'action au GameState actuel
+	GameManager->GetCurrentGameState().ApplyAction(PlayAction);
+	
 }
 
 void ATC_Player::SwitchFace(ATC_Card* Card)

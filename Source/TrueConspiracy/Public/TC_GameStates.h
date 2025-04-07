@@ -81,7 +81,8 @@ public:
 
 	// --- Generating Futur State(s) ---
 	TArray<TC_GameStates> GetNextStates() const;
-	void ApplyAction(const FAIActions& InAction, ATC_Player* InCurrentPlayer);
+	//void ApplyAction(const FAIActions& InAction, ATC_Player* InCurrentPlayer);
+	void ApplyAction(const FAIActions& InAction);
 
 	// --- Tool(s) Function(s) ---
 	TC_GameStates Clone() const;
@@ -104,7 +105,7 @@ public:
 
 	//void SetPlayer1Mana(int32 InMana);
 	//int32 GetPlayer1Mana() const;
-	//
+	
 	//void SetPlayer2Mana(int32 InMana);
 	//int32 GetPlayer2Mana() const;
 

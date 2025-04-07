@@ -108,10 +108,16 @@ TArray<TC_GameStates> TC_GameStates::GetNextStates() const
 	return TArray<TC_GameStates>();
 }
 
-void TC_GameStates::ApplyAction(const FAIActions& InAction, ATC_Player* InCurrentPlayer)
+//void TC_GameStates::ApplyAction(const FAIActions& InAction, ATC_Player* InCurrentPlayer)
+//{
+//	// Déléguer la logique à TC_ActionsSystem
+//	TC_ActionsSystem::ApplyAction(*this, InAction, InCurrentPlayer);
+//}
+
+void TC_GameStates::ApplyAction(const FAIActions& InAction)
 {
 	// Déléguer la logique à TC_ActionsSystem
-	TC_ActionsSystem::ApplyAction(*this, InAction, InCurrentPlayer);
+	TC_ActionsSystem::ApplyAction(*this, InAction);
 }
 
 // --- Tool(s) Function(s) ---

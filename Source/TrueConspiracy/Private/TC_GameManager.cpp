@@ -15,6 +15,7 @@ ATC_GameManager::ATC_GameManager()
 void ATC_GameManager::BeginPlay()
 {
 	Super::BeginPlay();
+	StartGame(EGameModeFormat::BO3);
 }
 
 void ATC_GameManager::Tick(float DeltaTime)
@@ -53,26 +54,41 @@ void ATC_GameManager::StartGame(EGameModeFormat InFormat) //Bouton de lancement 
 		UE_LOG(LogTemp, Error, TEXT("GameInstance introuvable dans StartGame()."));
 		return;
 	}
+
 	GameInstance->SetSelectedFormat(InFormat);
 	GetCurrentGameState() = TC_GameStates(GameInstance->GetSelectedFormat());
 	
+	GetCurrentGameState().SetGamePlate(GameInstance->GetWorld()->SpawnActor<ATC_Plate>(FVector::ZeroVector, FRotator::ZeroRotator));
+
 	TArray<AActor*> FoundPlayers;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATC_Player::StaticClass(), FoundPlayers);
-	for (AActor* Actor : FoundPlayers)
-	{
-		ATC_Player* Player = Cast<ATC_Player>(Actor);
-		if (!Player) continue;
+	//GetCurrentGameState().SetPlayer1(FoundPlayers[0]->GetClass());
 
-		if (Player->PlayerID == 1)
-		{
-			GetCurrentGameState().SetPlayer1(Player);
-		}
-		else if (Player->PlayerID == 2)
-		{
-			GetCurrentGameState().SetPlayer2(Player);
-		}
+	if (Cast<ATC_Player>(FoundPlayers[0]))
+	{
+		GetCurrentGameState().SetPlayer1(Cast<ATC_Player>(FoundPlayers[0]));
 	}
-	GetCurrentGameState().SetGamePlate(GameInstance->GetWorld()->SpawnActor<ATC_Plate>(FVector::ZeroVector, FRotator::ZeroRotator));
+	if (Cast<ATC_Player>(FoundPlayers[1]))
+	{
+		GetCurrentGameState().SetPlayer2(Cast<ATC_Player>(FoundPlayers[1]));
+	}
+
+	//for (AActor* Actor : FoundPlayers)
+	//{
+	//	ATC_Player* Player = Cast<ATC_Player>(Actor);
+	//	if (!Player) continue;
+	//
+	//	if (Player->PlayerID == 1)
+	//	{
+	//		GetCurrentGameState().SetPlayer1(Player);
+	//		//GetCurrentGameState().GetGamePlate()->SetPlayerOne(Player);
+	//	}
+	//	else if (Player->PlayerID == 2)
+	//	{
+	//		GetCurrentGameState().SetPlayer2(Player);
+	//		//GetCurrentGameState().GetGamePlate()->SetPlayerTwo(Player);
+	//	}
+	//}
 	InitGame();
 }
 
@@ -109,33 +125,88 @@ void ATC_GameManager::StartTurn()
 
 void ATC_GameManager::StartPhase()
 {
-	ATC_Player* CurrentPlayer;
-	if (GetCurrentGameState().GetIsPlayer1Turn())
-	{
-		CurrentPlayer = GetCurrentGameState().GetPlayer1();
-	}
-	else
-	{
-		CurrentPlayer = GetCurrentGameState().GetPlayer2();
-	}
+	ATC_Player* CurrentPlayer = GetCurrentGameState().GetIsPlayer1Turn()
+		? GetCurrentGameState().GetPlayer1()
+		: GetCurrentGameState().GetPlayer2();
 
 	GetCurrentGameState().SetActivePlayer(CurrentPlayer);
 	TC_ActionsSystem::DrawCard(GetCurrentGameState(), CurrentPlayer);
 
-	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
+	// Sécuriser les accès à BoardPlayerOne
+	ATC_Plate* Plate = GetCurrentGameState().GetGamePlate();
+	if (!Plate)
 	{
-		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		UE_LOG(LogTemp, Error, TEXT("StartPhase: Plate est null."));
+		return;
+	}
+
+	ATC_Board* BoardOne = Plate->GetBoardPlayerOne();
+	if (BoardOne)
+	{
+		for (ATC_BoardSlot* BoardSlot : BoardOne->GetBoardSlots())
 		{
-			Slot->GetSlotCard()->OnCardStartPhase();
+			if (!BoardSlot) continue;
+
+			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+			{
+				if (!Slot) continue;
+
+				ATC_Card* Card = Slot->GetSlotCard();
+				if (Card)
+				{
+					Card->OnCardStartPhase();
+				}
+			}
 		}
 	}
-	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerTwo()->GetBoardSlots())
+
+	ATC_Board* BoardTwo = Plate->GetBoardPlayerTwo();
+	if (BoardTwo)
 	{
-		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		for (ATC_BoardSlot* BoardSlot : BoardTwo->GetBoardSlots())
 		{
-			Slot->GetSlotCard()->OnCardStartPhase();
+			if (!BoardSlot) continue;
+
+			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+			{
+				if (!Slot) continue;
+
+				ATC_Card* Card = Slot->GetSlotCard();
+				if (Card)
+				{
+					Card->OnCardStartPhase();
+				}
+			}
 		}
 	}
+
+	//ATC_Player* CurrentPlayer;
+	//if (GetCurrentGameState().GetIsPlayer1Turn())
+	//{
+	//	CurrentPlayer = GetCurrentGameState().GetPlayer1();
+	//}
+	//else
+	//{
+	//	CurrentPlayer = GetCurrentGameState().GetPlayer2();
+	//}
+	//
+	//GetCurrentGameState().SetActivePlayer(CurrentPlayer);
+	//TC_ActionsSystem::DrawCard(GetCurrentGameState(), CurrentPlayer);
+	//
+	//for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
+	//{
+	//	for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+	//	{
+	//		Slot->GetSlotCard()->OnCardStartPhase();
+	//	}
+	//}
+	//for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerTwo()->GetBoardSlots())
+	//{
+	//	for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+	//	{
+	//		Slot->GetSlotCard()->OnCardStartPhase();
+	//	}
+	//}
 
 	//Generer toutes les actions valides par mon joueur
 	// lorsqu'aucune action est valide on appelle EndPhase

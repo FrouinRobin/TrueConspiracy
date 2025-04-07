@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 
+class ATC_Card;
+class ATC_Slot;
+
 // AIActions = Une commande dans un resto : "Plat 3, Table 4"
 // AIActionsSystem = Le serveur ou la cuisine qui sait comment préparer ce plat et vérifier la commande
 
@@ -21,10 +24,17 @@ struct FAIActions //-> represente une seule action
     static constexpr int32 INVALID_INDEX = -1;
 
     EActionType Type;
-    uint32 CardIndexInHand = INVALID_INDEX;
+    ATC_Card* CardInHand;
+    ATC_Slot* PlayingSlot;
+
+    uint8 CardIndex;
+    uint8 PlayingSlotIndex;
+    uint8 BoardSlotIndex;
+
     uint32 TerrainIndex = INVALID_INDEX;
     uint32 BoardCardIndex = INVALID_INDEX;
     uint32 DestinationTerrainIndex = INVALID_INDEX;
+
 
     FAIActions() {}
     FAIActions(EActionType InType) : Type(InType) {}
