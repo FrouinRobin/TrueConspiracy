@@ -55,7 +55,7 @@ ATC_Board* ATC_Plate::GetBoardByPlayer(ATC_Player* PlayerRef)
 	{
 		if (Board->GetBoardPlayer() == PlayerRef)
 		{
-			PlayerBaord = Board;
+			return Board;
 		}
 		else
 		{

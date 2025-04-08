@@ -9,5 +9,5 @@ enum class ETC_DataType : uint8
 {
     None            UMETA(DisplayName = "None"),
     Score           UMETA(DisplayName = "Score"),
-    Mana            UMETA(DisplayName = "Monster")
+    Mana            UMETA(DisplayName = "Mana")
 };
