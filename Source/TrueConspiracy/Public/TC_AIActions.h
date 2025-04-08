@@ -21,7 +21,7 @@ enum class EActionType : uint8 //-> le type d’action
 
 struct FAIActions //-> represente une seule action
 {
-    static constexpr int32 INVALID_INDEX = -1;
+    //static constexpr int32 INVALID_INDEX = -1;
 
     EActionType Type;
     ATC_Card* CardInHand;
@@ -31,13 +31,13 @@ struct FAIActions //-> represente une seule action
     int PlayingSlotIndex;
     int BoardSlotIndex;
 
-    uint32 TerrainIndex = INVALID_INDEX;
-    uint32 BoardCardIndex = INVALID_INDEX;
-    uint32 DestinationTerrainIndex = INVALID_INDEX;
-
+    int TerrainIndex;
+    int BoardCardIndex;
+    int DestinationTerrainIndex;
 
     FAIActions() {}
-    FAIActions(EActionType InType) : Type(InType) {}
+    //FAIActions(EActionType InType) : Type(InType) {}
+    FAIActions(EActionType InType);
 
     // C’est une donnée simple, ce que représente une action dans le jeu
     // Stocker une décision possible dans le MCTS

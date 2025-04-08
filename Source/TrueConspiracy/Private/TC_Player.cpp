@@ -322,6 +322,9 @@ void ATC_Player::PlayCard(ATC_Card* Card, ATC_Slot* Slot)
 	PlayAction.PlayingSlot = Slot;
 	PlayAction.CardIndex = _playerHand.Find(Card);
 
+	PlayAction.BoardSlotIndex = Slot->GetSlaotBoardSlot()->GetBoardSlotBoard()->GetBoardSlots().Find(Slot->GetSlaotBoardSlot());
+	PlayAction.BoardCardIndex = Slot->GetSlaotBoardSlot()->GetBoardSlotSlots().Find(Slot);
+
 	// Récupère le GameManager actif
 	AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
 	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);

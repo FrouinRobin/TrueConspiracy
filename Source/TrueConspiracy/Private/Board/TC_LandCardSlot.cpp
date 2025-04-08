@@ -15,7 +15,7 @@ ATC_LandCardSlot::ATC_LandCardSlot()
 
 TArray<ATC_BoardSlot*> ATC_LandCardSlot::GetLandCardBordSlot()
 {
-	return TArray<ATC_BoardSlot*>();
+	return _landCardBoardSlots;
 }
 
 ATC_BoardSlot* ATC_LandCardSlot::GetLandCardBordSlotByPlayer(ATC_Player* PlayerReference)

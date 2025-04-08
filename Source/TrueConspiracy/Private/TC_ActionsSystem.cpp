@@ -37,9 +37,6 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, ATC_Card* InCard, AT
 
 void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& InAction)
 {
-
-
-
 	////GPT DEBUG
 	UE_LOG(LogTemp, Warning, TEXT("Player1: %s | Player2: %s | IsPlayer1Turn: %s"),
 		*GetNameSafe(InGameState.GetPlayer1()),
@@ -63,7 +60,7 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 	
 	// Vérification de la main du joueur
 	TArray<ATC_Card*> ActivePlayerHand = ActivePlayer->GetHand();
-	//ActivePlayer->GetHand()[InAction.CardIndex];
+
 	UE_LOG(LogTemp, Warning, TEXT("PlayCard: Main contient %d cartes."), ActivePlayerHand.Num());
 	for (ATC_Card* Card : ActivePlayerHand)
 	{
@@ -118,14 +115,13 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 		return;
 	}
 	
-	// Copier les infos de la carte jouée
-	/*SpawnedCard->SetCardAttackFace(InAction.CardInHand->GetCardAttackFace());
-	SpawnedCard->SetCardDefendFace(InAction.CardInHand->GetCardDefendFace());
-	SpawnedCard->SetCardType(InAction.CardInHand->GetCardType());*/
-	
 	UE_LOG(LogTemp, Log, TEXT("PlayCard: Carte %s jouée avec succès."), *SpawnedCard->GetName());
 
-	SelectedCard->Destroy();
+	if (SelectedCard->Destroy()) 
+	{
+		UE_LOG(LogTemp, Log, TEXT("PlayCard: SelectedCard Destroyed."));
+	}
+
 	SpawnedCard->OnCardPlace();
 
 
