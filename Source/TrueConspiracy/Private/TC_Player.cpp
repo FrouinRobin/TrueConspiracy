@@ -11,6 +11,7 @@
 #include <Kismet/GameplayStatics.h>
 #include "TC_GameManager.h"
 #include "Board/TC_Slot.h"
+#include "Board/TC_Board.h"
 
 // Sets default values
 ATC_Player::ATC_Player()
@@ -103,6 +104,16 @@ ATC_Card* ATC_Player::GetCardFromHandById(ETC_CardID id)
 	}
 	UE_LOG(LogTemp, Warning, TEXT("GetCardFromDeckById() did not return any card!"));
 	return nullptr;
+}
+
+ATC_Board* ATC_Player::GetPlayerBaord()
+{
+	return _playerBoard;
+}
+
+void ATC_Player::SetPlayerBoard(ATC_Board* newBoard)
+{
+	_playerBoard = newBoard;
 }
 
 void ATC_Player::SetDeck(TArray<TSubclassOf<ATC_Card>> newDeck)

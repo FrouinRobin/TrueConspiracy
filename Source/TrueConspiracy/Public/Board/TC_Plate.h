@@ -50,9 +50,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_Player* GetPlayerTwo();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	ATC_Board* GetBoardPlayerOne();
-	UFUNCTION(BlueprintCallable, Category = "Getters")
-	ATC_Board* GetBoardPlayerTwo();
+	ATC_Board* GetBoardByPlayer(ATC_Player* PlayerRef);
+
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	TArray<ATC_LandCardSlot*> GetLandCardSlots();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
@@ -62,10 +61,6 @@ public:
 	void SetPlayerOne(ATC_Player* newPlayerOne);
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	void SetPlayerTwo(ATC_Player* newPlayerTwo);
-	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetBoardPlayerOne(ATC_Board* newBoardPlayerOne);
-	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetBoardPlayerTwo(ATC_Board* newBoardPlayerTwo);
 
 	UFUNCTION(BlueprintCallable, Category = "Init")
 	void Init();
@@ -78,7 +73,6 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true))
 	ATC_Player* _playerTwo;
 
-	ATC_Board* _boardPlayerOne;
-	ATC_Board* _boardPlayerTwo;
+	TArray<ATC_Board*> _plateBoard;
 	TArray<ATC_LandCardSlot*> _landCardSlots;
 };

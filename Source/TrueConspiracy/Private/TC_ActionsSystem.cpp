@@ -48,14 +48,14 @@ void TC_ActionsSystem::DrawCard(TC_GameStates& GameState, ATC_Player* InCurrentP
 		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Joueur invalide."));
 		return;
 	}
-	ATC_Board* CurrentPlayerBoard;
-	if (GameState.GetGamePlate() && GameState.GetGamePlate()->GetBoardPlayerOne()->GetBoardPlayer() == InCurrentPlayer) {
+	ATC_Board* CurrentPlayerBoard = GameState.GetGamePlate()->GetBoardByPlayer(InCurrentPlayer) ;
+	/*if (GameState.GetGamePlate() && GameState.GetGamePlate()->GetBoardPlayerOne()->GetBoardPlayer() == InCurrentPlayer) {
 		CurrentPlayerBoard = GameState.GetGamePlate()->GetBoardPlayerOne();
 	}
 	else
 	{
 		CurrentPlayerBoard = GameState.GetGamePlate()->GetBoardPlayerTwo();
-	}
+	}*/
 
 	TArray<ATC_Card*> BoardPlayerDrawDeck = CurrentPlayerBoard->GetBoardDraw()->GetDrawDeck();
 	TArray<ATC_Card*> Hand = InCurrentPlayer->GetHand();

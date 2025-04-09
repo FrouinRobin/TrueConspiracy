@@ -88,7 +88,7 @@ void ATC_GameManager::StartTurn()
 		//Switch priority playing players
 		GetCurrentGameState().SetIsPlayer1Turn(!GetCurrentGameState().GetIsPlayer1Turn());
 		//Invoke card OnStartTurn
-		for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
+		/*for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
 		{
 			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
 			{
@@ -96,6 +96,21 @@ void ATC_GameManager::StartTurn()
 			}
 		}
 		for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerTwo()->GetBoardSlots())
+		{
+
+			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+			{
+				Slot->GetSlotCard()->OnCardStartTurn();
+			}
+		}*/
+		for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardByPlayer(GetCurrentGameState().GetPlayer1())->GetBoardSlots())
+		{
+			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+			{
+				Slot->GetSlotCard()->OnCardStartTurn();
+			}
+		}
+		for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardByPlayer(GetCurrentGameState().GetPlayer2())->GetBoardSlots())
 		{
 
 			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
@@ -122,7 +137,7 @@ void ATC_GameManager::StartPhase()
 	GetCurrentGameState().SetActivePlayer(CurrentPlayer);
 	TC_ActionsSystem::DrawCard(GetCurrentGameState(), CurrentPlayer);
 
-	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
+	/*for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
 	{
 		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
 		{
@@ -130,6 +145,21 @@ void ATC_GameManager::StartPhase()
 		}
 	}
 	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerTwo()->GetBoardSlots())
+	{
+		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		{
+			Slot->GetSlotCard()->OnCardStartPhase();
+		}
+	}*/
+
+	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardByPlayer(GetCurrentGameState().GetPlayer1())->GetBoardSlots())
+	{
+		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		{
+			Slot->GetSlotCard()->OnCardStartPhase();
+		}
+	}
+	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardByPlayer(GetCurrentGameState().GetPlayer2())->GetBoardSlots())
 	{
 		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
 		{
@@ -145,7 +175,7 @@ void ATC_GameManager::StartPhase()
 
 void ATC_GameManager::EndPhase()
 {
-	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
+	/*for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
 	{
 		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
 		{
@@ -153,6 +183,20 @@ void ATC_GameManager::EndPhase()
 		}
 	}
 	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerTwo()->GetBoardSlots())
+	{
+		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		{
+			Slot->GetSlotCard()->OnCardEndPhase();
+		}
+	}*/
+	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardByPlayer(GetCurrentGameState().GetPlayer1())->GetBoardSlots())
+	{
+		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		{
+			Slot->GetSlotCard()->OnCardEndPhase();
+		}
+	}
+	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardByPlayer(GetCurrentGameState().GetPlayer2())->GetBoardSlots())
 	{
 		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
 		{
@@ -179,7 +223,7 @@ void ATC_GameManager::SwitchPhase()
 	{
 		Card->SwitchPhase();
 	}
-	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
+	/*for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
 	{
 
 		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
@@ -188,6 +232,22 @@ void ATC_GameManager::SwitchPhase()
 		}
 	}
 	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerTwo()->GetBoardSlots())
+	{
+
+		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		{
+			Slot->GetSlotCard()->SwitchPhase();
+		}
+	}*/
+	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardByPlayer(GetCurrentGameState().GetPlayer1())->GetBoardSlots())
+	{
+
+		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		{
+			Slot->GetSlotCard()->SwitchPhase();
+		}
+	}
+	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardByPlayer(GetCurrentGameState().GetPlayer2())->GetBoardSlots())
 	{
 
 		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
@@ -203,7 +263,7 @@ void ATC_GameManager::PlayAction(const FAIActions& InActionToPlay)
 
 void ATC_GameManager::EndTurn()
 {
-	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
+	/*for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
 	{
 		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
 		{
@@ -211,6 +271,20 @@ void ATC_GameManager::EndTurn()
 		}
 	}
 	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerTwo()->GetBoardSlots())
+	{
+		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		{
+			Slot->GetSlotCard()->OnCardEndTurn();
+		}
+	}*/
+	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardByPlayer(GetCurrentGameState().GetPlayer1())->GetBoardSlots())
+	{
+		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		{
+			Slot->GetSlotCard()->OnCardEndTurn();
+		}
+	}
+	for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardByPlayer(GetCurrentGameState().GetPlayer2())->GetBoardSlots())
 	{
 		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
 		{

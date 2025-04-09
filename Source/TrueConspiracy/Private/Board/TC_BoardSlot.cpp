@@ -45,9 +45,19 @@ TArray<ATC_Slot*> ATC_BoardSlot::GetBoardSlotSlots()
 	return _boardSlotSlots;
 }
 
+ATC_BoardSlot* ATC_BoardSlot::GetBoardSlotOppositeBoard()
+{
+	return _boardSlotOppositeBoard;
+}
+
 void ATC_BoardSlot::SetBoardSlotBoard(ATC_Board* newBoard)
 {
 	_boardSlotBoard = newBoard;
+}
+
+void ATC_BoardSlot::SetBoardSlotOppositeBoard(ATC_BoardSlot* newOppositeBoard)
+{
+	_boardSlotOppositeBoard = newOppositeBoard;
 }
 
 void ATC_BoardSlot::Init()
