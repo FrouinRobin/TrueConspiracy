@@ -27,13 +27,17 @@ struct FAIActions //-> represente une seule action
     ATC_Card* CardInHand;
     ATC_Slot* PlayingSlot;
 
-    int CardIndex;
-    int PlayingSlotIndex;
-    int BoardSlotIndex;
+    int CardinHandIndex; //Index de la carte en main
+    int BoardSlotIndex; //Index du BoardSlot (0, 1 ou 2)
+    int BoardSlotCardIndex; //Index du slot de la carte dans le boardSlot (0,1,2 ou 3)
 
-    int TerrainIndex;
-    int BoardCardIndex;
-    int DestinationTerrainIndex;
+    int DestinationBoardSlotIndex; //Index du BoardSlot de destination (0, 1 ou 2)
+    int DestinationBoardSlotCardIndex; //Index du slot de destination de la carte dans le boardSlot (0,1,2 ou 3)
+
+
+    //int TerrainIndex;
+    //int PlayingSlotIndex;
+
 
     FAIActions() {}
     //FAIActions(EActionType InType) : Type(InType) {}

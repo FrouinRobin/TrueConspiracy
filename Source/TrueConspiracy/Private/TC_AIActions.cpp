@@ -8,10 +8,11 @@ FAIActions::FAIActions(EActionType InType)
 	Type = InType;
 	CardInHand = nullptr;
 	PlayingSlot = nullptr;
-	CardIndex = 0;
-	PlayingSlotIndex = 0;
+	CardinHandIndex = 0;
 	BoardSlotIndex = 0;
-	TerrainIndex = 0;
-	BoardCardIndex = 0;
-	DestinationTerrainIndex = 0;
+	BoardSlotCardIndex = 0;
+	DestinationBoardSlotIndex = 0;
+	DestinationBoardSlotCardIndex = 0;
+	//TerrainIndex = 0;
+	//PlayingSlotIndex = 0;x
 }

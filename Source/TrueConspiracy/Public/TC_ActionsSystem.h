@@ -23,8 +23,12 @@ public:
 
 	static void PlayCard(TC_GameStates& InGameState, ATC_Card* InCard, ATC_Slot* InSlot);
 	static void PlayCard(TC_GameStates& InGameState, const FAIActions& InAction);
+	
 	static void DrawCard(TC_GameStates& InGameState, ATC_Player* InCurrentPlayer);
-	static void MoveCard(TC_GameStates& InGameState, const FAIActions& InAction, ATC_Player* InCurrentPlayer);
+	
+	static void DrawCard(TC_GameStates& InGameState, const FAIActions& InAction);
+	
+	static void MoveCard(TC_GameStates& InGameState, const FAIActions& InAction);
 	static void EndTurn(TC_GameStates& InGameState, ATC_Player* InCurrentPlayer);
 
 	static void ApplyAction(TC_GameStates& InGameState, const FAIActions& InAction, ATC_Player* InCurrentPlayer);
