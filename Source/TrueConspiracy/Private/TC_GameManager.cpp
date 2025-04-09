@@ -65,7 +65,7 @@ void ATC_GameManager::StartGame(EGameModeFormat InFormat) //Bouton de lancement 
 	}
 
 	GameInstance->SetSelectedFormat(InFormat);
-	GetCurrentGameState() = TC_GameStates(GameInstance->GetSelectedFormat());
+	SetCurrentGameState(TC_GameStates(GameInstance->GetSelectedFormat()));
 	
 	GetCurrentGameState().SetGamePlate(GameInstance->GetWorld()->SpawnActor<ATC_Plate>(FVector::ZeroVector, FRotator::ZeroRotator));
 

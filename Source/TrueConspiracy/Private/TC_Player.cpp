@@ -302,6 +302,7 @@ uint8 ATC_Player::GetPlayerMaxMana() const
 //
 //	return nullptr;
 //}
+
 void ATC_Player::PlayCard(ATC_Card* Card, ATC_Slot* Slot)
 {
 	//ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(Card->GetClass(), FVector(Slot->GetActorLocation().X, Slot->GetActorLocation().Y, Slot->GetActorLocation().Z + 1), Slot->GetActorRotation());
@@ -336,10 +337,40 @@ void ATC_Player::PlayCard(ATC_Card* Card, ATC_Slot* Slot)
 
 	// Applique l'action au GameState actuel
 	GameManager->GetCurrentGameState().ApplyAction(PlayAction);
-	
 }
 
 void ATC_Player::SwitchFace(ATC_Card* Card)
 {
 	Card->SwitchPhase();
+}
+
+void ATC_Player::MoveCard(ATC_Card* Card, ATC_Slot* Slot) 
+{
+	if (!Card || !Slot)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("MoveCard: Paramètre invalide (carte ou slot)."));
+		return;
+	}
+
+	FAIActions MoveAction(EActionType::MoveCard);
+	MoveAction.CardInHand = Card;
+	MoveAction.PlayingSlot = Slot;
+	//Relatif à Card (Origine)
+	MoveAction.BoardSlotIndex = Card->GetSlot()->GetSlaotBoardSlot()->GetBoardSlotBoard()->GetBoardSlots().Find(Card->GetSlot()->GetSlaotBoardSlot());
+	MoveAction.BoardSlotCardIndex = Card->GetSlot()->GetSlaotBoardSlot()->GetBoardSlotSlots().Find(Card->GetSlot());
+	//Relatif à Slot (Destination)
+	MoveAction.DestinationBoardSlotIndex = Slot->GetSlaotBoardSlot()->GetBoardSlotBoard()->GetBoardSlots().Find(Slot->GetSlaotBoardSlot());
+	MoveAction.DestinationBoardSlotCardIndex = Slot->GetSlaotBoardSlot()->GetBoardSlotSlots().Find(Slot);
+
+	// Récupère le GameManager actif
+	AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
+	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
+	if (!GameManager)
+	{
+		UE_LOG(LogTemp, Error, TEXT("PlayCard: GameManager introuvable."));
+		return;
+	}
+
+	//Appliquer l'action au GameState actuel
+	GameManager->GetCurrentGameState().ApplyAction(MoveAction);
 }

@@ -124,5 +124,7 @@ public:
 	void PlayCard(ATC_Card* Card, ATC_Slot* Slot);
 
 	void SwitchFace(ATC_Card* Card);
-
+	
+	UFUNCTION(BlueprintCallable)
+	void MoveCard(ATC_Card* Card, ATC_Slot* Slot);
 };
