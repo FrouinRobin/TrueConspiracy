@@ -22,43 +22,126 @@ TArray<FAIActions> TC_ActionsSystem::GenerateAllValidActions(const TC_GameStates
 	return TArray<FAIActions>();
 }
 
-void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, ATC_Card* InCard, ATC_Slot* InSlot)
+void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& InAction)
 {
-	InGameState.GetActivePlayer()->SetPlayerMana(InGameState.GetActivePlayer()->GetPlayerMana() - InCard->GetCardCurrentMana());
-
-	UTC_GameInstance* GameInstance = UTC_GameInstance::GetInstance(InSlot);
-	ATC_Card* NewCard = GameInstance->GetWorld()->SpawnActor<ATC_Card>(InSlot->GetActorLocation(), InSlot->GetActorRotation());
-	//NewCard->InitCard()
-	NewCard->SetCardAttackFace(InCard->GetCardAttackFace());
-	NewCard->SetCardDefendFace(InCard->GetCardDefendFace());
-	NewCard->SetCardType(InCard->GetCardType());
-	//Fin NewCard->InitCard()
-}
-
-void TC_ActionsSystem::PlayCard(TC_GameStates& GameState, const FAIActions& Action, ATC_Player* InCurrentPlayer)
-{
-
-}
-
-void TC_ActionsSystem::DrawCard(TC_GameStates& GameState, ATC_Player* InCurrentPlayer)
-{
-	// /!\ N'utilise pas une copie de deck, manipule les cartes dans le deck
-	if (!InCurrentPlayer)
+	////GPT DEBUG
+	UE_LOG(LogTemp, Warning, TEXT("Player1: %s | Player2: %s | IsPlayer1Turn: %s"),
+		*GetNameSafe(InGameState.GetPlayer1()),
+		*GetNameSafe(InGameState.GetPlayer2()),
+		InGameState.GetIsPlayer1Turn() ? TEXT("true") : TEXT("false"));
+	
+	// Récupération du joueur actif
+	ATC_Player* ActivePlayer = InGameState.GetActivePlayer();
+	if (!ActivePlayer)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Joueur invalide."));
+		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Aucun joueur actif."));
 		return;
 	}
-	ATC_Board* CurrentPlayerBoard = GameState.GetGamePlate()->GetBoardByPlayer(InCurrentPlayer) ;
-	/*if (GameState.GetGamePlate() && GameState.GetGamePlate()->GetBoardPlayerOne()->GetBoardPlayer() == InCurrentPlayer) {
-		CurrentPlayerBoard = GameState.GetGamePlate()->GetBoardPlayerOne();
+	
+	// Vérification de la carte à jouer
+	if (!InAction.CardInHand)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Aucune carte fournie dans l'action."));
+		return;
+	}
+	
+	// Vérification de la main du joueur
+	TArray<ATC_Card*> ActivePlayerHand = ActivePlayer->GetHand();
+
+	UE_LOG(LogTemp, Warning, TEXT("PlayCard: Main contient %d cartes."), ActivePlayerHand.Num());
+	for (ATC_Card* Card : ActivePlayerHand)
+	{
+		if (Card)
+		{
+			UE_LOG(LogTemp, Warning, TEXT(" - Carte dans main : %s (%p)"), *Card->GetName(), Card);
+		}
+	}
+	
+	ATC_Card* SelectedCard = ActivePlayer->GetHand()[InAction.CardinHandIndex];
+
+	// Vérification du coût en mana
+	int32 CurrentMana = ActivePlayer->GetPlayerMana();
+	if (InAction.CardInHand->GetCardCurrentMana() > CurrentMana)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Mana insuffisant."));
+		return;
+	}
+	
+	// Vérification du GamePlate et du plateau correspondant
+	ATC_Plate* Plate = InGameState.GetGamePlate();
+	if (!Plate)
+	{
+		UE_LOG(LogTemp, Error, TEXT("PlayCard: GamePlate est nul."));
+		return;
+	}
+	
+	// Retirer la carte de la main
+	ActivePlayer->GetHand().Remove(SelectedCard);
+	
+	// Dépenser le mana
+	ActivePlayer->SetPlayerMana(CurrentMana - InAction.CardInHand->GetCardCurrentMana());
+	
+	// Spawn de la carte
+	UTC_GameInstance* GameInstance = UTC_GameInstance::GetInstance(InAction.PlayingSlot);
+	if (!GameInstance)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayCard: GameInstance introuvable."));
+		return;
+	}
+	
+	ActivePlayer->GetPlayerBaord()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex];
+
+	ATC_Card* SpawnedCard = GameInstance->GetWorld()->SpawnActor<ATC_Card>(
+		SelectedCard->GetClass(),
+		ActivePlayer->GetPlayerBaord()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex]->GetActorLocation(),
+		ActivePlayer->GetPlayerBaord()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex]->GetActorRotation());
+	
+	if (!SpawnedCard)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Échec du spawn de la carte."));
+		return;
+	}
+	
+	UE_LOG(LogTemp, Log, TEXT("PlayCard: Carte %s jouée avec succès."), *SpawnedCard->GetName());
+
+	if (SelectedCard->Destroy()) 
+	{
+		UE_LOG(LogTemp, Log, TEXT("PlayCard: SelectedCard Destroyed."));
+	}
+
+	SpawnedCard->OnCardPlace();
+}
+
+void TC_ActionsSystem::DrawCard(TC_GameStates& InGameState, const FAIActions& InAction)
+{
+	ATC_Player* ActivePlayer = InGameState.GetActivePlayer();
+	if (!ActivePlayer)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Aucun joueur actif."));
+		return;
+	}
+
+	ATC_Plate* Plate = InGameState.GetGamePlate();
+	if (!Plate)
+	{
+		UE_LOG(LogTemp, Error, TEXT("DrawCard : GamePlate est nul."));
+		return;
+	}
+
+	ATC_Board* CurrentPlayerBoard = nullptr;
+
+	if (!ActivePlayer->GetPlayerBaord())
+	{
+		UE_LOG(LogTemp, Error, TEXT("DrawCard : BoardDraw est nul."));
+		return;
 	}
 	else
 	{
-		CurrentPlayerBoard = GameState.GetGamePlate()->GetBoardPlayerTwo();
-	}*/
+		CurrentPlayerBoard = ActivePlayer->GetPlayerBaord();
+	}
 
 	TArray<ATC_Card*> BoardPlayerDrawDeck = CurrentPlayerBoard->GetBoardDraw()->GetDrawDeck();
-	TArray<ATC_Card*> Hand = InCurrentPlayer->GetHand();
+	TArray<ATC_Card*> Hand = ActivePlayer->GetHand();
 
 	if (BoardPlayerDrawDeck.Num() == 0)
 	{
@@ -76,22 +159,24 @@ void TC_ActionsSystem::DrawCard(TC_GameStates& GameState, ATC_Player* InCurrentP
 	}
 
 	//Adding card to hand
-	bool isCardAdded = InCurrentPlayer->AddCardToHand(DrawnCard->GetClass());
+	bool isCardAdded = ActivePlayer->AddCardToHand(DrawnCard->GetClass());
 
 	if (isCardAdded)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Carte %s ajoutee a la main."), *DrawnCard->GetName());
+		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Carte %s ajoutée à la main."), *DrawnCard->GetName());
 		CurrentPlayerBoard->OnDrawCard(DrawnCard);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Echec lors de l'ajout a la main. %s"), *DrawnCard->GetName());
+		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Échec lors de l'ajout à la main. %s"), *DrawnCard->GetName());
 	}
-	InCurrentPlayer->ShowHandOnCamera();
+
+	ActivePlayer->ShowHandOnCamera();
 }
 
-void TC_ActionsSystem::MoveCard(TC_GameStates& GameState, const FAIActions& Action, ATC_Player* InCurrentPlayer)
+void TC_ActionsSystem::MoveCard(TC_GameStates& InGameState, const FAIActions& InAction)
 {
+
 	//board = joueurActif == P1 ? Player1BoardCard : Player2BoardCard
 	//
 	//	// Vérifier que l’index de la carte est valide
@@ -119,11 +204,11 @@ void TC_ActionsSystem::EndTurn(TC_GameStates& GameState, ATC_Player* InCurrentPl
 	GameState.SetIsPlayer1Turn(!GameState.GetIsPlayer1Turn());
 }
 
-void TC_ActionsSystem::ApplyAction(TC_GameStates& InGameState, const FAIActions& InAction, ATC_Player* InCurrentPlayer)
+void TC_ActionsSystem::ApplyAction(TC_GameStates& InGameState, const FAIActions& InAction)
 {
 	switch (InAction.Type)
 	{
-	case EActionType::PlayCard :
+	case EActionType::PlayCard:
 	{
 		// si le joueur a assez de mana
 		// si l'index de carte dans la main est valide
@@ -131,27 +216,27 @@ void TC_ActionsSystem::ApplyAction(TC_GameStates& InGameState, const FAIActions&
 		// -> retirer la carte de la main
 		// -> ajouter au plateau
 		// -> retirer le coût en mana
-		PlayCard(InGameState, InAction, InCurrentPlayer);
+		PlayCard(InGameState, InAction);
 		break;
-	}	
+	}
 	case EActionType::DrawCard:
 	{
 		// si la pioche du joueur n’est pas vide
 		// -> retirer la première carte de la pioche
 		// -> ajouter à la main
-		DrawCard(InGameState, InCurrentPlayer);
+		DrawCard(InGameState, InAction);
 		break;
 	}
-	case EActionType::MoveCard:
-	{
-		MoveCard(InGameState, InAction, InCurrentPlayer);
-		break;
-	}
-	case EActionType::EndTurn:
-	{
-		EndTurn(InGameState, InCurrentPlayer);
-		break;
-	}
+	//case EActionType::MoveCard:
+	//{
+	//	MoveCard(InGameState, InAction);
+	//	break;
+	//}
+	//case EActionType::EndTurn:
+	//{
+	//	EndTurn(InGameState);
+	//	break;
+	//}
 	default:
 		break;
 	}
