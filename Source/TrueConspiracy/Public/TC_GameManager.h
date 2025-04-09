@@ -16,7 +16,8 @@ class TRUECONSPIRACY_API ATC_GameManager : public AActor
 	GENERATED_BODY()
 private:
 	TC_GameStates _CurrentGameState;
-
+	ATC_Player* PlayerOne;
+	ATC_Player* PlayerTwo;
 protected:
 	virtual void BeginPlay() override;
 

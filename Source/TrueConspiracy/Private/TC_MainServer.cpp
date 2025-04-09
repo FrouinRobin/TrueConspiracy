@@ -27,42 +27,29 @@ int32 ATC_MainServer::GetAvailablePort()
 	return 7777 + ActiveSessions.Num();
 }
 
-void ATC_MainServer::CreateNewSession(const TArray<FString>& Players)
+void ATC_MainServer::CreateNewSession(TArray<ATC_Player*> Players)
 {
-	int32 Port = GetAvailablePort();
-	if (Port == -1)
-		return;
+    ATC_GameManager* NewSession = GetWorld()->SpawnActor<ATC_GameManager>();
+    NewSession->GetCurrentGameState().SetPlayer1(Players[0]);
+    NewSession->GetCurrentGameState().SetPlayer2(Players[1]);
+    ActiveSessions.Add(NewSession);
+}
 
-	FGuid NewSessionGUID = FGuid::NewGuid();
-	FString SessionID = NewSessionGUID.ToString(EGuidFormats::Digits);
-
-	FString ExePath = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir() + TEXT("/Binaries/Win64/GameSession.exe"));
-
-	FString Params = FString::Printf(TEXT("%s -log -port=%d"), *SessionID, Port);
-
-	FProcHandle Handle = FPlatformProcess::CreateProc(
-		*ExePath,
-		*Params,
-		true, false, false,
-		nullptr, 0,
-		nullptr, nullptr
-	);
-
-	if (!Handle.IsValid())
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to launch GameSession server for Session %s."), *SessionID);
-		return;
-	}
-
-	FSessionInfo NewSession;
-	NewSession.SessionID = SessionID;
-	NewSession.Port = Port;
-	NewSession.PlayerIDs = Players;
-	NewSession.bIsRunning = true;
-
-	ActiveSessions.Add(NewSession);
-
-	UE_LOG(LogTemp, Log, TEXT("Launched session %s on port %d."), *SessionID, Port);
+TArray<ATC_Player*> ATC_MainServer::GetAvailablePlayer()
+{
+    TArray<ATC_Player*> NewSessionPlayers;
+    while (NewSessionPlayers.Num() < 2) 
+    {
+        for (ATC_Player* Player : ConnectedPlayer)
+        {
+            //if(Player->ConnectedState == ETC_ConnectedState::Searching)
+            //{
+            //  NewSessionPlayers.Add(Player);
+            //  Break;
+            //}
+        }
+    }
+    return NewSessionPlayers;
 }
 
 

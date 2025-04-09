@@ -9,24 +9,6 @@
 
 class ATC_Player;
 
-USTRUCT(BlueprintType)
-struct FSessionInfo {
-	GENERATED_BODY()
-
-	UPROPERTY()
-	FString SessionID;
-
-	UPROPERTY()
-	int32 Port;
-
-	UPROPERTY()
-	TArray<FString> PlayerIDs;
-
-	UPROPERTY()
-	bool bIsRunning;
-};
-
-
 UCLASS()
 class TRUECONSPIRACY_API ATC_MainServer : public AGameModeBase
 {
@@ -41,9 +23,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void HandlePlayerConnection(ATC_Player* newPlayer);
 	UFUNCTION(BlueprintCallable)
-	void CreateNewSession(const TArray<FString>& Players);
+	void CreateNewSession(TArray<ATC_Player*> Players);
 	UFUNCTION(BlueprintCallable)
-	int32 GetAvailablePort();
+	TArray<ATC_Player*> GetAvailablePlayer();
 private:
 
 };
