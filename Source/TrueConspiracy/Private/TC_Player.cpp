@@ -2,6 +2,9 @@
 
 
 #include "TC_Player.h"
+#include "Engine/World.h"
+#include "Engine/NetDriver.h"
+#include "GameFramework/GameModeBase.h"
 #include "Camera/CameraComponent.h"
 #include <Components/CapsuleComponent.h>
 #include <Cards/Faces/TC_Face.h>
@@ -103,6 +106,16 @@ ATC_Card* ATC_Player::GetCardFromHandById(ETC_CardID id)
 	}
 	UE_LOG(LogTemp, Warning, TEXT("GetCardFromDeckById() did not return any card!"));
 	return nullptr;
+}
+
+ETC_ConnectState ATC_Player::GetPlayerConnectState()
+{
+	return _playerConnectState;
+}
+
+void ATC_Player::SetPlayerConnectState(ETC_ConnectState newConnectState)
+{
+	_playerConnectState = newConnectState;
 }
 
 ATC_Board* ATC_Player::GetPlayerBaord()
@@ -342,4 +355,13 @@ void ATC_Player::PlayCard(ATC_Card* Card, ATC_Slot* Slot)
 void ATC_Player::SwitchFace(ATC_Card* Card)
 {
 	Card->SwitchPhase();
+}
+
+void ATC_Player::ConnectToServer()
+{
+	FURL URL;
+	URL.Protocol = TEXT("udp");
+	URL.Host = "82.65.231.55";
+	URL.Port = 7777;
+	GetWorld()->GetFirstPlayerController()->ClientTravel(URL.ToString(), ETravelType::TRAVEL_Absolute);
 }

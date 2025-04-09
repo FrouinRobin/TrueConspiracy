@@ -16,7 +16,6 @@ ATC_GameManager::ATC_GameManager()
 void ATC_GameManager::BeginPlay()
 {
 	Super::BeginPlay();
-	StartGame(EGameModeFormat::BO3);
 }
 
 void ATC_GameManager::Tick(float DeltaTime)
@@ -55,7 +54,7 @@ void ATC_GameManager::CoinFlip()
 	GetCurrentGameState().SetActivePlayer(ChosenPlayer);
 }
 
-void ATC_GameManager::StartGame(EGameModeFormat InFormat) //Bouton de lancement de mode de jeu (BO3/BO5/BO7/BO9)
+void ATC_GameManager::StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> InPlayers) //Bouton de lancement de mode de jeu (BO3/BO5/BO7/BO9)
 {
 	UTC_GameInstance* GameInstance = UTC_GameInstance::GetInstance(this);
 	if (!GameInstance)
@@ -65,21 +64,19 @@ void ATC_GameManager::StartGame(EGameModeFormat InFormat) //Bouton de lancement 
 	}
 
 	GameInstance->SetSelectedFormat(InFormat);
+	//GetCurrentGameState() = TC_GameStates(GameInstance->GetSelectedFormat());
 	SetCurrentGameState(TC_GameStates(GameInstance->GetSelectedFormat()));
-	
-	GetCurrentGameState().SetGamePlate(GameInstance->GetWorld()->SpawnActor<ATC_Plate>(FVector::ZeroVector, FRotator::ZeroRotator));
 
-	TArray<AActor*> FoundPlayers;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATC_Player::StaticClass(), FoundPlayers);
+	GetCurrentGameState().SetGamePlate(GameInstance->GetWorld()->SpawnActor<ATC_Plate>(PlateBluePrint,FVector::ZeroVector, FRotator::ZeroRotator));
 	//GetCurrentGameState().SetPlayer1(FoundPlayers[0]->GetClass());
 
-	if (Cast<ATC_Player>(FoundPlayers[0]))
+	if (InPlayers[0])
 	{
-		GetCurrentGameState().SetPlayer1(Cast<ATC_Player>(FoundPlayers[0]));
+		GetCurrentGameState().SetPlayer1(InPlayers[0]);
 	}
-	if (Cast<ATC_Player>(FoundPlayers[1]))
+	if (InPlayers[1])
 	{
-		GetCurrentGameState().SetPlayer2(Cast<ATC_Player>(FoundPlayers[1]));
+		GetCurrentGameState().SetPlayer2(InPlayers[1]);
 	}
 
 	//for (AActor* Actor : FoundPlayers)
@@ -103,7 +100,7 @@ void ATC_GameManager::StartGame(EGameModeFormat InFormat) //Bouton de lancement 
 
 void ATC_GameManager::StartTurn()
 {
-	if (GetCurrentGameState().GetCurrentTurn() > 1) 
+	if (GetCurrentGameState().GetCurrentTurn() > 1)
 	{
 		//Switch att/def players (cards)
 		SwitchPhase();
@@ -134,7 +131,7 @@ void ATC_GameManager::StartTurn()
 
 void ATC_GameManager::StartPhase()
 {
-	ATC_Player* CurrentPlayer = GetCurrentGameState().GetIsPlayer1Turn() 
+	ATC_Player* CurrentPlayer = GetCurrentGameState().GetIsPlayer1Turn()
 		? GetCurrentGameState().GetPlayer1()
 		: GetCurrentGameState().GetPlayer2();
 
@@ -223,7 +220,7 @@ void ATC_GameManager::EndPhase()
 	{
 		EndTurn();
 	}
-	else 
+	else
 	{
 		EndPhase();
 	}

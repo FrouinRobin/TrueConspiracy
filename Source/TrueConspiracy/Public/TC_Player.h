@@ -9,6 +9,15 @@
 
 class ATC_Board;
 
+UENUM(BlueprintType)  // Makes it visible in Blueprints
+enum class ETC_ConnectState : uint8
+{
+	OffLine			UMETA(DisplayName = "OffLine"),
+	Searching		UMETA(DisplayName = "Searching"),
+	InGame			UMETA(DisplayName = "InGame")
+
+};
+
 enum class ETC_PhaseState : uint8
 {
 	Attack,
@@ -45,6 +54,8 @@ protected:
 
 private:
 	
+	ETC_ConnectState _playerConnectState;
+
 	ETC_PhaseState _PhaseState;
 	
 	ATC_Board* _playerBoard;
@@ -63,6 +74,10 @@ public:
 	ATC_Card* GetCardFromDeckByName(FString name, bool checkAllFaces);
 	UFUNCTION(BlueprintCallable, Category = "Player Deck")
 	ATC_Card* GetCardFromDeckById(ETC_CardID id);*/
+	UFUNCTION(BlueprintCallable, Category = "Player Connection")
+	ETC_ConnectState GetPlayerConnectState();
+	UFUNCTION(BlueprintCallable, Category = "Player Connection")
+	void SetPlayerConnectState(ETC_ConnectState newConnectState);
 	UFUNCTION(BlueprintCallable, Category = "Player Board")
 	ATC_Board* GetPlayerBaord();
 	UFUNCTION(BlueprintCallable, Category = "Player Board")
@@ -111,6 +126,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnSelectCard(ATC_Card* card, ATC_Card* oldCard);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnConnectPlayer();
+
 	void SetPhaseState(ETC_PhaseState InPhaseState);
 	ETC_PhaseState GetPhaseState() const;
 
@@ -124,5 +142,7 @@ public:
 	void PlayCard(ATC_Card* Card, ATC_Slot* Slot);
 
 	void SwitchFace(ATC_Card* Card);
+	UFUNCTION(BlueprintCallable)
+	void ConnectToServer();
 
 };

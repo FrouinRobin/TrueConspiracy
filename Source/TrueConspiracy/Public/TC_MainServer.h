@@ -19,6 +19,7 @@ public:
 	TArray<ATC_Player*> ConnectedPlayer;
 protected:
 	virtual void StartPlay() override;
+	virtual void PostLogin(APlayerController* NewPlayer) override;
 public:
 	UFUNCTION(BlueprintCallable)
 	void HandlePlayerConnection(ATC_Player* newPlayer);

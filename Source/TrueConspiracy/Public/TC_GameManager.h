@@ -14,14 +14,16 @@ UCLASS()
 class TRUECONSPIRACY_API ATC_GameManager : public AActor
 {
 	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BluePrintRef")
+	TSubclassOf<ATC_Plate> PlateBluePrint;
 private:
 	TC_GameStates _CurrentGameState;
-	ATC_Player* PlayerOne;
-	ATC_Player* PlayerTwo;
+
 protected:
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	ATC_GameManager();
 
 	virtual void Tick(float DeltaTime) override;
@@ -29,7 +31,7 @@ public:
 	// === GAME CONTROL ===
 	void InitGame();
 	void CoinFlip();
-	void StartGame(EGameModeFormat InFormat);
+	void StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> InPlayers);
 	void StartTurn();
 	void StartPhase();
 	void EndPhase();
