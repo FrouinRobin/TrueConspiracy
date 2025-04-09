@@ -27,9 +27,11 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	uint8 PlayerID;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly)
+	USceneComponent* _cameraAnchor;
+	UPROPERTY(BlueprintReadOnly)
 	class UCameraComponent* _playerCamera;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly)
 	class USceneComponent* _cardAnchor;
 
 

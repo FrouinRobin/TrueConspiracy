@@ -21,8 +21,11 @@ ATC_Player::ATC_Player()
 
 	RootComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
 
+	_cameraAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("CameraAnchor"));
+	_cameraAnchor->SetupAttachment(RootComponent);
+
 	_playerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
-	_playerCamera->SetupAttachment(RootComponent);
+	_playerCamera->SetupAttachment(_cameraAnchor);
 	_playerCamera->bUsePawnControlRotation = true;
 
 	_cardAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("CardAnchor"));
@@ -229,6 +232,10 @@ void ATC_Player::BeginPlay()
 void ATC_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	UE_LOG(LogTemp, Warning, TEXT("Ticking %s"), *GetName())
+
+	AddActorLocalRotation(FRotator(10).Quaternion());
 
 }
 
