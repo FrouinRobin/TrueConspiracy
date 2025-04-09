@@ -306,6 +306,9 @@ uint8 ATC_Player::GetPlayerMaxMana() const
 void ATC_Player::PlayCard(ATC_Card* Card, ATC_Slot* Slot)
 {
 	ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(Card->GetClass(), FVector(Slot->GetActorLocation().X, Slot->GetActorLocation().Y, Slot->GetActorLocation().Z + 1), Slot->GetActorRotation());
+	NewCard->SetPlayer(this);
+	NewCard->SetSlot(Slot);
+	Slot->SetSlotCard(NewCard);
 	/*AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
 	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
 	
