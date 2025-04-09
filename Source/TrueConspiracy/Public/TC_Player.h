@@ -58,6 +58,12 @@ private:
 	TArray<ATC_Card*> _playerHand;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TArray<TSubclassOf<ATC_Card>> _playerDeck;
+
+	float _transformTransitionTimer;
+	float _transformTransitionTimerGoal;
+	bool _isTransformTransitionOn;
+	bool _canUseTransformTransition = true;
+	FTransform _transformTransitionGoal;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -139,5 +145,12 @@ public:
 	ETC_PlayerState GetState();
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Player State")
 	void OnStateChange(ETC_PlayerState newState, ETC_PlayerState oldState);
+
+private:
+	UFUNCTION(CallInEditor)
+	void ActivateStateTransform(bool on, FTransform goal);
+	void TickStateTransform(float dt);
+	UFUNCTION(CallInEditor)
+	void SwitchTransformTransition();
 
 };

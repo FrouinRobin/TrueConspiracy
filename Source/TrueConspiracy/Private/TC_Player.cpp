@@ -17,7 +17,7 @@
 ATC_Player::ATC_Player()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	RootComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
 
@@ -33,6 +33,38 @@ ATC_Player::ATC_Player()
 	_cardAnchor->SetRelativeLocation(FVector(150, 0, -120));
 
 	//_playerTransform.Add(ETC_PlayerState::SELECTHAND, FTransform())
+}
+
+// Called when the game starts or when spawned
+void ATC_Player::BeginPlay()
+{
+	Super::BeginPlay();
+
+	_playerCamera->SetRelativeRotation(FRotator(-90, 180, 0));
+
+	FQuat Rotation = FQuat(0.0f, -0.0f, 0.0f, 1.0f);
+	FVector Translation = FVector(1464.0f, 2410.0f, 937.0f);
+	FVector Scale3D = FVector(1.0f, 1.0f, 1.0f);
+
+	FTransform Transform(Rotation, Translation, Scale3D);
+	_playerTransform[ETC_PlayerState::SELECTSLOT] = Transform;
+}
+
+// Called every frame
+void ATC_Player::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (_isTransformTransitionOn)
+		TickStateTransform(DeltaTime);
+
+}
+
+// Called to bind functionality to input
+void ATC_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
 }
 
 //ATC_Card* ATC_Player::GetCardFromDeckByName(FString name, bool checkAllFaces)
@@ -220,32 +252,6 @@ bool ATC_Player::CanPlayCard(ATC_Card* card)
 	return card->GetCardCurrentMana() >= GetPlayerMana();
 }
 
-// Called when the game starts or when spawned
-void ATC_Player::BeginPlay()
-{
-	Super::BeginPlay();
-
-	_playerCamera->SetRelativeRotation(FRotator(-90, 180, 0));
-}
-
-// Called every frame
-void ATC_Player::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	UE_LOG(LogTemp, Warning, TEXT("Ticking %s"), *GetName())
-
-	AddActorLocalRotation(FRotator(10).Quaternion());
-
-}
-
-// Called to bind functionality to input
-void ATC_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-
 uint8 ATC_Player::IncreaseManaLimit(uint8 value)
 {
 	_playerMaxMana += value;
@@ -352,8 +358,8 @@ ETC_PlayerState ATC_Player::GetState()
 void ATC_Player::OnStateChange_Implementation(ETC_PlayerState newState, ETC_PlayerState oldState)
 {
 	UKismetSystemLibrary::PrintString(GetWorld(), FString("From the C++"), true, NULL, FLinearColor(0, 0, 1));
-	//if (_playerTransform.Contains(newState))
-	//	SetActorTransform(_playerTransform[newState]);
+	if (_playerTransform.Contains(newState))
+		ActivateStateTransform(true, _playerTransform[newState]);
 	switch (newState)
 	{
 		case (ETC_PlayerState::SELECTHAND):
@@ -361,5 +367,43 @@ void ATC_Player::OnStateChange_Implementation(ETC_PlayerState newState, ETC_Play
 		//case (ETC_PlayerState::WAITTURN):
 		default:
 			break;
+	}
+}
+
+void ATC_Player::ActivateStateTransform(bool on, FTransform goal)
+{
+	if (!_canUseTransformTransition) return;
+	_isTransformTransitionOn = on;
+	if (!_isTransformTransitionOn) return;
+
+	//_transformTransitionTimerGoal = timerGoal;
+	//if (resetTimer)
+	//	_transformTransitionTimer = 0;
+
+	_transformTransitionGoal = goal;
+}
+
+void ATC_Player::TickStateTransform(float dt)
+{
+	FVector newPos = FMath::VInterpTo(GetActorLocation(), _transformTransitionGoal.GetLocation(), dt, 2);
+	FRotator newRot = FMath::RInterpTo(GetActorRotation(), _transformTransitionGoal.Rotator(), dt, 2);
+	FVector newScale = FMath::VInterpTo(GetActorScale3D(), _transformTransitionGoal.GetScale3D(), dt, 2);
+
+	SetActorLocationAndRotation(newPos, newRot);
+	SetActorScale3D(newScale);
+
+	_transformTransitionTimer += dt;
+	if (GetTransform().Equals(_transformTransitionGoal))
+		ActivateStateTransform(false, FTransform::Identity);
+}
+
+void ATC_Player::SwitchTransformTransition()
+{
+	_canUseTransformTransition = not _canUseTransformTransition;
+	if (_isTransformTransitionOn && !_canUseTransformTransition)
+	{
+		_isTransformTransitionOn = false;
+		SetActorLocationAndRotation(_transformTransitionGoal.GetLocation(), _transformTransitionGoal.Rotator());
+		SetActorScale3D(_transformTransitionGoal.GetScale3D());
 	}
 }
