@@ -62,7 +62,7 @@ private:
 	float _transformTransitionTimer;
 	float _transformTransitionTimerGoal;
 	bool _isTransformTransitionOn;
-	bool _canUseTransformTransition = true;
+	bool _canUseTransformTransition = false;
 	FTransform _transformTransitionGoal;
 public:	
 	// Called every frame

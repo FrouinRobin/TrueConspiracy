@@ -327,6 +327,7 @@ void ATC_Player::PlayCard(ATC_Card* Card, ATC_Slot* Slot)
 	
 	TC_ActionsSystem::PlayCard(GameManager->GetCurrentGameState(), Card, Slot);*/
 	RemoveCardFromHand(Card);
+	NewCard->OnCardPlace();
 }
 
 void ATC_Player::RemoveCardFromHand(ATC_Card* Card)

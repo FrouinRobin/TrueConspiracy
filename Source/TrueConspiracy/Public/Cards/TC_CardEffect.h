@@ -25,6 +25,8 @@ public:
 	ETC_TargetType TargetType;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FTC_DataTypeStruct> DataType;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ATC_Card* TargetCard;
 public:
 
 	UFUNCTION(BlueprintImplementableEvent)
