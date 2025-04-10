@@ -67,7 +67,7 @@ void ATC_GameManager::StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> In
 	//GetCurrentGameState() = TC_GameStates(GameInstance->GetSelectedFormat());
 	SetCurrentGameState(TC_GameStates(GameInstance->GetSelectedFormat()));
 
-	GetCurrentGameState().SetGamePlate(GameInstance->GetWorld()->SpawnActor<ATC_Plate>(PlateBluePrint,FVector::ZeroVector, FRotator::ZeroRotator));
+	GetCurrentGameState().SetGamePlate(Plate);
 	//GetCurrentGameState().SetPlayer1(FoundPlayers[0]->GetClass());
 
 	if (InPlayers[0])
@@ -78,6 +78,9 @@ void ATC_GameManager::StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> In
 	{
 		GetCurrentGameState().SetPlayer2(InPlayers[1]);
 	}
+	GetCurrentGameState().GetGamePlate()->SetPlayerOne(GetCurrentGameState().GetPlayer1());
+	GetCurrentGameState().GetGamePlate()->SetPlayerTwo(GetCurrentGameState().GetPlayer2());
+	GetCurrentGameState().GetGamePlate()->Init();
 
 	//for (AActor* Actor : FoundPlayers)
 	//{
@@ -140,7 +143,7 @@ void ATC_GameManager::StartPhase()
 	GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
 
 	// Sécuriser les accès à BoardPlayerOne
-	ATC_Plate* Plate = GetCurrentGameState().GetGamePlate();
+	
 	if (!Plate)
 	{
 		UE_LOG(LogTemp, Error, TEXT("StartPhase: Plate est null."));

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "GameFramework/GameMode.h"
 #include "TC_GameStates.h"
 
 #include "TC_GameManager.generated.h"
@@ -11,12 +11,14 @@ class ATC_Plate;
 struct FAIActions;
 
 UCLASS()
-class TRUECONSPIRACY_API ATC_GameManager : public AActor
+class TRUECONSPIRACY_API ATC_GameManager : public AGameMode
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BluePrintRef")
-	TSubclassOf<ATC_Plate> PlateBluePrint;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ATC_Plate* Plate;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<ATC_Player*> Players;
 private:
 	TC_GameStates _CurrentGameState;
 
@@ -31,6 +33,7 @@ public:
 	// === GAME CONTROL ===
 	void InitGame();
 	void CoinFlip();
+	UFUNCTION(BlueprintCallable)
 	void StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> InPlayers);
 	void StartTurn();
 	void StartPhase();
