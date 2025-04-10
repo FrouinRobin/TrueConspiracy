@@ -18,17 +18,54 @@
 ATC_Player::ATC_Player()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	RootComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
 
+	_cameraAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("CameraAnchor"));
+	_cameraAnchor->SetupAttachment(RootComponent);
+
 	_playerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
-	_playerCamera->SetupAttachment(RootComponent);
+	_playerCamera->SetupAttachment(_cameraAnchor);
 	_playerCamera->bUsePawnControlRotation = true;
 
 	_cardAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("CardAnchor"));
 	_cardAnchor->SetupAttachment(_playerCamera);
 	_cardAnchor->SetRelativeLocation(FVector(150, 0, -120));
+
+	//_playerTransform.Add(ETC_PlayerState::SELECTHAND, FTransform())
+}
+
+// Called when the game starts or when spawned
+void ATC_Player::BeginPlay()
+{
+	Super::BeginPlay();
+
+	_playerCamera->SetRelativeRotation(FRotator(-90, 180, 0));
+
+	FQuat Rotation = FQuat(0.0f, -0.0f, 0.0f, 1.0f);
+	FVector Translation = FVector(1464.0f, 2410.0f, 937.0f);
+	FVector Scale3D = FVector(1.0f, 1.0f, 1.0f);
+
+	FTransform Transform(Rotation, Translation, Scale3D);
+	_playerTransform[ETC_PlayerState::SELECTSLOT] = Transform;
+}
+
+// Called every frame
+void ATC_Player::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (_isTransformTransitionOn)
+		TickStateTransform(DeltaTime);
+
+}
+
+// Called to bind functionality to input
+void ATC_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
 }
 
 //ATC_Card* ATC_Player::GetCardFromDeckByName(FString name, bool checkAllFaces)
@@ -216,28 +253,6 @@ bool ATC_Player::CanPlayCard(ATC_Card* card)
 	return card->GetCardCurrentMana() >= GetPlayerMana();
 }
 
-// Called when the game starts or when spawned
-void ATC_Player::BeginPlay()
-{
-	Super::BeginPlay();
-
-	_playerCamera->SetRelativeRotation(FRotator(-90, 180, 0));
-}
-
-// Called every frame
-void ATC_Player::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-// Called to bind functionality to input
-void ATC_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-
 uint8 ATC_Player::IncreaseManaLimit(uint8 value)
 {
 	_playerMaxMana += value;
@@ -313,11 +328,11 @@ void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 
 	if (!InCard || !InSlot)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Paramètre invalide (carte ou slot)."));
+		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Paramï¿½tre invalide (carte ou slot)."));
 		return;
 	}
 
-	// Crée une action PlayCard
+	// Crï¿½e une action PlayCard
 	FAIActions PlayAction(EActionType::PlayCard);
 	PlayAction.CardInHand = InCard;
 	PlayAction.PlayingSlot = InSlot;
@@ -326,7 +341,7 @@ void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 	PlayAction.BoardSlotIndex = InSlot->GetSlaotBoardSlot()->GetBoardSlotBoard()->GetBoardSlots().Find(InSlot->GetSlaotBoardSlot());
 	PlayAction.BoardSlotCardIndex = InSlot->GetSlaotBoardSlot()->GetBoardSlotSlots().Find(InSlot);
 
-	// Récupère le GameManager actif
+	// Rï¿½cupï¿½re le GameManager actif
 	AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
 	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
 	if (!GameManager)
@@ -337,6 +352,16 @@ void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 
 	// Applique l'action au GameState actuel
 	GameManager->GetCurrentGameState().ApplyAction(PlayAction);
+	RemoveCardFromHand(Card);
+}
+
+void ATC_Player::RemoveCardFromHand(ATC_Card* Card)
+{
+	if (!_playerHand.Contains(Card)) return;
+
+	_playerHand.Remove(Card);
+	Card->Destroy();
+	ShowHandOnCamera();
 }
 
 void ATC_Player::SwitchFace(ATC_Card* Card)
@@ -348,21 +373,21 @@ void ATC_Player::MoveCard(ATC_Card* InCard, ATC_Slot* InSlot)
 {
 	if (!InCard || !InSlot)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("MoveCard: Paramètre invalide (carte ou slot)."));
+		UE_LOG(LogTemp, Warning, TEXT("MoveCard: Paramï¿½tre invalide (carte ou slot)."));
 		return;
 	}
 
 	FAIActions MoveAction(EActionType::MoveCard);
 	MoveAction.CardInHand = InCard;
 	MoveAction.PlayingSlot = InSlot;
-	//Relatif à Card (Origine)
+	//Relatif ï¿½ Card (Origine)
 	MoveAction.BoardSlotIndex = InCard->GetSlot()->GetSlaotBoardSlot()->GetBoardSlotBoard()->GetBoardSlots().Find(InCard->GetSlot()->GetSlaotBoardSlot());
 	MoveAction.BoardSlotCardIndex = InCard->GetSlot()->GetSlaotBoardSlot()->GetBoardSlotSlots().Find(InCard->GetSlot());
-	//Relatif à Slot (Destination)
+	//Relatif ï¿½ Slot (Destination)
 	MoveAction.DestinationBoardSlotIndex = InSlot->GetSlaotBoardSlot()->GetBoardSlotBoard()->GetBoardSlots().Find(InSlot->GetSlaotBoardSlot());
 	MoveAction.DestinationBoardSlotCardIndex = InSlot->GetSlaotBoardSlot()->GetBoardSlotSlots().Find(InSlot);
 
-	// Récupère le GameManager actif
+	// Rï¿½cupï¿½re le GameManager actif
 	AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
 	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
 	if (!GameManager)
@@ -378,4 +403,68 @@ void ATC_Player::MoveCard(ATC_Card* InCard, ATC_Slot* InSlot)
 void ATC_Player::MoveCard(ATC_Card* InCardOne, ATC_Card* InCardTwo) 
 {
 
+}
+void ATC_Player::SetState(ETC_PlayerState State)
+{
+	ETC_PlayerState oldState = _PlayerState;
+	_PlayerState = State;
+	OnStateChange(_PlayerState, oldState);
+}
+
+ETC_PlayerState ATC_Player::GetState()
+{
+	return _PlayerState;
+}
+
+void ATC_Player::OnStateChange_Implementation(ETC_PlayerState newState, ETC_PlayerState oldState)
+{
+	UKismetSystemLibrary::PrintString(GetWorld(), FString("From the C++"), true, NULL, FLinearColor(0, 0, 1));
+	if (_playerTransform.Contains(newState))
+		ActivateStateTransform(true, _playerTransform[newState]);
+	switch (newState)
+	{
+		case (ETC_PlayerState::SELECTHAND):
+		case (ETC_PlayerState::SELECTSLOT):
+		//case (ETC_PlayerState::WAITTURN):
+		default:
+			break;
+	}
+}
+
+void ATC_Player::ActivateStateTransform(bool on, FTransform goal)
+{
+	if (!_canUseTransformTransition) return;
+	_isTransformTransitionOn = on;
+	if (!_isTransformTransitionOn) return;
+
+	//_transformTransitionTimerGoal = timerGoal;
+	//if (resetTimer)
+	//	_transformTransitionTimer = 0;
+
+	_transformTransitionGoal = goal;
+}
+
+void ATC_Player::TickStateTransform(float dt)
+{
+	FVector newPos = FMath::VInterpTo(GetActorLocation(), _transformTransitionGoal.GetLocation(), dt, 2);
+	FRotator newRot = FMath::RInterpTo(GetActorRotation(), _transformTransitionGoal.Rotator(), dt, 2);
+	FVector newScale = FMath::VInterpTo(GetActorScale3D(), _transformTransitionGoal.GetScale3D(), dt, 2);
+
+	SetActorLocationAndRotation(newPos, newRot);
+	SetActorScale3D(newScale);
+
+	_transformTransitionTimer += dt;
+	if (GetTransform().Equals(_transformTransitionGoal))
+		ActivateStateTransform(false, FTransform::Identity);
+}
+
+void ATC_Player::SwitchTransformTransition()
+{
+	_canUseTransformTransition = not _canUseTransformTransition;
+	if (_isTransformTransitionOn && !_canUseTransformTransition)
+	{
+		_isTransformTransitionOn = false;
+		SetActorLocationAndRotation(_transformTransitionGoal.GetLocation(), _transformTransitionGoal.Rotator());
+		SetActorScale3D(_transformTransitionGoal.GetScale3D());
+	}
 }

@@ -47,6 +47,9 @@ ETC_CardType ATC_Slot::GetSlotCardType()
 }
 void ATC_Slot::SetSlotCard(ATC_Card* newSlotCard)
 {
+	ATC_Card* card = GetSlotCard();
+	if (card)
+		card->Destroy();
 	_slotCard = newSlotCard;
 }
 

@@ -148,10 +148,20 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SwitchPhase();
 
+	UFUNCTION(BlueprintCallable)
+	bool CanDoEffect();
+
+	UFUNCTION(BlueprintCallable)
+	void DeactivateEffects();
+
+	UFUNCTION(BlueprintCallable)
+	void ActivateEffects();
 private:
 
 	UTC_Face* _cardCurrentFace;
 	TArray<UTC_Face*> _cardFaceList;
+
+	bool _isEffectActive = true;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	ETC_CardType _cardType;

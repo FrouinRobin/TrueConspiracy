@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Cards/TC_Card.h"
+#include <TC_PlayerState.h>
 #include "TC_Player.generated.h"
 
 class ATC_Board;
@@ -26,9 +27,11 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	uint8 PlayerID;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly)
+	USceneComponent* _cameraAnchor;
+	UPROPERTY(BlueprintReadOnly)
 	class UCameraComponent* _playerCamera;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly)
 	class USceneComponent* _cardAnchor;
 
 
@@ -44,14 +47,23 @@ protected:
 	ATC_Card* _selectedCard;
 
 private:
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TMap<ETC_PlayerState, FTransform> _playerTransform;
+
 	ETC_PhaseState _PhaseState;
+	ETC_PlayerState _PlayerState;
 	
 	ATC_Board* _playerBoard;
 
 	TArray<ATC_Card*> _playerHand;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TArray<TSubclassOf<ATC_Card>> _playerDeck;
+
+	float _transformTransitionTimer;
+	float _transformTransitionTimerGoal;
+	bool _isTransformTransitionOn;
+	bool _canUseTransformTransition = true;
+	FTransform _transformTransitionGoal;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -128,4 +140,22 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void MoveCard(ATC_Card* InCard, ATC_Slot* InSlot);
 	void MoveCard(ATC_Card* InCardOne, ATC_Card* InCardTwo);
+	
+	UFUNCTION(BlueprintCallable)
+	void RemoveCardFromHand(ATC_Card* Card);
+
+	UFUNCTION(BlueprintCallable, Category = "Player State")
+	void SetState(ETC_PlayerState State);
+	UFUNCTION(BlueprintPure, Category = "Player State", meta = (ReturnDisplayName = "Current State"))
+	ETC_PlayerState GetState();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Player State")
+	void OnStateChange(ETC_PlayerState newState, ETC_PlayerState oldState);
+
+private:
+	UFUNCTION(CallInEditor)
+	void ActivateStateTransform(bool on, FTransform goal);
+	void TickStateTransform(float dt);
+	UFUNCTION(CallInEditor)
+	void SwitchTransformTransition();
+
 };

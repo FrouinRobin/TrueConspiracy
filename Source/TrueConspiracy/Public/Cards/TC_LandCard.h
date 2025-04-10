@@ -13,5 +13,9 @@ UCLASS()
 class TRUECONSPIRACY_API ATC_LandCard : public ATC_Card
 {
 	GENERATED_BODY()
+public:
+public:
+private:
+
 	
 };

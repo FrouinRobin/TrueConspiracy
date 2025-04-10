@@ -217,3 +217,18 @@ void ATC_Card::SwitchPhase()
 	SwitchFace();
 	OnCardStartPhase();
 }
+
+bool ATC_Card::CanDoEffect()
+{
+	return _isEffectActive;
+}
+
+void ATC_Card::DeactivateEffects()
+{
+	_isEffectActive = false;
+}
+
+void ATC_Card::ActivateEffects()
+{
+	_isEffectActive = true;
+}
