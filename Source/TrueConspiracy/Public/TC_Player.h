@@ -121,10 +121,11 @@ public:
 	TSubclassOf<ATC_Card> FindCardClassFromInstance(ATC_Card* InstanceCard);*/
 
 	UFUNCTION(BlueprintCallable)
-	void PlayCard(ATC_Card* Card, ATC_Slot* Slot);
+	void PlayCard(ATC_Card* InCard, ATC_Slot* InSlot);
 
 	void SwitchFace(ATC_Card* Card);
 	
 	UFUNCTION(BlueprintCallable)
-	void MoveCard(ATC_Card* Card, ATC_Slot* Slot);
+	void MoveCard(ATC_Card* InCard, ATC_Slot* InSlot);
+	void MoveCard(ATC_Card* InCardOne, ATC_Card* InCardTwo);
 };

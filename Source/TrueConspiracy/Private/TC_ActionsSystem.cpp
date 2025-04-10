@@ -245,10 +245,86 @@ void TC_ActionsSystem::MoveCard(TC_GameStates& InGameState, const FAIActions& In
 	// Retrait de l’ancienne slot
 	// 
 	// Déplacement de la carte
-	DestinationSlot->SetSlotCard(CardToMove); // Associe la carte à la nouvelle slot
+	DestinationSlot->SetSlotCard(CardToMove);
 	CardToMove->SetActorLocation(DestinationSlot->GetActorLocation());
 	CardToMove->SetActorRotation(DestinationSlot->GetActorRotation());
 }
+
+//void TC_ActionsSystem::MoveCard(TC_GameStates& InGameState, const FAIActions& InAction)
+//{
+//	//Récupération du joueur actif
+//	ATC_Player* ActivePlayer = InGameState.GetActivePlayer();
+//	if (!ActivePlayer)
+//	{
+//		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Aucun joueur actif."));
+//		return;
+//	}
+//	//Récupération du plateau de jeu
+//	ATC_Plate* Plate = InGameState.GetGamePlate();
+//	if (!Plate)
+//	{
+//		UE_LOG(LogTemp, Error, TEXT("DrawCard : GamePlate est nul."));
+//		return;
+//	}
+//	//Récupération du board du joueur actif
+//	ATC_Board* PlayerBoard = ActivePlayer->GetPlayerBaord();
+//	if (!PlayerBoard)
+//	{
+//		UE_LOG(LogTemp, Error, TEXT("DrawCard : BoardDraw est nul."));
+//		return;
+//	}
+//
+//	//Récupération des BoardSlots du joueur actif
+//	TArray<ATC_BoardSlot*> BoardSlots = PlayerBoard->GetBoardSlots();
+//	//Vérification de la validité de l'index
+//	if (!BoardSlots.IsValidIndex(InAction.BoardSlotIndex))
+//	{
+//		UE_LOG(LogTemp, Error, TEXT("MoveCard: BoardSlotIndex %d invalide."), InAction.BoardSlotIndex);
+//		return;
+//	}
+//	//Récupération du BoardSlot origine de la carte à déplacer
+//	ATC_BoardSlot* FromBoardSlot = BoardSlots[InAction.BoardSlotIndex];
+//	TArray<ATC_Slot*> SlotsInBoard = FromBoardSlot->GetBoardSlotSlots();
+//	//Vérification de la validité de l'index
+//	if (!SlotsInBoard.IsValidIndex(InAction.BoardSlotCardIndex))
+//	{
+//		UE_LOG(LogTemp, Error, TEXT("MoveCard: BoardCardIndex %d invalide."), InAction.BoardSlotCardIndex);
+//		return;
+//	}
+//
+//	ATC_Slot* CurrentSlot = SlotsInBoard[InAction.BoardSlotCardIndex];
+//	ATC_Card* CardToMove = CurrentSlot->GetSlotCard();
+//
+//	if (!CardToMove)
+//	{
+//		UE_LOG(LogTemp, Warning, TEXT("MoveCard: Aucune carte trouvée à la position spécifiée."));
+//		return;
+//	}
+//
+//	if (!BoardSlots.IsValidIndex(InAction.DestinationBoardSlotIndex))
+//	{
+//		UE_LOG(LogTemp, Error, TEXT("MoveCard: DestinationTerrainIndex %d invalide."), InAction.DestinationBoardSlotIndex);
+//		return;
+//	}
+//
+//	ATC_BoardSlot* DestinationBoardSlot = BoardSlots[InAction.DestinationBoardSlotCardIndex];
+//	TArray<ATC_Slot*> DestinationSlots = DestinationBoardSlot->GetBoardSlotSlots();
+//
+//	if (!DestinationSlots.IsValidIndex(InAction.DestinationBoardSlotCardIndex))
+//	{
+//		UE_LOG(LogTemp, Error, TEXT("MoveCard: DestinationSlotIndex %d invalide."), InAction.DestinationBoardSlotCardIndex);
+//		return;
+//	}
+//
+//	ATC_Slot* DestinationSlot = DestinationSlots[InAction.DestinationBoardSlotCardIndex];
+//
+//	// Retrait de l’ancienne slot
+//	// 
+//	// Déplacement de la carte
+//	DestinationSlot->SetSlotCard(CardToMove);
+//	CardToMove->SetActorLocation(DestinationSlot->GetActorLocation());
+//	CardToMove->SetActorRotation(DestinationSlot->GetActorRotation());
+//}
 
 void TC_ActionsSystem::EndTurn(TC_GameStates& InGameState, const FAIActions& InAction)
 {

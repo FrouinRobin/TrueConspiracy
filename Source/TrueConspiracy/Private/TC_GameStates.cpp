@@ -98,7 +98,7 @@ int32 TC_GameStates::GetWinner() const
 	if (GetPlayer1Score() > GetPlayer2Score()) return 1;
 	if (GetPlayer2Score() > GetPlayer1Score()) return 2;
 
-	return 0; // Draw
+	return 0; // Draw 
 }
 
 // --- Generating Futur State(s) ---
