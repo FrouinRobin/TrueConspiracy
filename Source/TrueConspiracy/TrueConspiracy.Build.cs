@@ -12,7 +12,7 @@ public class TrueConspiracy : ModuleRules
         {
             "Core", "CoreUObject", "Engine", "InputCore",
             "NavigationSystem", "AIModule", "Niagara", "EnhancedInput",
-            "UMG", "SlateCore", "GameplayTags", "GameplayTasks", "TextureUtilitiesCommon"
+            "UMG", "SlateCore", "GameplayTags", "GameplayTasks", "TextureUtilitiesCommon", "OnlineSubsystem", "Sockets", "Networking"
         });
     }
 }
