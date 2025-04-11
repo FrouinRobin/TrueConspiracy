@@ -145,7 +145,7 @@ ATC_Card* ATC_Player::GetCardFromHandById(ETC_CardID id)
 	return nullptr;
 }
 
-ATC_Board* ATC_Player::GetPlayerBaord()
+ATC_Board* ATC_Player::GetPlayerBoard()
 {
 	return _playerBoard;
 }
@@ -179,6 +179,8 @@ bool ATC_Player::AddCardToHand(TSubclassOf<ATC_Card> card)
 	_playerHand.Add(NewCard);
 	NewCard->AttachToComponent(_cardAnchor, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
 	NewCard->CardAnchor->SetWorldRotation(FRotator(-69.f,180.f,0.f));
+	NewCard->SetPlayer(this);
+	NewCard->Init();
 
 	ShowHandOnCamera();
 	return true;
@@ -288,12 +290,12 @@ ATC_Card* ATC_Player::GetSelectedCard()
 
 void ATC_Player::SetPhaseState(ETC_PhaseState InPhaseState)
 {
-	_PhaseState = InPhaseState;
+	_phaseState = InPhaseState;
 }
 
 ETC_PhaseState ATC_Player::GetPhaseState() const
 {
-	return _PhaseState;
+	return _phaseState;
 }
 
 void ATC_Player::SetPlayerMaxMana(uint8 InMaxMana)
@@ -356,8 +358,8 @@ void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 	PlayAction.PlayingSlot = InSlot;
 	PlayAction.CardinHandIndex = _playerHand.Find(InCard);
 
-	PlayAction.BoardSlotIndex = InSlot->GetSlaotBoardSlot()->GetBoardSlotBoard()->GetBoardSlots().Find(InSlot->GetSlaotBoardSlot());
-	PlayAction.BoardSlotCardIndex = InSlot->GetSlaotBoardSlot()->GetBoardSlotSlots().Find(InSlot);
+	PlayAction.BoardSlotIndex = InSlot->GetSlotBoardSlot()->GetBoardSlotBoard()->GetBoardSlots().Find(InSlot->GetSlotBoardSlot());
+	PlayAction.BoardSlotCardIndex = InSlot->GetSlotBoardSlot()->GetBoardSlotSlots().Find(InSlot);
 
 	InSlot->SetSlotCard(InCard);
 	InCard->SetSlot(InSlot);
@@ -391,11 +393,11 @@ void ATC_Player::MoveCard(ATC_Card* InCard, ATC_Slot* InSlot)
 	MoveAction.CardInHand = InCard;
 	MoveAction.PlayingSlot = InSlot;
 	//Relatif � Card (Origine)
-	MoveAction.BoardSlotIndex = InCard->GetSlot()->GetSlaotBoardSlot()->GetBoardSlotBoard()->GetBoardSlots().Find(InCard->GetSlot()->GetSlaotBoardSlot());
-	MoveAction.BoardSlotCardIndex = InCard->GetSlot()->GetSlaotBoardSlot()->GetBoardSlotSlots().Find(InCard->GetSlot());
+	MoveAction.BoardSlotIndex = InCard->GetSlot()->GetSlotBoardSlot()->GetBoardSlotBoard()->GetBoardSlots().Find(InCard->GetSlot()->GetSlotBoardSlot());
+	MoveAction.BoardSlotCardIndex = InCard->GetSlot()->GetSlotBoardSlot()->GetBoardSlotSlots().Find(InCard->GetSlot());
 	//Relatif � Slot (Destination)
-	MoveAction.DestinationBoardSlotIndex = InSlot->GetSlaotBoardSlot()->GetBoardSlotBoard()->GetBoardSlots().Find(InSlot->GetSlaotBoardSlot());
-	MoveAction.DestinationBoardSlotCardIndex = InSlot->GetSlaotBoardSlot()->GetBoardSlotSlots().Find(InSlot);
+	MoveAction.DestinationBoardSlotIndex = InSlot->GetSlotBoardSlot()->GetBoardSlotBoard()->GetBoardSlots().Find(InSlot->GetSlotBoardSlot());
+	MoveAction.DestinationBoardSlotCardIndex = InSlot->GetSlotBoardSlot()->GetBoardSlotSlots().Find(InSlot);
 
 	// R�cup�re le GameManager actif
 	AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());

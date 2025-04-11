@@ -10,6 +10,7 @@
 
 class ATC_Board;
 
+UENUM(BlueprintType)
 enum class ETC_PhaseState : uint8
 {
 	Attack,
@@ -49,8 +50,8 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	TMap<ETC_PlayerState, FTransform> _playerTransform;
-
-	ETC_PhaseState _PhaseState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	ETC_PhaseState _phaseState;
 	ETC_PlayerState _PlayerState;
 	
 	ATC_Board* _playerBoard;
@@ -76,7 +77,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Player Deck")
 	ATC_Card* GetCardFromDeckById(ETC_CardID id);*/
 	UFUNCTION(BlueprintCallable, Category = "Player Board")
-	ATC_Board* GetPlayerBaord();
+	ATC_Board* GetPlayerBoard();
 	UFUNCTION(BlueprintCallable, Category = "Player Board")
 	void SetPlayerBoard(ATC_Board* newBoard);
 	UFUNCTION(BlueprintCallable, Category = "Player Deck")

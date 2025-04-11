@@ -159,6 +159,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ActivateEffects();
+
+	UFUNCTION(BlueprintCallable)
+	void Init();
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	UTC_Face* _cardCurrentFace;

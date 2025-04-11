@@ -37,7 +37,7 @@ bool ATC_Slot::HasCard()
 ATC_Card* ATC_Slot::GetSlotCard() {
 	return _slotCard;
 }
-ATC_BoardSlot* ATC_Slot::GetSlaotBoardSlot()
+ATC_BoardSlot* ATC_Slot::GetSlotBoardSlot()
 {
 	return _slotBoardSlot;
 }

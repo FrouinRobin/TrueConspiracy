@@ -50,7 +50,7 @@ ATC_Player* ATC_Plate::GetPlayerTwo()
 
 ATC_Board* ATC_Plate::GetBoardByPlayer(ATC_Player* PlayerRef)
 {
-	ATC_Board* PlayerBaord = nullptr;
+	ATC_Board* PlayerBoard = nullptr;
 	for (ATC_Board* Board : _plateBoard)
 	{
 		if (Board->GetBoardPlayer() == PlayerRef)
@@ -59,10 +59,10 @@ ATC_Board* ATC_Plate::GetBoardByPlayer(ATC_Player* PlayerRef)
 		}
 		else
 		{
-			PlayerBaord = nullptr;
+			PlayerBoard = nullptr;
 		}
 	}
-	return PlayerBaord;
+	return PlayerBoard;
 }
 
 TArray<ATC_LandCardSlot*> ATC_Plate::GetLandCardSlots()
