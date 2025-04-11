@@ -7,7 +7,7 @@
 UENUM(BlueprintType)  // Makes it visible in Blueprints
 enum class ETC_EffectLocalisation : uint8
 {
-
+    Target          UMETA(DisplayName = "Target"),
     Land            UMETA(DisplayName = "Land"),
     Board           UMETA(DisplayName = "Board"),
     All             UMETA(DisplayName = "All")
