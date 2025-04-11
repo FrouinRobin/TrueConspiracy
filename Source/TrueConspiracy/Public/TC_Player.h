@@ -152,11 +152,16 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Player State")
 	void OnStateChange(ETC_PlayerState newState, ETC_PlayerState oldState);
 
+	UFUNCTION(BlueprintCallable, Category = "Card Validation")
+	bool CanPlaceCardOnSlot(ATC_Card* Card, ATC_Slot* Slot);
+
+	UFUNCTION(BlueprintCallable, Category = "Card Validation")
+	TArray<ATC_Slot*> GetValidSlotsForCard(ATC_Card* Card);
+
 private:
 	UFUNCTION(CallInEditor)
 	void ActivateStateTransform(bool on, FTransform goal);
 	void TickStateTransform(float dt);
 	UFUNCTION(CallInEditor)
 	void SwitchTransformTransition();
-
 };

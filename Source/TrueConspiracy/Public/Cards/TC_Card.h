@@ -37,6 +37,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category = "Card Faces")
 	UTC_DefendFace* CardDefendFace;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Properties")
+	ETC_CardType _cardType;
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -97,7 +100,7 @@ public:
 	void SetCardType(ETC_CardType newType);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardAttributeList(TArray<ETC_CardAttribute> newTypeList);
-	UFUNCTION(BlueprintCallable, Category = "Getters")
+	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardID(ETC_CardID newID);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardIllustration(UTexture2D* newImage);
@@ -113,9 +116,9 @@ public:
 	void SetCardMaxScore(float newScore);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardCurrentScore(float newScore);
-	UFUNCTION(BlueprintCallable, Category = "Getters")
+	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetPlayer(ATC_Player* newPlayer);
-	UFUNCTION(BlueprintCallable, Category = "Getters")
+	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetSlot(ATC_Slot* newSlot);
 
 
@@ -163,8 +166,8 @@ private:
 
 	bool _isEffectActive = true;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
-	ETC_CardType _cardType;
+	/*UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	ETC_CardType _cardType;*/
 	TArray<ETC_CardAttribute> _cardAttribute;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))

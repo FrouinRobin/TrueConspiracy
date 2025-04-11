@@ -67,7 +67,20 @@ ATC_DiscardDeck* ATC_Board::GetBoardDiscard()
     return _boardDiscard;
 }
 
+TArray<ATC_Slot*> ATC_Board::GetAllSlots() const
+{
+    TArray<ATC_Slot*> allSlots;
 
+    for (ATC_BoardSlot* boardSlot : _boardSlots)
+    {
+        if (!boardSlot) continue;
+
+        const TArray<ATC_Slot*>& slotList = boardSlot->GetBoardSlotSlots();
+        allSlots.Append(slotList);
+    }
+
+    return allSlots;
+}
 
 
 void ATC_Board::SetBoardPlater(ATC_Plate* newBoardPlate)

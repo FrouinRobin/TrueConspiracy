@@ -13,6 +13,7 @@
 #include "TC_GameManager.h"
 #include "Board/TC_Slot.h"
 #include "Board/TC_Board.h"
+#include "TC_CardCondition.h"
 
 // Sets default values
 ATC_Player::ATC_Player()
@@ -473,4 +474,32 @@ void ATC_Player::SwitchTransformTransition()
 		SetActorLocationAndRotation(_transformTransitionGoal.GetLocation(), _transformTransitionGoal.Rotator());
 		SetActorScale3D(_transformTransitionGoal.GetScale3D());
 	}
+}
+
+bool ATC_Player::CanPlaceCardOnSlot(ATC_Card* Card, ATC_Slot* Slot)
+{
+	if (!Card || !Slot) return false;
+
+	// Créer une instance du vérificateur de conditions
+	UTC_CardCondition* ConditionChecker = NewObject<UTC_CardCondition>();
+
+	// Appelle les conditions centralisées
+	return ConditionChecker->IsValidForCard(Card, Slot);
+}
+
+TArray<ATC_Slot*> ATC_Player::GetValidSlotsForCard(ATC_Card* Card)
+{
+	TArray<ATC_Slot*> ValidSlots;
+
+	if (!Card || !_playerBoard) return ValidSlots;
+
+	for (ATC_Slot* Slot : _playerBoard->GetAllSlots()) // Supposé avoir cette fonction
+	{
+		if (CanPlaceCardOnSlot(Card, Slot))
+		{
+			ValidSlots.Add(Slot);
+		}
+	}
+
+	return ValidSlots;
 }

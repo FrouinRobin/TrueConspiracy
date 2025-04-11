@@ -56,6 +56,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_DiscardDeck* GetBoardDiscard();
 
+	UFUNCTION(BlueprintCallable, Category = "Slots")
+	TArray<ATC_Slot*> GetAllSlots() const;
 
 
 	UFUNCTION(BlueprintCallable, Category = "Setters")
