@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "TC_Player.h"
@@ -7,11 +7,15 @@
 #include <Cards/Faces/TC_Face.h>
 #include <Components/SphereComponent.h>
 #include <TC_GameInstance.h>
+#include "TC_AIActions.h"
 #include <TC_ActionsSystem.h>
 #include <Kismet/GameplayStatics.h>
 #include "TC_GameManager.h"
 #include "Board/TC_Slot.h"
 #include "Board/TC_Board.h"
+#include "TC_CardCondition.h"
+
+
 
 // Sets default values
 ATC_Player::ATC_Player()
@@ -40,7 +44,7 @@ void ATC_Player::BeginPlay()
 {
 	Super::BeginPlay();
 
-	_playerCamera->SetRelativeRotation(FRotator(-90, 180, 0));
+	//_playerCamera->SetRelativeRotation(FRotator(-90, 180, 0));
 
 	FQuat Rotation = FQuat(0.0f, -0.0f, 0.0f, 1.0f);
 	FVector Translation = FVector(1464.0f, 2410.0f, 937.0f);
@@ -316,19 +320,7 @@ uint8 ATC_Player::GetPlayerMaxMana() const
 //
 //	return nullptr;
 //}
-void ATC_Player::PlayCard(ATC_Card* Card, ATC_Slot* Slot)
-{
-	ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(Card->GetClass(), FVector(Slot->GetActorLocation().X, Slot->GetActorLocation().Y, Slot->GetActorLocation().Z + 1), Slot->GetActorRotation());
-	NewCard->SetPlayer(this);
-	NewCard->SetSlot(Slot);
-	Slot->SetSlotCard(NewCard);
-	/*AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
-	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
-	
-	TC_ActionsSystem::PlayCard(GameManager->GetCurrentGameState(), Card, Slot);*/
-	RemoveCardFromHand(Card);
-	NewCard->OnCardPlace();
-}
+
 
 void ATC_Player::RemoveCardFromHand(ATC_Card* Card)
 {
@@ -342,6 +334,84 @@ void ATC_Player::RemoveCardFromHand(ATC_Card* Card)
 void ATC_Player::SwitchFace(ATC_Card* Card)
 {
 	Card->SwitchPhase();
+}
+
+void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
+{
+	//ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(Card->GetClass(), FVector(Slot->GetActorLocation().X, Slot->GetActorLocation().Y, Slot->GetActorLocation().Z + 1), Slot->GetActorRotation());
+	/*AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
+	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
+
+	TC_ActionsSystem::PlayCard(GameManager->GetCurrentGameState(), Card, Slot);*/
+
+	if (!InCard || !InSlot)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Parametre invalide (carte ou slot)."));
+		return;
+	}
+
+	// Cr�e une action PlayCard
+	FAIActions PlayAction(EActionType::PlayCard);
+	PlayAction.CardInHand = InCard;
+	PlayAction.PlayingSlot = InSlot;
+	PlayAction.CardinHandIndex = _playerHand.Find(InCard);
+
+	PlayAction.BoardSlotIndex = InSlot->GetSlaotBoardSlot()->GetBoardSlotBoard()->GetBoardSlots().Find(InSlot->GetSlaotBoardSlot());
+	PlayAction.BoardSlotCardIndex = InSlot->GetSlaotBoardSlot()->GetBoardSlotSlots().Find(InSlot);
+
+	InSlot->SetSlotCard(InCard);
+	InCard->SetSlot(InSlot);
+
+	UE_LOG(LogTemp, Warning, TEXT("la carte %s "), *InCard->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("Place at slot %s "), *InSlot->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("so Slot have card %s "), *InSlot->GetSlotCard()->GetName());
+	// R�cup�re le GameManager actif
+	AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
+	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
+	if (!GameManager)
+	{
+		UE_LOG(LogTemp, Error, TEXT("PlayCard: GameManager introuvable."));
+		return;
+	}
+
+	// Applique l'action au GameState actuel
+	GameManager->GetCurrentGameState().ApplyAction(PlayAction);
+	RemoveCardFromHand(InCard);
+}
+
+void ATC_Player::MoveCard(ATC_Card* InCard, ATC_Slot* InSlot)
+{
+	if (!InCard || !InSlot)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("MoveCard: Parametre invalide (carte ou slot)."));
+		return;
+	}
+
+	FAIActions MoveAction(EActionType::MoveCard);
+	MoveAction.CardInHand = InCard;
+	MoveAction.PlayingSlot = InSlot;
+	//Relatif � Card (Origine)
+	MoveAction.BoardSlotIndex = InCard->GetSlot()->GetSlaotBoardSlot()->GetBoardSlotBoard()->GetBoardSlots().Find(InCard->GetSlot()->GetSlaotBoardSlot());
+	MoveAction.BoardSlotCardIndex = InCard->GetSlot()->GetSlaotBoardSlot()->GetBoardSlotSlots().Find(InCard->GetSlot());
+	//Relatif � Slot (Destination)
+	MoveAction.DestinationBoardSlotIndex = InSlot->GetSlaotBoardSlot()->GetBoardSlotBoard()->GetBoardSlots().Find(InSlot->GetSlaotBoardSlot());
+	MoveAction.DestinationBoardSlotCardIndex = InSlot->GetSlaotBoardSlot()->GetBoardSlotSlots().Find(InSlot);
+
+	// R�cup�re le GameManager actif
+	AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
+	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
+	if (!GameManager)
+	{
+		UE_LOG(LogTemp, Error, TEXT("PlayCard: GameManager introuvable."));
+		return;
+	}
+
+	//Appliquer l'action au GameState actuel
+	GameManager->GetCurrentGameState().ApplyAction(MoveAction);
+}
+
+void ATC_Player::SwapCard(ATC_Card* InCardOne, ATC_Card* InCardTwo)
+{
 }
 
 void ATC_Player::SetState(ETC_PlayerState State)
@@ -407,4 +477,32 @@ void ATC_Player::SwitchTransformTransition()
 		SetActorLocationAndRotation(_transformTransitionGoal.GetLocation(), _transformTransitionGoal.Rotator());
 		SetActorScale3D(_transformTransitionGoal.GetScale3D());
 	}
+}
+
+bool ATC_Player::CanPlaceCardOnSlot(ATC_Card* Card, ATC_Slot* Slot)
+{
+	if (!Card || !Slot) return false;
+
+	// Créer une instance du vérificateur de conditions
+	UTC_CardCondition* ConditionChecker = NewObject<UTC_CardCondition>();
+
+	// Appelle les conditions centralisées
+	return ConditionChecker->IsValidForCard(Card, Slot);
+}
+
+TArray<ATC_Slot*> ATC_Player::GetValidSlotsForCard(ATC_Card* Card)
+{
+	TArray<ATC_Slot*> ValidSlots;
+
+	if (!Card || !_playerBoard) return ValidSlots;
+
+	for (ATC_Slot* Slot : _playerBoard->GetAllSlots()) // Supposé avoir cette fonction
+	{
+		if (CanPlaceCardOnSlot(Card, Slot))
+		{
+			ValidSlots.Add(Slot);
+		}
+	}
+
+	return ValidSlots;
 }

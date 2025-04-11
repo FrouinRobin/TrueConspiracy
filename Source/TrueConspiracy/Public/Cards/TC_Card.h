@@ -160,7 +160,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ActivateEffects();
 private:
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	UTC_Face* _cardCurrentFace;
 	TArray<UTC_Face*> _cardFaceList;
 
