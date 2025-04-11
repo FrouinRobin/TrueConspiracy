@@ -503,6 +503,7 @@ TArray<ATC_Slot*> ATC_Player::GetValidSlotsForCard(ATC_Card* Card)
 			ValidSlots.Add(Slot);
 		}
 	}
+	
 
 	return ValidSlots;
 }
