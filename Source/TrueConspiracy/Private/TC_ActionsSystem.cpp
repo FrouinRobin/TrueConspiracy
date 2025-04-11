@@ -89,7 +89,9 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 		return;
 	}
 	
-	ActivePlayer->GetPlayerBaord()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex];
+	//ATC_Slot* SlotCard = ActivePlayer->GetPlayerBaord()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex];
+	//ActivePlayer->GetPlayerBaord()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex]->SetSlotCard(InAction.CardInHand); //Attribution de la carte au slot
+	//ActivePlayer->GetPlayerBaord()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex]->GetSlotCard()->SetSlot(InAction.PlayingSlot); //Attribution du slot à la carte
 
 	ATC_Card* SpawnedCard = GameInstance->GetWorld()->SpawnActor<ATC_Card>(
 		SelectedCard->GetClass(),

@@ -28,7 +28,7 @@ ATC_Plate::ATC_Plate()
 void ATC_Plate::BeginPlay()
 {
 	Super::BeginPlay();
-	TArray<AActor*> FoundPlayers;
+
 }
 
 // Called every frame

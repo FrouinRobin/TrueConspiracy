@@ -16,19 +16,21 @@ class TRUECONSPIRACY_API ATC_GameManager : public AActor
 	GENERATED_BODY()
 private:
 	TC_GameStates _CurrentGameState;
-
+	
 protected:
 	virtual void BeginPlay() override;
 
 public:	
 	ATC_GameManager();
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ATC_Plate* Plate;
 	virtual void Tick(float DeltaTime) override;
 
 	// === GAME CONTROL ===
 	void InitGame();
 	void CoinFlip();
-	void StartGame(EGameModeFormat InFormat);
+	UFUNCTION(BlueprintCallable)
+	void StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> Players);
 	void StartTurn();
 	void StartPhase();
 	void EndPhase();

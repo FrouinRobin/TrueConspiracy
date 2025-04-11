@@ -328,7 +328,7 @@ void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 
 	if (!InCard || !InSlot)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Param�tre invalide (carte ou slot)."));
+		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Parametre invalide (carte ou slot)."));
 		return;
 	}
 
@@ -341,6 +341,12 @@ void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 	PlayAction.BoardSlotIndex = InSlot->GetSlaotBoardSlot()->GetBoardSlotBoard()->GetBoardSlots().Find(InSlot->GetSlaotBoardSlot());
 	PlayAction.BoardSlotCardIndex = InSlot->GetSlaotBoardSlot()->GetBoardSlotSlots().Find(InSlot);
 
+	InSlot->SetSlotCard(InCard);
+	InCard->SetSlot(InSlot);
+	
+	UE_LOG(LogTemp, Warning, TEXT("la carte %s "), *InCard->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("Place at slot %s "), *InSlot->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("so Slot have card %s "), *InSlot->GetSlotCard()->GetName());
 	// R�cup�re le GameManager actif
 	AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
 	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
@@ -352,7 +358,7 @@ void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 
 	// Applique l'action au GameState actuel
 	GameManager->GetCurrentGameState().ApplyAction(PlayAction);
-	RemoveCardFromHand(Card);
+	RemoveCardFromHand(InCard);
 }
 
 void ATC_Player::RemoveCardFromHand(ATC_Card* Card)
@@ -400,7 +406,7 @@ void ATC_Player::MoveCard(ATC_Card* InCard, ATC_Slot* InSlot)
 	GameManager->GetCurrentGameState().ApplyAction(MoveAction);
 }
 
-void ATC_Player::MoveCard(ATC_Card* InCardOne, ATC_Card* InCardTwo) 
+void ATC_Player::SwapCard(ATC_Card* InCardOne, ATC_Card* InCardTwo) 
 {
 
 }

@@ -16,7 +16,6 @@ ATC_GameManager::ATC_GameManager()
 void ATC_GameManager::BeginPlay()
 {
 	Super::BeginPlay();
-	StartGame(EGameModeFormat::BO3);
 }
 
 void ATC_GameManager::Tick(float DeltaTime)
@@ -27,19 +26,22 @@ void ATC_GameManager::Tick(float DeltaTime)
 void ATC_GameManager::InitGame()
 {
 	//Draw 5 cards for each players
-	for (int32 i = 0; i < 5; ++i)
-	{
-		GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
-		GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
+	//for (int32 i = 0; i < 5; ++i)
+	//{
+	//	GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
+	//	GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
+	//
+	//	GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer2());
+	//	GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
+	//
+	//	//TC_ActionsSystem::DrawCard(GetCurrentGameState(), GetCurrentGameState().GetPlayer1());
+	//	//TC_ActionsSystem::DrawCard(GetCurrentGameState(), GetCurrentGameState().GetPlayer2());
+	//}
 
-		GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer2());
-		GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
 
-		//TC_ActionsSystem::DrawCard(GetCurrentGameState(), GetCurrentGameState().GetPlayer1());
-		//TC_ActionsSystem::DrawCard(GetCurrentGameState(), GetCurrentGameState().GetPlayer2());
-	}
+	GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
 	//Do a CoinFlip
-	CoinFlip();
+	/*CoinFlip();*/
 	//Give the max mana to each player
 	GetCurrentGameState().GetPlayer1()->SetPlayerMana(3);
 	GetCurrentGameState().GetPlayer2()->SetPlayerMana(3);
@@ -55,8 +57,11 @@ void ATC_GameManager::CoinFlip()
 	GetCurrentGameState().SetActivePlayer(ChosenPlayer);
 }
 
-void ATC_GameManager::StartGame(EGameModeFormat InFormat) //Bouton de lancement de mode de jeu (BO3/BO5/BO7/BO9)
+void ATC_GameManager::StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> Players) //Bouton de lancement de mode de jeu (BO3/BO5/BO7/BO9)
 {
+	UE_LOG(LogTemp, Error, TEXT("StartGame called."));
+
+
 	UTC_GameInstance* GameInstance = UTC_GameInstance::GetInstance(this);
 	if (!GameInstance)
 	{
@@ -67,21 +72,14 @@ void ATC_GameManager::StartGame(EGameModeFormat InFormat) //Bouton de lancement 
 	GameInstance->SetSelectedFormat(InFormat);
 	SetCurrentGameState(TC_GameStates(GameInstance->GetSelectedFormat()));
 	
-	GetCurrentGameState().SetGamePlate(GameInstance->GetWorld()->SpawnActor<ATC_Plate>(FVector::ZeroVector, FRotator::ZeroRotator));
+	GetCurrentGameState().SetGamePlate(Plate);
+	
+	GetCurrentGameState().SetPlayer1(Players[0]);
+	GetCurrentGameState().SetPlayer2(Players[1]);
 
-	TArray<AActor*> FoundPlayers;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATC_Player::StaticClass(), FoundPlayers);
-	//GetCurrentGameState().SetPlayer1(FoundPlayers[0]->GetClass());
-
-	if (Cast<ATC_Player>(FoundPlayers[0]))
-	{
-		GetCurrentGameState().SetPlayer1(Cast<ATC_Player>(FoundPlayers[0]));
-	}
-	if (Cast<ATC_Player>(FoundPlayers[1]))
-	{
-		GetCurrentGameState().SetPlayer2(Cast<ATC_Player>(FoundPlayers[1]));
-	}
-
+	GetCurrentGameState().GetGamePlate()->SetPlayerOne(GetCurrentGameState().GetPlayer1());
+	GetCurrentGameState().GetGamePlate()->SetPlayerTwo(GetCurrentGameState().GetPlayer2());
+	GetCurrentGameState().GetGamePlate()->Init();
 	//for (AActor* Actor : FoundPlayers)
 	//{
 	//	ATC_Player* Player = Cast<ATC_Player>(Actor);
@@ -98,6 +96,7 @@ void ATC_GameManager::StartGame(EGameModeFormat InFormat) //Bouton de lancement 
 	//		//GetCurrentGameState().GetGamePlate()->SetPlayerTwo(Player);
 	//	}
 	//}
+	GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
 	InitGame();
 }
 
@@ -143,7 +142,7 @@ void ATC_GameManager::StartPhase()
 	GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
 
 	// Sécuriser les accès à BoardPlayerOne
-	ATC_Plate* Plate = GetCurrentGameState().GetGamePlate();
+	Plate = GetCurrentGameState().GetGamePlate();
 	if (!Plate)
 	{
 		UE_LOG(LogTemp, Error, TEXT("StartPhase: Plate est null."));

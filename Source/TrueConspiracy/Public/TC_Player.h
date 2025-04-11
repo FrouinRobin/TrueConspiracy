@@ -139,7 +139,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void MoveCard(ATC_Card* InCard, ATC_Slot* InSlot);
-	void MoveCard(ATC_Card* InCardOne, ATC_Card* InCardTwo);
+	UFUNCTION(BlueprintCallable)
+	void SwapCard(ATC_Card* InCardOne, ATC_Card* InCardTwo);
 	
 	UFUNCTION(BlueprintCallable)
 	void RemoveCardFromHand(ATC_Card* Card);
