@@ -97,7 +97,7 @@ void ATC_Plate::Init()
 	_plateBoard[0]->SetBoardPlayer(_playerOne);
 	_plateBoard[0]->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 	
-	_playerOne->SetPlayerBoard(_plateBoard[0]);
+ 	_playerOne->SetPlayerBoard(_plateBoard[0]);
 	_plateBoard.Add(GetWorld()->SpawnActor<ATC_Board>(BoardBluePrint, BoardPlayerTwoAnchor->GetComponentLocation(), BoardPlayerTwoAnchor->GetComponentRotation()));
 	_plateBoard[1]->SetBoardPlayer(_playerTwo);
 	_plateBoard[1]->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);

@@ -57,7 +57,7 @@ void ATC_GameManager::CoinFlip()
 	GetCurrentGameState().SetActivePlayer(ChosenPlayer);
 }
 
-void ATC_GameManager::StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> Players) //Bouton de lancement de mode de jeu (BO3/BO5/BO7/BO9)
+void ATC_GameManager::StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> InPlayers) //Bouton de lancement de mode de jeu (BO3/BO5/BO7/BO9)
 {
 	UE_LOG(LogTemp, Error, TEXT("StartGame called."));
 
@@ -74,8 +74,8 @@ void ATC_GameManager::StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> Pl
 	
 	GetCurrentGameState().SetGamePlate(Plate);
 	
-	GetCurrentGameState().SetPlayer1(Players[0]);
-	GetCurrentGameState().SetPlayer2(Players[1]);
+	GetCurrentGameState().SetPlayer1(InPlayers[0]);
+	GetCurrentGameState().SetPlayer2(InPlayers[1]);
 
 	GetCurrentGameState().GetGamePlate()->SetPlayerOne(GetCurrentGameState().GetPlayer1());
 	GetCurrentGameState().GetGamePlate()->SetPlayerTwo(GetCurrentGameState().GetPlayer2());
