@@ -20,4 +20,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void DoEffect(ATC_Card* caster);
+
+	UFUNCTION(BlueprintPure)
+	bool DoesEffectRequireTarget();
 };

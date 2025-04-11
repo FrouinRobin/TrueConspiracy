@@ -40,7 +40,7 @@ void ATC_Player::BeginPlay()
 {
 	Super::BeginPlay();
 
-	_playerCamera->SetRelativeRotation(FRotator(-90, 180, 0));
+	//_playerCamera->SetRelativeRotation(FRotator(-90, 180, 0));
 
 	FQuat Rotation = FQuat(0.0f, -0.0f, 0.0f, 1.0f);
 	FVector Translation = FVector(1464.0f, 2410.0f, 937.0f);
@@ -344,11 +344,11 @@ void ATC_Player::SwitchFace(ATC_Card* Card)
 	Card->SwitchPhase();
 }
 
-void ATC_Player::SetState(ETC_PlayerState State)
+void ATC_Player::SetState(ETC_PlayerState State, ETC_PlayerStateChangeReason reason)
 {
 	ETC_PlayerState oldState = _PlayerState;
 	_PlayerState = State;
-	OnStateChange(_PlayerState, oldState);
+	OnStateChange(_PlayerState, oldState, reason);
 }
 
 ETC_PlayerState ATC_Player::GetState()
@@ -356,7 +356,12 @@ ETC_PlayerState ATC_Player::GetState()
 	return _PlayerState;
 }
 
-void ATC_Player::OnStateChange_Implementation(ETC_PlayerState newState, ETC_PlayerState oldState)
+ETC_PlayerStateChangeReason ATC_Player::GetStateChangeReason()
+{
+	return _StateReason;
+}
+
+void ATC_Player::OnStateChange_Implementation(ETC_PlayerState newState, ETC_PlayerState oldState, ETC_PlayerStateChangeReason reason)
 {
 	UKismetSystemLibrary::PrintString(GetWorld(), FString("From the C++"), true, NULL, FLinearColor(0, 0, 1));
 	if (_playerTransform.Contains(newState))

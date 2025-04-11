@@ -6,6 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "Cards/TC_Card.h"
 #include <TC_PlayerState.h>
+#include "TC_PlayerStateChangeReason.h"
 #include "TC_Player.generated.h"
 
 class ATC_Board;
@@ -52,6 +53,7 @@ private:
 
 	ETC_PhaseState _PhaseState;
 	ETC_PlayerState _PlayerState;
+	ETC_PlayerStateChangeReason _StateReason;
 	
 	ATC_Board* _playerBoard;
 
@@ -140,11 +142,13 @@ public:
 	void SwitchFace(ATC_Card* Card);
 
 	UFUNCTION(BlueprintCallable, Category = "Player State")
-	void SetState(ETC_PlayerState State);
+	void SetState(ETC_PlayerState State, ETC_PlayerStateChangeReason Reason= ETC_PlayerStateChangeReason::Unspecified);
 	UFUNCTION(BlueprintPure, Category = "Player State", meta = (ReturnDisplayName = "Current State"))
 	ETC_PlayerState GetState();
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Player State")
-	void OnStateChange(ETC_PlayerState newState, ETC_PlayerState oldState);
+	UFUNCTION(BlueprintPure, Category = "Player State", meta = (ReturnDisplayName = "State Change Reason"))
+	ETC_PlayerStateChangeReason GetStateChangeReason();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Player State")
+	void OnStateChange(ETC_PlayerState newState, ETC_PlayerState oldState, ETC_PlayerStateChangeReason reason);
 
 private:
 	UFUNCTION(CallInEditor)
