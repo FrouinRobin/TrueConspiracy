@@ -182,6 +182,11 @@ void ATC_DrawDeck::SetDrawDeckGameCardLastCard(ATC_Card* newCard)
     }
 }
 
+int32 ATC_DrawDeck::GetDrawDeckCardCount()
+{
+    return _drawDeck.Num();
+}
+
 TArray<TSubclassOf<ATC_Card>> ATC_DrawDeck::ShuffleCard(TArray<TSubclassOf<ATC_Card>> PlayerDeckToShuffle)
 {
     int32 DeckSize = PlayerDeckToShuffle.Num();
