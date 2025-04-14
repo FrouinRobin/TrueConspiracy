@@ -4,6 +4,9 @@
 #include "TC_CardCondition.h"
 #include "Board/TC_Slot.h"
 #include "Cards/TC_Card.h"
+#include "Board/TC_BoardSlot.h"
+#include "Board/TC_Board.h"
+#include "TC_Player.h"
 
 
 bool UTC_CardCondition::IsValidForCard_Implementation(ATC_Card* Card, ATC_Slot* Slot)
@@ -11,6 +14,9 @@ bool UTC_CardCondition::IsValidForCard_Implementation(ATC_Card* Card, ATC_Slot* 
 	if (!IsSlotEmpty(Slot)) return false;
 	if (!IsSlotAcceptingCard(Slot, Card)) return false;
 	if (!IsCardType(Card, Slot->GetSlotCardType())) return false;
+
+	if (Card->GetPlayer() != Slot->GetSlotBoardSlot()->GetBoardSlotBoard()->GetBoardPlayer()) return false;
+	UE_LOG(LogTemp, Display, TEXT("CardPlayer = %s SlotPlayer = %s"),*Card->GetPlayer()->GetName(), *Slot->GetSlotBoardSlot()->GetBoardSlotBoard()->GetBoardPlayer()->GetName());
 
 	return true;
 }
