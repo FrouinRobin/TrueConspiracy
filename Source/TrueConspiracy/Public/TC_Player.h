@@ -6,7 +6,6 @@
 #include "GameFramework/Pawn.h"
 #include "Cards/TC_Card.h"
 #include <TC_PlayerState.h>
-#include "TC_PlayerStateChangeReason.h"
 #include "TC_Player.generated.h"
 
 class ATC_Board;
@@ -53,13 +52,14 @@ private:
 
 	ETC_PhaseState _PhaseState;
 	ETC_PlayerState _PlayerState;
-	ETC_PlayerStateChangeReason _StateReason;
 	
 	ATC_Board* _playerBoard;
 
 	TArray<ATC_Card*> _playerHand;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TArray<TSubclassOf<ATC_Card>> _playerDeck;
+
+	TArray<ATC_Card*> _cardsWaitingTarget;
 
 	float _transformTransitionTimer;
 	float _transformTransitionTimerGoal;
@@ -125,6 +125,11 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnSelectCard(ATC_Card* card, ATC_Card* oldCard);
 
+	UFUNCTION(BlueprintCallable, Category = "Player Card")
+	void AddCardToWaitingTargetList(ATC_Card* card);
+	UFUNCTION(BlueprintPure, Category = "Player Card")
+	TArray<ATC_Card*> GetCardsWaitingTargetList();
+
 	void SetPhaseState(ETC_PhaseState InPhaseState);
 	ETC_PhaseState GetPhaseState() const;
 
@@ -142,13 +147,11 @@ public:
 	void SwitchFace(ATC_Card* Card);
 
 	UFUNCTION(BlueprintCallable, Category = "Player State")
-	void SetState(ETC_PlayerState State, ETC_PlayerStateChangeReason Reason= ETC_PlayerStateChangeReason::Unspecified);
+	void SetState(ETC_PlayerState State);
 	UFUNCTION(BlueprintPure, Category = "Player State", meta = (ReturnDisplayName = "Current State"))
 	ETC_PlayerState GetState();
-	UFUNCTION(BlueprintPure, Category = "Player State", meta = (ReturnDisplayName = "State Change Reason"))
-	ETC_PlayerStateChangeReason GetStateChangeReason();
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Player State")
-	void OnStateChange(ETC_PlayerState newState, ETC_PlayerState oldState, ETC_PlayerStateChangeReason reason);
+	void OnStateChange(ETC_PlayerState newState, ETC_PlayerState oldState);
 
 private:
 	UFUNCTION(CallInEditor)

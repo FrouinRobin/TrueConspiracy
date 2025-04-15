@@ -282,6 +282,16 @@ ATC_Card* ATC_Player::GetSelectedCard()
 	return _selectedCard;
 }
 
+void ATC_Player::AddCardToWaitingTargetList(ATC_Card* card)
+{
+	_cardsWaitingTarget.Add(card);
+}
+
+TArray<ATC_Card*> ATC_Player::GetCardsWaitingTargetList()
+{
+	return _cardsWaitingTarget;
+}
+
 void ATC_Player::SetPhaseState(ETC_PhaseState InPhaseState)
 {
 	_PhaseState = InPhaseState;
@@ -344,11 +354,11 @@ void ATC_Player::SwitchFace(ATC_Card* Card)
 	Card->SwitchPhase();
 }
 
-void ATC_Player::SetState(ETC_PlayerState State, ETC_PlayerStateChangeReason reason)
+void ATC_Player::SetState(ETC_PlayerState State)
 {
 	ETC_PlayerState oldState = _PlayerState;
 	_PlayerState = State;
-	OnStateChange(_PlayerState, oldState, reason);
+	OnStateChange(_PlayerState, oldState);
 }
 
 ETC_PlayerState ATC_Player::GetState()
@@ -356,12 +366,7 @@ ETC_PlayerState ATC_Player::GetState()
 	return _PlayerState;
 }
 
-ETC_PlayerStateChangeReason ATC_Player::GetStateChangeReason()
-{
-	return _StateReason;
-}
-
-void ATC_Player::OnStateChange_Implementation(ETC_PlayerState newState, ETC_PlayerState oldState, ETC_PlayerStateChangeReason reason)
+void ATC_Player::OnStateChange_Implementation(ETC_PlayerState newState, ETC_PlayerState oldState)
 {
 	UKismetSystemLibrary::PrintString(GetWorld(), FString("From the C++"), true, NULL, FLinearColor(0, 0, 1));
 	if (_playerTransform.Contains(newState))
