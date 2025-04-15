@@ -20,3 +20,13 @@ bool UTC_EffectType::DoesEffectRequireTarget()
 	}
 	return false;
 }
+
+void UTC_EffectType::SetTarget(ATC_Card* target)
+{
+	_target = target;
+}
+
+ATC_Card* UTC_EffectType::GetTarget()
+{
+	return _target;
+}
