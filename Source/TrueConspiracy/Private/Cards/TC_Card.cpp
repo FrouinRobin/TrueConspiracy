@@ -27,7 +27,19 @@ void ATC_Card::BeginPlay()
 void ATC_Card::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	switch (_cardPlayer->GetPhaseState())
+	{
+		case(ETC_PhaseState::Attack):
+		{
+			SetCardCurrentFace(CardDefendFace);
+		}
+		case(ETC_PhaseState::Defense):
+		{
+			SetCardCurrentFace(CardAttackFace);
+		}
+	default:
+		break;
+	}
 }
 
 /*GETTER*/
@@ -118,6 +130,13 @@ ATC_Slot* ATC_Card::GetSlot()
 
 void ATC_Card::SetCardCurrentFace(UTC_Face* newCurrentFace)
 {
+	
+	SetCardMaxMana(_cardCurrentFace->GetCardMana());
+	SetCardCurrentMana(newCurrentFace->FaceMana - (GetCardMaxMana()-GetCardCurrentMana()));
+	SetCardCurrentScore(newCurrentFace->FaceScore - (GetCardMaxScore()-GetCardCurrentScore()));
+	GetCardAttribute().Empty();
+	SetCardAttributeList(newCurrentFace->FaceAttribute);
+	SetCardDescription(newCurrentFace->FaceDescription);
 	_cardCurrentFace = newCurrentFace;
 }
 
@@ -231,4 +250,15 @@ void ATC_Card::DeactivateEffects()
 void ATC_Card::ActivateEffects()
 {
 	_isEffectActive = true;
+}
+
+void ATC_Card::Init()
+{
+	switch (GetPlayer()->GetPhaseState())
+	{
+	case(ETC_PhaseState::Attack):
+		SetCardCurrentFace(GetCardAttackFace());
+	case(ETC_PhaseState::Defense):
+		SetCardCurrentFace(GetCardDefendFace());
+	}
 }

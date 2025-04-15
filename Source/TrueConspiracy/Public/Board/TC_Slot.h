@@ -33,7 +33,7 @@ public:
 	ATC_Card* GetSlotCard();
 
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	ATC_BoardSlot* GetSlaotBoardSlot();
+	ATC_BoardSlot* GetSlotBoardSlot();
 
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ETC_CardType GetSlotCardType();
