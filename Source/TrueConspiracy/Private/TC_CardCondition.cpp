@@ -13,7 +13,7 @@ bool UTC_CardCondition::IsValidForCard_Implementation(ATC_Card* Card, ATC_Slot* 
 	if (!IsSlotEmpty(Slot)) return false;
 	if (!IsSlotAcceptingCard(Slot, Card)) return false;
 	if (!IsCardType(Card, Slot->GetSlotCardType())) return false;
-	//if (Slot->GetSlaotBoardSlot()->GetBoardSlotBoard()->GetBoardPlayer() != Card->GetPlayer()) return false;
+	if (Slot->GetSlotBoardSlot()->GetBoardSlotBoard()->GetBoardPlayer() != Card->GetPlayer()) return false;
 
 	return true;
 }
