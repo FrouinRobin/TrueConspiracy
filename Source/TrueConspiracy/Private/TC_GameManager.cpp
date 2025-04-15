@@ -80,6 +80,7 @@ void ATC_GameManager::StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> Pl
 	GetCurrentGameState().GetGamePlate()->SetPlayerOne(GetCurrentGameState().GetPlayer1());
 	GetCurrentGameState().GetGamePlate()->SetPlayerTwo(GetCurrentGameState().GetPlayer2());
 	GetCurrentGameState().GetGamePlate()->Init();
+
 	//for (AActor* Actor : FoundPlayers)
 	//{
 	//	ATC_Player* Player = Cast<ATC_Player>(Actor);
@@ -136,10 +137,14 @@ void ATC_GameManager::StartPhase()
 	ATC_Player* CurrentPlayer = GetCurrentGameState().GetIsPlayer1Turn() 
 		? GetCurrentGameState().GetPlayer1()
 		: GetCurrentGameState().GetPlayer2();
+	UE_LOG(LogTemp, Error, TEXT("StartPhase: The phase has started, the player playing is : %s."), *GetNameSafe(CurrentPlayer));
+
+
 
 	//GetCurrentGameState().SetActivePlayer(CurrentPlayer);
 	//TC_ActionsSystem::DrawCard(GetCurrentGameState(), CurrentPlayer);
 	GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
+	UE_LOG(LogTemp, Error, TEXT("StartPhase: Drawing a card."));
 
 	// Sécuriser les accès à BoardPlayerOne
 	Plate = GetCurrentGameState().GetGamePlate();
