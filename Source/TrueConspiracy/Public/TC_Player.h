@@ -33,6 +33,8 @@ public:
 	class UCameraComponent* _playerCamera;
 	UPROPERTY(BlueprintReadOnly)
 	class USceneComponent* _cardAnchor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Possess")
+	bool IsPossessed = false;
 
 
 protected:

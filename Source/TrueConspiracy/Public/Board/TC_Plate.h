@@ -9,6 +9,8 @@
 #include "Board/TC_LandCardSlot.h"
 #include "TC_Plate.generated.h"
 
+class ATC_Player;
+
 UCLASS()
 class TRUECONSPIRACY_API ATC_Plate : public AActor
 {

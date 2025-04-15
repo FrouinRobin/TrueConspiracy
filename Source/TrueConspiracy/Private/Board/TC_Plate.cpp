@@ -21,7 +21,6 @@ ATC_Plate::ATC_Plate()
 	LandCardSlotTwoAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("LandCardSlotTwoAnchor"));
 
 	LandCardSlotThreeAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("LandCardSlotThreeAnchor"));
-
 }
 
 // Called when the game starts or when spawned
