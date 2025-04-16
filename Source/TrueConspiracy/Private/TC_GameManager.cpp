@@ -43,8 +43,8 @@ void ATC_GameManager::InitGame()
 	//Do a CoinFlip
 	/*CoinFlip();*/
 	//Give the max mana to each player
-	GetCurrentGameState().GetPlayer1()->SetPlayerMana(3);
-	GetCurrentGameState().GetPlayer2()->SetPlayerMana(3);
+	GetCurrentGameState().GetPlayer1()->SetPlayerCurrentMana(3);
+	GetCurrentGameState().GetPlayer2()->SetPlayerCurrentMana(3);
 	//Start the first round
 	StartTurn();
 }
@@ -107,8 +107,8 @@ void ATC_GameManager::StartTurn()
 		//Switch att/def players (cards)
 		SwitchPhase();
 		//Reset ManaMax
-		GetCurrentGameState().GetPlayer1()->SetPlayerMana(GetCurrentGameState().GetPlayer1()->GetPlayerMaxMana() + 1);
-		GetCurrentGameState().GetPlayer2()->SetPlayerMana(GetCurrentGameState().GetPlayer2()->GetPlayerMaxMana() + 1);
+		GetCurrentGameState().GetPlayer1()->SetPlayerCurrentMana(GetCurrentGameState().GetPlayer1()->GetPlayerMaxMana() + 1);
+		GetCurrentGameState().GetPlayer2()->SetPlayerCurrentMana(GetCurrentGameState().GetPlayer2()->GetPlayerMaxMana() + 1);
 		//Switch priority playing players
 		GetCurrentGameState().SetIsPlayer1Turn(!GetCurrentGameState().GetIsPlayer1Turn());
 		//Invoke card OnStartTurn
@@ -218,7 +218,7 @@ void ATC_GameManager::EndPhase()
 			}
 		}
 	}
-	if (GetCurrentGameState().GetActivePlayer()->GetPhaseState() == ETC_PhaseState::Defense)
+	if (GetCurrentGameState().GetActivePlayer()->GetPlayerPhaseState() == ETC_PhaseState::Defense)
 	{
 		EndTurn();
 	}
