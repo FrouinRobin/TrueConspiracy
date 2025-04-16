@@ -74,6 +74,11 @@ TArray<ETC_CardAttribute> ATC_Card::GetCardAttribute()
 	return _cardAttribute;
 }
 
+TArray<ETC_CardID> ATC_Card::GetCardUnderEffect()
+{
+	return _cardUnderEffect;
+}
+
 ETC_CardID ATC_Card::GetCardID()
 {
 	return _cardId;
@@ -163,6 +168,11 @@ void ATC_Card::SetCardType(ETC_CardType newType)
 void ATC_Card::SetCardAttributeList(TArray<ETC_CardAttribute> newAttributeList)
 {
 	_cardAttribute = newAttributeList;
+}
+
+void ATC_Card::SetCardUnderEffectList(TArray<ETC_CardID> newCardUnderEffectList)
+{
+	_cardUnderEffect = newCardUnderEffectList;
 }
 
 void ATC_Card::SetCardID(ETC_CardID newID)

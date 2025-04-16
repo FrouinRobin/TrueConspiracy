@@ -65,6 +65,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	TArray<ETC_CardAttribute> GetCardAttribute();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
+	TArray<ETC_CardID> GetCardUnderEffect();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ETC_CardID GetCardID();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	UTexture2D* GetCardIllustration();
@@ -99,7 +101,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardType(ETC_CardType newType);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetCardAttributeList(TArray<ETC_CardAttribute> newTypeList);
+	void SetCardAttributeList(TArray<ETC_CardAttribute> newAttributeList);
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetCardUnderEffectList(TArray<ETC_CardID> newCardUnderEffectList);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardID(ETC_CardID newID);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
@@ -142,6 +146,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnCardEndTurn();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnAction();
 
 	/*OTHER FUNCTION*/
 
@@ -172,6 +178,7 @@ private:
 	/*UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	ETC_CardType _cardType;*/
 	TArray<ETC_CardAttribute> _cardAttribute;
+	TArray<ETC_CardID> _cardUnderEffect;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	ETC_CardID _cardId;

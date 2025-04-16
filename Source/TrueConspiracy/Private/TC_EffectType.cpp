@@ -3,10 +3,10 @@
 
 #include "TC_EffectType.h"
 
-void UTC_EffectType::DoEffect(ATC_Card* Caster)
+void UTC_EffectType::DoEffect(ATC_Card* Caster, bool IsPassiv)
 {
 	for (UTC_CardEffect* effect : EffectList)
 	{
-		effect->Activate(Caster);
+		effect->Activate(Caster, IsPassiv);
 	}
 }

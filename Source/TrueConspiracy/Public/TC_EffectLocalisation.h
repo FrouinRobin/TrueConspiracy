@@ -10,5 +10,8 @@ enum class ETC_EffectLocalisation : uint8
     Target          UMETA(DisplayName = "Target"),
     Land            UMETA(DisplayName = "Land"),
     Board           UMETA(DisplayName = "Board"),
-    All             UMETA(DisplayName = "All")
+    Plate           UMETA(DisplayName = "Plate"),
+    PlayerHand      UMETA(DisplayName = "PlayerHand"),
+    Player          UMETA(DisplayName = "Player")
+    
 };

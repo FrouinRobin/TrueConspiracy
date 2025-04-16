@@ -28,7 +28,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ATC_Card* TargetCard;
 public:
-
 	UFUNCTION(BlueprintImplementableEvent)
-	void Activate(ATC_Card* Caster);
+	void Activate(ATC_Card* Caster, bool IsPassif);
 };
