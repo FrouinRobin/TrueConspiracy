@@ -8,6 +8,7 @@
 
 class ATC_Card;
 class ATC_Board;
+class ATC_Player;
 
 UCLASS()
 class TRUECONSPIRACY_API ATC_DrawDeck : public AActor
@@ -30,6 +31,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ATC_Player* GetDrawDeckPlayer();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_Board* GetDrawDeckBoard();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
@@ -49,6 +53,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	int32 GetDrawDeckCardCount();
 
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetDrawDeckPlayer(ATC_Player* newDrawDeckPlayer);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetDrawDeckBoard(ATC_Board* newDrawDeckBoard);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
@@ -73,6 +79,7 @@ public:
 	void Init(TArray<TSubclassOf<ATC_Card>> CardsToSpawn);
 	
 private:
+	ATC_Player* _drawDeckPlayer;
 	ATC_Board* _drawDeckBoard;
 	TArray<ATC_Card*> _drawDeck;
 };

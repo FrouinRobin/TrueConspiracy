@@ -89,15 +89,16 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 		return;
 	}
 	
-	//ATC_Slot* SlotCard = ActivePlayer->GetPlayerBaord()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex];
-	//ActivePlayer->GetPlayerBaord()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex]->SetSlotCard(InAction.CardInHand); //Attribution de la carte au slot
-	//ActivePlayer->GetPlayerBaord()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex]->GetSlotCard()->SetSlot(InAction.PlayingSlot); //Attribution du slot à la carte
+	//ATC_Slot* SlotCard = ActivePlayer->GetPlayerBoard()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex];
+	//ActivePlayer->GetPlayerBoard()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex]->SetSlotCard(InAction.CardInHand); //Attribution de la carte au slot
+	//ActivePlayer->GetPlayerBoard()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex]->GetSlotCard()->SetSlot(InAction.PlayingSlot); //Attribution du slot à la carte
 
 	ATC_Card* SpawnedCard = GameInstance->GetWorld()->SpawnActor<ATC_Card>(
 		SelectedCard->GetClass(),
-		ActivePlayer->GetPlayerBaord()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex]->GetActorLocation(),
-		ActivePlayer->GetPlayerBaord()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex]->GetActorRotation());
-	
+		ActivePlayer->GetPlayerBoard()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex]->GetActorLocation(),
+		ActivePlayer->GetPlayerBoard()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex]->GetActorRotation());
+	SpawnedCard->SetPlayer(ActivePlayer);
+	SpawnedCard->Init();
 	if (!SpawnedCard)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Échec du spawn de la carte."));
@@ -132,14 +133,14 @@ void TC_ActionsSystem::DrawCard(TC_GameStates& InGameState, const FAIActions& In
 
 	ATC_Board* CurrentPlayerBoard = nullptr;
 
-	if (!ActivePlayer->GetPlayerBaord())
+	if (!ActivePlayer->GetPlayerBoard())
 	{
 		UE_LOG(LogTemp, Error, TEXT("DrawCard : BoardDraw est nul."));
 		return;
 	}
 	else
 	{
-		CurrentPlayerBoard = ActivePlayer->GetPlayerBaord();
+		CurrentPlayerBoard = ActivePlayer->GetPlayerBoard();
 	}
 
 	TArray<ATC_Card*> BoardPlayerDrawDeck = CurrentPlayerBoard->GetBoardDraw()->GetDrawDeck();
@@ -193,7 +194,7 @@ void TC_ActionsSystem::MoveCard(TC_GameStates& InGameState, const FAIActions& In
 		return;
 	}
 	//Récupération du board du joueur actif
-	ATC_Board* PlayerBoard = ActivePlayer->GetPlayerBaord();
+	ATC_Board* PlayerBoard = ActivePlayer->GetPlayerBoard();
 	if (!PlayerBoard)
 	{
 		UE_LOG(LogTemp, Error, TEXT("DrawCard : BoardDraw est nul."));
@@ -269,7 +270,7 @@ void TC_ActionsSystem::MoveCard(TC_GameStates& InGameState, const FAIActions& In
 //		return;
 //	}
 //	//Récupération du board du joueur actif
-//	ATC_Board* PlayerBoard = ActivePlayer->GetPlayerBaord();
+//	ATC_Board* PlayerBoard = ActivePlayer->GetPlayerBoard();
 //	if (!PlayerBoard)
 //	{
 //		UE_LOG(LogTemp, Error, TEXT("DrawCard : BoardDraw est nul."));

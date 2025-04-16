@@ -21,7 +21,6 @@ ATC_Plate::ATC_Plate()
 	LandCardSlotTwoAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("LandCardSlotTwoAnchor"));
 
 	LandCardSlotThreeAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("LandCardSlotThreeAnchor"));
-
 }
 
 // Called when the game starts or when spawned
@@ -50,7 +49,7 @@ ATC_Player* ATC_Plate::GetPlayerTwo()
 
 ATC_Board* ATC_Plate::GetBoardByPlayer(ATC_Player* PlayerRef)
 {
-	ATC_Board* PlayerBaord = nullptr;
+	ATC_Board* PlayerBoard = nullptr;
 	for (ATC_Board* Board : _plateBoard)
 	{
 		if (Board->GetBoardPlayer() == PlayerRef)
@@ -59,10 +58,10 @@ ATC_Board* ATC_Plate::GetBoardByPlayer(ATC_Player* PlayerRef)
 		}
 		else
 		{
-			PlayerBaord = nullptr;
+			PlayerBoard = nullptr;
 		}
 	}
-	return PlayerBaord;
+	return PlayerBoard;
 }
 
 TArray<ATC_LandCardSlot*> ATC_Plate::GetLandCardSlots()
@@ -97,7 +96,7 @@ void ATC_Plate::Init()
 	_plateBoard[0]->SetBoardPlayer(_playerOne);
 	_plateBoard[0]->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 	
-	_playerOne->SetPlayerBoard(_plateBoard[0]);
+ 	_playerOne->SetPlayerBoard(_plateBoard[0]);
 	_plateBoard.Add(GetWorld()->SpawnActor<ATC_Board>(BoardBluePrint, BoardPlayerTwoAnchor->GetComponentLocation(), BoardPlayerTwoAnchor->GetComponentRotation()));
 	_plateBoard[1]->SetBoardPlayer(_playerTwo);
 	_plateBoard[1]->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
