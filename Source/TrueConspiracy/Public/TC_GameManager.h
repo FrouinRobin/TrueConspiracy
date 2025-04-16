@@ -20,7 +20,7 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     ATC_Plate* Plate;
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<ATC_Player*> Players;
+    TArray<ATC_Player*> PlayerLogged;
 private:
     TC_GameStates _CurrentGameState;
 

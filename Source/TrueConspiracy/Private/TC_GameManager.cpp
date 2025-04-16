@@ -26,25 +26,27 @@ void ATC_GameManager::Tick(float DeltaTime)
 void ATC_GameManager::InitGame()
 {
 	//Draw 5 cards for each players
-	//for (int32 i = 0; i < 5; ++i)
-	//{
-	//	GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
-	//	GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
-	//
-	//	GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer2());
-	//	GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
-	//
-	//	//TC_ActionsSystem::DrawCard(GetCurrentGameState(), GetCurrentGameState().GetPlayer1());
-	//	//TC_ActionsSystem::DrawCard(GetCurrentGameState(), GetCurrentGameState().GetPlayer2());
-	//}
+	for (int32 i = 0; i < 5; ++i)
+	{
+		GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
+		GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
+	
+		GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer2());
+		GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
+	}
 
-
+	//Bruteforce (need to remove on release)
 	GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
 	//Do a CoinFlip
 	/*CoinFlip();*/
+
 	//Give the max mana to each player
-	GetCurrentGameState().GetPlayer1()->SetPlayerMana(3);
-	GetCurrentGameState().GetPlayer2()->SetPlayerMana(3);
+	GetCurrentGameState().GetPlayer1()->SetPlayerMaxMana(3); //Default value = 3
+	GetCurrentGameState().GetPlayer2()->SetPlayerMaxMana(3); //Default value = 3
+
+	GetCurrentGameState().GetPlayer1()->SetPlayerMana(GetCurrentGameState().GetPlayer1()->GetPlayerMaxMana());
+	GetCurrentGameState().GetPlayer2()->SetPlayerMana(GetCurrentGameState().GetPlayer2()->GetPlayerMaxMana());
+
 	//Start the first round
 	StartTurn();
 }
@@ -66,13 +68,14 @@ void ATC_GameManager::StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> In
 		return;
 	}
 
+	//Sending selected format to game instance (Bo3/Bo5/Bo7)
 	GameInstance->SetSelectedFormat(InFormat);
-	//GetCurrentGameState() = TC_GameStates(GameInstance->GetSelectedFormat());
 	SetCurrentGameState(TC_GameStates(GameInstance->GetSelectedFormat()));
 
+	//Setting GamePlate to plate in scene
 	GetCurrentGameState().SetGamePlate(Plate);
-	//GetCurrentGameState().SetPlayer1(FoundPlayers[0]->GetClass());
-
+	
+	//Servers Functions (need update)
 	if (InPlayers[0])
 	{
 		GetCurrentGameState().SetPlayer1(InPlayers[0]);
@@ -81,26 +84,11 @@ void ATC_GameManager::StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> In
 	{
 		GetCurrentGameState().SetPlayer2(InPlayers[1]);
 	}
+
 	GetCurrentGameState().GetGamePlate()->SetPlayerOne(GetCurrentGameState().GetPlayer1());
 	GetCurrentGameState().GetGamePlate()->SetPlayerTwo(GetCurrentGameState().GetPlayer2());
 	GetCurrentGameState().GetGamePlate()->Init();
 
-	//for (AActor* Actor : FoundPlayers)
-	//{
-	//    ATC_Player* Player = Cast<ATC_Player>(Actor);
-	//    if (!Player) continue;
-	//
-	//    if (Player->PlayerID == 1)
-	//    {
-	//        GetCurrentGameState().SetPlayer1(Player);
-	//        //GetCurrentGameState().GetGamePlate()->SetPlayerOne(Player);
-	//    }
-	//    else if (Player->PlayerID == 2)
-	//    {
-	//        GetCurrentGameState().SetPlayer2(Player);
-	//        //GetCurrentGameState().GetGamePlate()->SetPlayerTwo(Player);
-	//    }
-	//}
 	InitGame();
 }
 
@@ -123,7 +111,7 @@ void ATC_GameManager::StartTurn()
 				Slot->GetSlotCard()->OnCardStartTurn();
 			}
 		}
-		for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardByPlayer(GetCurrentGameState().GetPlayer1())->GetBoardSlots())
+		for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardByPlayer(GetCurrentGameState().GetPlayer2())->GetBoardSlots())
 		{
 
 			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
@@ -132,6 +120,7 @@ void ATC_GameManager::StartTurn()
 			}
 		}
 	}
+
 	StartPhase();
 }
 
@@ -141,8 +130,6 @@ void ATC_GameManager::StartPhase()
 		? GetCurrentGameState().GetPlayer1()
 		: GetCurrentGameState().GetPlayer2();
 
-	//GetCurrentGameState().SetActivePlayer(CurrentPlayer);
-	//TC_ActionsSystem::DrawCard(GetCurrentGameState(), CurrentPlayer);
 	GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
 
 	// Sécuriser les accès à BoardPlayerOne
@@ -170,36 +157,9 @@ void ATC_GameManager::StartPhase()
 		}
 	}
 
-	//ATC_Player* CurrentPlayer;
-	//if (GetCurrentGameState().GetIsPlayer1Turn())
-	//{
-	//	CurrentPlayer = GetCurrentGameState().GetPlayer1();
-	//}
-	//else
-	//{
-	//	CurrentPlayer = GetCurrentGameState().GetPlayer2();
-	//}
-	//
-	//GetCurrentGameState().SetActivePlayer(CurrentPlayer);
-	//TC_ActionsSystem::DrawCard(GetCurrentGameState(), CurrentPlayer);
-	//
-	//for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
-	//{
-	//	for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
-	//	{
-	//		Slot->GetSlotCard()->OnCardStartPhase();
-	//	}
-	//}
-	//for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerTwo()->GetBoardSlots())
-	//{
-	//	for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
-	//	{
-	//		Slot->GetSlotCard()->OnCardStartPhase();
-	//	}
-	//}
-
 	//Generer toutes les actions valides par mon joueur
 	// lorsqu'aucune action est valide on appelle EndPhase
+	// ou lorsque le timer arrive à 0 secondes on appelle EndPhase
 	//GenerateAllValidActions()
 	//EndPhase();
 }
@@ -222,6 +182,7 @@ void ATC_GameManager::EndPhase()
 			}
 		}
 	}
+
 	if (GetCurrentGameState().GetActivePlayer()->GetPhaseState() == ETC_PhaseState::Defense)
 	{
 		EndTurn();
