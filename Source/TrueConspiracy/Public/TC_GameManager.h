@@ -8,42 +8,44 @@
 
 class ATC_Plate;
 
+class ATC_Player;
+
 struct FAIActions;
 
 UCLASS()
 class TRUECONSPIRACY_API ATC_GameManager : public AGameMode
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    ATC_Plate* Plate;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<ATC_Player*> Players;
 private:
-	TC_GameStates _CurrentGameState;
-	
+    TC_GameStates _CurrentGameState;
+
 protected:
-	virtual void BeginPlay() override;
+    virtual void BeginPlay() override;
 
-public:	
-	ATC_GameManager();
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	ATC_Plate* Plate;
+public:
+    ATC_GameManager();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<ATC_Player*> PlayersLogged;
+    virtual void Tick(float DeltaTime) override;
 
-	virtual void Tick(float DeltaTime) override;
+    // === GAME CONTROL ===
+    void InitGame();
+    void CoinFlip();
+    UFUNCTION(BlueprintCallable)
+    void StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> InPlayers);
+    void StartTurn();
+    void StartPhase();
+    void EndPhase();
+    void SwitchPhase();
+    void PlayAction(const FAIActions& InActionToPlay);
+    void EndTurn();
+    void EndGame();
 
-	// === GAME CONTROL ===
-	void InitGame();
-	void CoinFlip();
-	UFUNCTION(BlueprintCallable)
-	void StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> Players);
-	void StartTurn();
-	void StartPhase();
-	void EndPhase();
-	void SwitchPhase();
-	void PlayAction(const FAIActions& InActionToPlay);
-	void EndTurn();
-	void EndGame();
-
-	// --- Setter(s) / Getter(s) ---
-	void SetCurrentGameState(TC_GameStates InCurrentGameState);
-	TC_GameStates& GetCurrentGameState();
+    // --- Setter(s) / Getter(s) ---
+    void SetCurrentGameState(TC_GameStates InCurrentGameState);
+    TC_GameStates& GetCurrentGameState();
 };

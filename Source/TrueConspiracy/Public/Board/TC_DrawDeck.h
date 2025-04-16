@@ -50,6 +50,8 @@ public:
 	ATC_Card* GetDrawDeckGameCardAtIndex(int index);
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_Card* GetDrawDeckGameCardLastCard();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	int32 GetDrawDeckCardCount();
 
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetDrawDeckPlayer(ATC_Player* newDrawDeckPlayer);
