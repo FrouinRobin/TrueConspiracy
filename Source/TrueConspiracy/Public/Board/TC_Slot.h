@@ -20,6 +20,9 @@ public:
 	UStaticMeshComponent* visualMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USceneComponent* sceneComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ETC_CardType _slotCardType;
 
 protected:

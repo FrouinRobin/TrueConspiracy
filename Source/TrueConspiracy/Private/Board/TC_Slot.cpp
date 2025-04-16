@@ -10,11 +10,14 @@ ATC_Slot::ATC_Slot()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
+	sceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
+	RootComponent = sceneComponent;
+
 	visualMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SlotVisual"));
-	RootComponent = visualMesh;
+	visualMesh->SetupAttachment(RootComponent);
 
 	// Set the mesh to a basic cube (engine default)
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Game/TrueConspiracy/FBX/Card/CardFBX.CardFBX"));
 	if (CubeMesh.Succeeded())
 	{
 		visualMesh->SetStaticMesh(CubeMesh.Object);
@@ -27,6 +30,7 @@ ATC_Slot::ATC_Slot()
 bool ATC_Slot::HasCard()
 {
 	if (_slotCard != nullptr) {
+		UE_LOG(LogTemp, Error, TEXT("Slot is Occupied"));
 		return true;
 	}
 	else {

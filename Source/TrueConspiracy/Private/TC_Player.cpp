@@ -498,7 +498,7 @@ TArray<ATC_Slot*> ATC_Player::GetValidSlotsForCard(ATC_Card* Card)
 
 	if (!Card || !_playerBoard) return ValidSlots;
 
-	for (ATC_Slot* Slot : _playerBoard->GetAllSlots()) // Supposé avoir cette fonction
+	for (ATC_Slot* Slot : _playerBoard->GetAllSlots())
 	{
 		if (CanPlaceCardOnSlot(Card, Slot))
 		{
