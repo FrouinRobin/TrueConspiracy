@@ -26,14 +26,14 @@ void ATC_GameManager::Tick(float DeltaTime)
 void ATC_GameManager::InitGame()
 {
 	//Draw 5 cards for each players
-	for (int32 i = 0; i < 5; ++i)
-	{
-		GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
-		GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
-	
-		GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer2());
-		GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
-	}
+	//for (int32 i = 0; i < 5; ++i)
+	//{
+	//	GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
+	//	GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
+	//
+	//	GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer2());
+	//	GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
+	//}
 
 	//Bruteforce (need to remove on release)
 	GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
