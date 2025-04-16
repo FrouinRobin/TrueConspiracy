@@ -41,6 +41,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BluePrintReference")
 	TSubclassOf<ATC_DiscardDeck> DiscardDeckBluePrint;
 
+
 protected:
 	virtual void BeginPlay() override;
 

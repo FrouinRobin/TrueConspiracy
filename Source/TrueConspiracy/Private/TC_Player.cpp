@@ -45,13 +45,13 @@ void ATC_Player::BeginPlay()
 	Super::BeginPlay();
 
 	//_playerCamera->SetRelativeRotation(FRotator(-90, 180, 0));
-
+	/*
 	FQuat Rotation = FQuat(0.0f, -0.0f, 0.0f, 1.0f);
 	FVector Translation = FVector(1464.0f, 2410.0f, 937.0f);
 	FVector Scale3D = FVector(1.0f, 1.0f, 1.0f);
 
 	FTransform Transform(Rotation, Translation, Scale3D);
-	_playerTransform[ETC_PlayerState::SELECTSLOT] = Transform;
+	_playerTransform[ETC_PlayerState::SELECTSLOT] = Transform;*/
 }
 
 // Called every frame
