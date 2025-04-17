@@ -98,7 +98,7 @@ int32 TC_GameStates::GetWinner() const
 	if (GetPlayer1Score() > GetPlayer2Score()) return 1;
 	if (GetPlayer2Score() > GetPlayer1Score()) return 2;
 
-	return 0; // Draw
+	return 0; // Draw 
 }
 
 // --- Generating Futur State(s) ---
@@ -108,10 +108,16 @@ TArray<TC_GameStates> TC_GameStates::GetNextStates() const
 	return TArray<TC_GameStates>();
 }
 
-void TC_GameStates::ApplyAction(const FAIActions& InAction, ATC_Player* InCurrentPlayer)
+//void TC_GameStates::ApplyAction(const FAIActions& InAction, ATC_Player* InCurrentPlayer)
+//{
+//	// Déléguer la logique à TC_ActionsSystem
+//	TC_ActionsSystem::ApplyAction(*this, InAction, InCurrentPlayer);
+//}
+
+void TC_GameStates::ApplyAction(const FAIActions& InAction)
 {
 	// Déléguer la logique à TC_ActionsSystem
-	TC_ActionsSystem::ApplyAction(*this, InAction, InCurrentPlayer);
+	TC_ActionsSystem::ApplyAction(*this, InAction);
 }
 
 // --- Tool(s) Function(s) ---
@@ -129,12 +135,12 @@ TC_GameStates TC_GameStates::Clone() const
 	//return clone;
 	
 	TC_GameStates clone;
-	clone.Player1->SetHand(Player1->GetHand());
-	clone.Player2->SetHand(Player2->GetHand());
+	clone.Player1->SetPlayerHand(Player1->GetHand());
+	clone.Player2->SetPlayerHand(Player2->GetHand());
 	//clone._Player1BoardCard = _Player1BoardCard;
 	//clone._Player2BoardCard = _Player2BoardCard;
-	clone.Player1->SetPlayerMana(Player1->GetPlayerMana());
-	clone.Player2->SetPlayerMana(Player2->GetPlayerMana());
+	clone.Player1->SetPlayerCurrentMana(Player1->GetPlayerCurrentMana());
+	clone.Player2->SetPlayerCurrentMana(Player2->GetPlayerCurrentMana());
 	clone.SetIsPlayer1Turn(GetIsPlayer1Turn());
 	return clone;
 }

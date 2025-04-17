@@ -18,6 +18,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* visualMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ETC_CardType _slotCardType;
+
 protected:
 
 public:
@@ -29,7 +33,7 @@ public:
 	ATC_Card* GetSlotCard();
 
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	ATC_BoardSlot* GetSlaotBoardSlot();
+	ATC_BoardSlot* GetSlotBoardSlot();
 
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ETC_CardType GetSlotCardType();
@@ -51,5 +55,5 @@ public:
 private:
 	ATC_BoardSlot* _slotBoardSlot;
 	ATC_Card* _slotCard;
-	ETC_CardType _slotCardType;
+	//ETC_CardType _slotCardType;
 };

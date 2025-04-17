@@ -67,7 +67,20 @@ ATC_DiscardDeck* ATC_Board::GetBoardDiscard()
     return _boardDiscard;
 }
 
+TArray<ATC_Slot*> ATC_Board::GetAllSlots() const
+{
+    TArray<ATC_Slot*> allSlots;
 
+    for (ATC_BoardSlot* boardSlot : _boardSlots)
+    {
+        if (!boardSlot) continue;
+
+        const TArray<ATC_Slot*>& slotList = boardSlot->GetBoardSlotSlots();
+        allSlots.Append(slotList);
+    }
+
+    return allSlots;
+}
 
 
 void ATC_Board::SetBoardPlater(ATC_Plate* newBoardPlate)
@@ -114,11 +127,8 @@ TArray<TSubclassOf<ATC_Card>> ATC_Board::ShuffleCard(TArray<TSubclassOf<ATC_Card
 
 void ATC_Board::Init()
 {
-    float i = 0;
-    
-
-
     _boardDraw = GetWorld()->SpawnActor<ATC_DrawDeck>(DrawDeckBluePrint, BoardDrawAnchor->GetComponentLocation(), BoardDrawAnchor->GetComponentRotation());
+    _boardDraw->SetDrawDeckPlayer(GetBoardPlayer());
     _boardDraw->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
     _boardDraw->SetDrawDeckBoard(this);
     _boardDraw->Init(GetBoardPlayer()->GetDeck());

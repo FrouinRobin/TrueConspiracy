@@ -32,6 +32,11 @@ void ATC_DrawDeck::Tick(float DeltaTime)
 
 }
 
+ATC_Player* ATC_DrawDeck::GetDrawDeckPlayer()
+{
+    return _drawDeckPlayer;
+}
+
 ATC_Board* ATC_DrawDeck::GetDrawDeckBoard()
 {
     return _drawDeckBoard;
@@ -94,6 +99,11 @@ ATC_Card* ATC_DrawDeck::GetDrawDeckGameCardLastCard()
         return _drawDeck[0];
     }
     return nullptr;
+}
+
+void ATC_DrawDeck::SetDrawDeckPlayer(ATC_Player* newDrawDeckPlayer)
+{
+    _drawDeckPlayer = newDrawDeckPlayer;
 }
 
 void ATC_DrawDeck::SetDrawDeckBoard(ATC_Board* newDrawDeckBoard)
@@ -201,7 +211,9 @@ void ATC_DrawDeck::Init(TArray<TSubclassOf<ATC_Card>> CardsToSpawn)
     for (TSubclassOf<ATC_Card> Card : ShuffleCard(CardsToSpawn))
     {
         ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(Card, FVector(CardAnchor->GetComponentLocation().X, CardAnchor->GetComponentLocation().Y, CardAnchor->GetComponentLocation().Z + 2 * _drawDeck.Num()), CardAnchor->GetComponentRotation());
+        NewCard->SetPlayer(GetDrawDeckPlayer());
         NewCard->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+        NewCard->Init();
         _drawDeck.Add(NewCard);
     }
 }

@@ -28,7 +28,7 @@ ATC_Plate::ATC_Plate()
 void ATC_Plate::BeginPlay()
 {
 	Super::BeginPlay();
-	TArray<AActor*> FoundPlayers;
+
 }
 
 // Called every frame
@@ -50,7 +50,7 @@ ATC_Player* ATC_Plate::GetPlayerTwo()
 
 ATC_Board* ATC_Plate::GetBoardByPlayer(ATC_Player* PlayerRef)
 {
-	ATC_Board* PlayerBaord = nullptr;
+	ATC_Board* PlayerBoard = nullptr;
 	for (ATC_Board* Board : _plateBoard)
 	{
 		if (Board->GetBoardPlayer() == PlayerRef)
@@ -59,10 +59,10 @@ ATC_Board* ATC_Plate::GetBoardByPlayer(ATC_Player* PlayerRef)
 		}
 		else
 		{
-			PlayerBaord = nullptr;
+			PlayerBoard = nullptr;
 		}
 	}
-	return PlayerBaord;
+	return PlayerBoard;
 }
 
 TArray<ATC_LandCardSlot*> ATC_Plate::GetLandCardSlots()
@@ -73,6 +73,11 @@ TArray<ATC_LandCardSlot*> ATC_Plate::GetLandCardSlots()
 ATC_LandCardSlot* ATC_Plate::GetLandCardSlotAtIndex(int index)
 {
 	return _landCardSlots[index];
+}
+
+TArray<ATC_Board*> ATC_Plate::GetPlateBoard()
+{
+	return _plateBoard;
 }
 
 
@@ -91,24 +96,25 @@ void ATC_Plate::Init()
 	_plateBoard.Add(GetWorld()->SpawnActor<ATC_Board>(BoardBluePrint, BoardPlayerOneAnchor->GetComponentLocation(), BoardPlayerOneAnchor->GetComponentRotation()));
 	_plateBoard[0]->SetBoardPlayer(_playerOne);
 	_plateBoard[0]->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
-	_plateBoard[0]->Init();
+	
 	_playerOne->SetPlayerBoard(_plateBoard[0]);
 	_plateBoard.Add(GetWorld()->SpawnActor<ATC_Board>(BoardBluePrint, BoardPlayerTwoAnchor->GetComponentLocation(), BoardPlayerTwoAnchor->GetComponentRotation()));
 	_plateBoard[1]->SetBoardPlayer(_playerTwo);
 	_plateBoard[1]->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
-	_plateBoard[1]->Init();
+	
 	_playerTwo->SetPlayerBoard(_plateBoard[1]);
 
 	_landCardSlots.Add(GetWorld()->SpawnActor<ATC_LandCardSlot>(LandCardSlotBluePrint,LandCardSlotOneAnchor->GetComponentLocation(), LandCardSlotOneAnchor->GetComponentRotation()));
 	_landCardSlots.Add(GetWorld()->SpawnActor<ATC_LandCardSlot>(LandCardSlotBluePrint,LandCardSlotTwoAnchor->GetComponentLocation(), LandCardSlotTwoAnchor->GetComponentRotation()));
 	_landCardSlots.Add(GetWorld()->SpawnActor<ATC_LandCardSlot>(LandCardSlotBluePrint,LandCardSlotThreeAnchor->GetComponentLocation(), LandCardSlotThreeAnchor->GetComponentRotation()));
-	
-	GetLandCardSlots()[0]->GetLandCardBordSlot().Add(GetBoardByPlayer(_playerOne)->GetBoardSlots()[0]);
-	GetLandCardSlots()[0]->GetLandCardBordSlot().Add(GetBoardByPlayer(_playerTwo)->GetBoardSlots()[2]);
-	GetLandCardSlots()[1]->GetLandCardBordSlot().Add(GetBoardByPlayer(_playerOne)->GetBoardSlots()[1]);
-	GetLandCardSlots()[1]->GetLandCardBordSlot().Add(GetBoardByPlayer(_playerTwo)->GetBoardSlots()[1]);
-	GetLandCardSlots()[2]->GetLandCardBordSlot().Add(GetBoardByPlayer(_playerOne)->GetBoardSlots()[2]);
-	GetLandCardSlots()[2]->GetLandCardBordSlot().Add(GetBoardByPlayer(_playerTwo)->GetBoardSlots()[0]);
+	_plateBoard[0]->Init();
+	_plateBoard[1]->Init();
+	//GetLandCardSlots()[0]->GetLandCardBordSlot().Add(GetBoardByPlayer(_playerOne)->GetBoardSlots()[0]);
+	//GetLandCardSlots()[0]->GetLandCardBordSlot().Add(GetBoardByPlayer(_playerTwo)->GetBoardSlots()[2]);
+	//GetLandCardSlots()[1]->GetLandCardBordSlot().Add(GetBoardByPlayer(_playerOne)->GetBoardSlots()[1]);
+	//GetLandCardSlots()[1]->GetLandCardBordSlot().Add(GetBoardByPlayer(_playerTwo)->GetBoardSlots()[1]);
+	//GetLandCardSlots()[2]->GetLandCardBordSlot().Add(GetBoardByPlayer(_playerOne)->GetBoardSlots()[2]);
+	//GetLandCardSlots()[2]->GetLandCardBordSlot().Add(GetBoardByPlayer(_playerTwo)->GetBoardSlots()[0]);
 
 	for (ATC_LandCardSlot* LandCardSlot: _landCardSlots)
 	{
