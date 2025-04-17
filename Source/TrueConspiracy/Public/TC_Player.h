@@ -92,6 +92,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getter")
 	TArray<ATC_Slot*> GetValidSlotsForCard(ATC_Card* Card);
 
+	UFUNCTION(BlueprintPure)
+	TArray<ATC_Card*> GetCardsWaitingTargetList();
+
 	// === Setters ===
 	UFUNCTION(BlueprintCallable, Category = "Setter")
 	void SetPlayerBoard(ATC_Board* newBoard);
@@ -143,8 +146,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SwapCard(ATC_Card* InCardOne, ATC_Card* InCardTwo);
 
-	void OnStateChange_Implementation(ETC_PlayerState newState, ETC_PlayerState oldState);
-
 	UFUNCTION(BlueprintCallable)
 	void RemoveCardFromHand(ATC_Card* Card);
 
@@ -159,6 +160,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SwitchTransformTransition();
+
+	UFUNCTION(BlueprintCallable)
+	void AddCardToWaitingTargetList(ATC_Card* card);
 
 	// === Events ===
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
