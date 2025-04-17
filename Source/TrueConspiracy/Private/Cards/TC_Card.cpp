@@ -27,7 +27,7 @@ void ATC_Card::BeginPlay()
 void ATC_Card::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	switch (_cardPlayer->GetPhaseState())
+	switch (_cardPlayer->GetPlayerPhaseState())
 	{
 		case(ETC_PhaseState::Attack):
 		{
@@ -254,7 +254,7 @@ void ATC_Card::ActivateEffects()
 
 void ATC_Card::Init()
 {
-	switch (GetPlayer()->GetPhaseState())
+	switch (GetPlayer()->GetPlayerPhaseState())
 	{
 	case(ETC_PhaseState::Attack):
 		SetCardCurrentFace(GetCardAttackFace());
