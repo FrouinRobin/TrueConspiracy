@@ -34,6 +34,9 @@ ATC_Player::ATC_Player()
 	PlayerCardAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("CardAnchor"));
 	PlayerCardAnchor->SetupAttachment(RootComponent);
 	PlayerCardAnchor->SetRelativeLocation(FVector(150, 0, -120));
+
+
+	_PlayerState = ETC_PlayerState::SELECTHAND;
 }
 
 // Called when the game starts or when spawned
@@ -163,6 +166,37 @@ TArray<ATC_Slot*> ATC_Player::GetValidSlotsForCard(ATC_Card* Card)
 	return AvailableSlot;
 }
 
+TArray<ATC_Card*> ATC_Player::GetAllPlayerCard(bool takeHand)
+{
+	TArray<ATC_Card*> PlayerCard;
+	if (takeHand)
+	{
+		for (ATC_Card* HandCard : _playerHand)
+		{
+			if (HandCard != nullptr)
+			{
+				PlayerCard.Add(HandCard);
+			}
+		}
+	}
+	for (ATC_BoardSlot* BoardSlot : _playerBoard->GetBoardSlots())
+	{
+		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		{
+			if(Slot->GetSlotCard() != nullptr)
+			{
+				PlayerCard.Add(Slot->GetSlotCard());
+			}
+		}
+	}
+	return PlayerCard;
+}
+
+void ATC_Player::dorotate()
+{
+	OnChangePhaseState(ETC_PhaseState::Attack);
+}
+
 void ATC_Player::SetPlayerBoard(ATC_Board* newBoard)
 {
 	_playerBoard = newBoard;
@@ -186,6 +220,7 @@ void ATC_Player::SetPlayerCurrentMana(int newCurrrentMana)
 void ATC_Player::SetPlayerPhaseState(ETC_PhaseState newPhaseState)
 {
 	_playerPhaseState = newPhaseState;
+	OnChangePhaseState(_playerPhaseState);
 }
 
 void ATC_Player::SetPlayerMaxMana(int newManaMax)
@@ -217,9 +252,10 @@ bool ATC_Player::AddCardToHand(TSubclassOf<ATC_Card> card)
 	{
 		ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(card, PlayerCardAnchor->GetComponentLocation(), PlayerCardAnchor->GetComponentRotation());
 		_playerHand.Add(NewCard);
-		NewCard->AttachToComponent(PlayerCardAnchor, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
-		NewCard->CardAnchor->SetWorldRotation(FRotator(-69.f, 180.f, 0.f));
+		NewCard->AttachToComponent(PlayerCardAnchor, FAttachmentTransformRules(EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, EAttachmentRule::KeepWorld, true));
 		NewCard->SetPlayer(this);
+		NewCard->CardAnchor->SetRelativeRotation(FRotator(-69.f, 180.f, 0.f));
+		NewCard->CardAnchor->UpdateComponentToWorld();
 		NewCard->Init();
 	}
 

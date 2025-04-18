@@ -92,6 +92,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getter")
 	TArray<ATC_Slot*> GetValidSlotsForCard(ATC_Card* Card);
 
+	UFUNCTION(BlueprintCallable, Category = "Getter", CallInEditor)
+	TArray<ATC_Card*> GetAllPlayerCard(bool takeHand);
+
+	UFUNCTION(CallInEditor, Category = "Do Rotation")
+	void dorotate();
+
 	// === Setters ===
 	UFUNCTION(BlueprintCallable, Category = "Setter")
 	void SetPlayerBoard(ATC_Board* newBoard);
@@ -169,6 +175,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnStateChange(ETC_PlayerState newState, ETC_PlayerState oldState);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnChangePhaseState(ETC_PhaseState newPhaseState);
 
 private:
 
