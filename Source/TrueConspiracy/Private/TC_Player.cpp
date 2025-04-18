@@ -34,6 +34,9 @@ ATC_Player::ATC_Player()
 	PlayerCardAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("CardAnchor"));
 	PlayerCardAnchor->SetupAttachment(RootComponent);
 	PlayerCardAnchor->SetRelativeLocation(FVector(150, 0, -120));
+	PlayerCardAnchor->SetRelativeRotation(FRotator(-69.f, 180.f, 0.f));
+
+	_PlayerState = ETC_PlayerState::SELECTHAND;
 }
 
 // Called when the game starts or when spawned
@@ -218,8 +221,8 @@ bool ATC_Player::AddCardToHand(TSubclassOf<ATC_Card> card)
 		ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(card, PlayerCardAnchor->GetComponentLocation(), PlayerCardAnchor->GetComponentRotation());
 		_playerHand.Add(NewCard);
 		NewCard->AttachToComponent(PlayerCardAnchor, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
-		NewCard->CardAnchor->SetWorldRotation(FRotator(-69.f, 180.f, 0.f));
 		NewCard->SetPlayer(this);
+		NewCard->CardAnchor->SetRelativeRotation(FRotator(0.f, 0.f, 0.f));
 		NewCard->Init();
 	}
 
