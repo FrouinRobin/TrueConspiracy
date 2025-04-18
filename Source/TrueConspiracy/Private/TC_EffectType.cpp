@@ -24,6 +24,10 @@ bool UTC_EffectType::DoesEffectRequireTarget()
 void UTC_EffectType::SetTarget(ATC_Card* target)
 {
 	_target = target;
+	for (UTC_CardEffect* effect : EffectList)
+	{
+		effect->TargetCard = target;
+	}
 }
 
 ATC_Card* UTC_EffectType::GetTarget()
