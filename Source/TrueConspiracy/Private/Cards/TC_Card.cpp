@@ -124,6 +124,16 @@ ATC_Slot* ATC_Card::GetSlot()
 	return _cardSlot;
 }
 
+USceneComponent* ATC_Card::GetCardAnchor()
+{
+	return CardAnchor;
+}
+
+FRotator ATC_Card::GetCardAnchorRotation()
+{
+	return CardAnchor->GetRelativeRotation();
+}
+
 /*----------------------------------------------------------------------------------*/
 
 /*SETTER*/
@@ -215,6 +225,11 @@ void ATC_Card::SetSlot(ATC_Slot* newSlot)
 	_cardSlot = newSlot;
 }
 
+void ATC_Card::SetCardAnchorRotation(FRotator newRotation)
+{
+	CardAnchor->SetRelativeRotation(newRotation);
+}
+
 
 /*OTHER FUNCTION*/
 
@@ -232,9 +247,7 @@ void ATC_Card::SwitchFace()
 
 void ATC_Card::SwitchPhase()
 {
-	OnCardEndPhase();
 	SwitchFace();
-	OnCardStartPhase();
 }
 
 bool ATC_Card::CanDoEffect()

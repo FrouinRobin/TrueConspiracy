@@ -85,6 +85,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_Slot* GetSlot();
 
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	USceneComponent* GetCardAnchor();
+
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	FRotator GetCardAnchorRotation();
+
 
 	/*SETTER*/
 
@@ -121,6 +127,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetSlot(ATC_Slot* newSlot);
 
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetCardAnchorRotation(FRotator newRotation);
+
 
 	/*CUSTOM EVENT*/
 
@@ -141,6 +150,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnCardEndTurn();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnCardRotate();
 
 
 	/*OTHER FUNCTION*/

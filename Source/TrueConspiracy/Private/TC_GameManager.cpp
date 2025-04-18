@@ -43,7 +43,9 @@ void ATC_GameManager::InitGame()
 	//Do a CoinFlip
 	/*CoinFlip();*/
 	//Give the max mana to each player
+	GetCurrentGameState().GetPlayer1()->SetPlayerMaxMana(3);
 	GetCurrentGameState().GetPlayer1()->SetPlayerCurrentMana(3);
+	GetCurrentGameState().GetPlayer2()->SetPlayerMaxMana(3);
 	GetCurrentGameState().GetPlayer2()->SetPlayerCurrentMana(3);
 	//Start the first round
 	StartTurn();
@@ -252,13 +254,13 @@ void ATC_GameManager::EndTurn()
 	{
 		GetCurrentGameState().GetPlayer1()->SetPlayerPhaseState(ETC_PhaseState::Defense);
 		GetCurrentGameState().GetPlayer2()->SetPlayerPhaseState(ETC_PhaseState::Attack);
-		//GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer2());
+		GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer2());
 	}
 	else
 	{
 		GetCurrentGameState().GetPlayer1()->SetPlayerPhaseState(ETC_PhaseState::Attack);
 		GetCurrentGameState().GetPlayer2()->SetPlayerPhaseState(ETC_PhaseState::Defense);
-		//GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
+		GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
 	}
 
 	//UE_LOG(LogTemp, Log, TEXT("EndTurn: Tour %d lancé, %s est en attaque."),GetCurrentGameState().GetCurrentTurn(),*GetNameSafe(GetCurrentGameState().GetActivePlayer()));
