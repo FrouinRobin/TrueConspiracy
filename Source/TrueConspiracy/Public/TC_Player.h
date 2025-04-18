@@ -95,9 +95,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getter", CallInEditor)
 	TArray<ATC_Card*> GetAllPlayerCard(bool takeHand);
 
-	UFUNCTION(CallInEditor, Category = "Do Rotation")
-	void dorotate();
-
 	// === Setters ===
 	UFUNCTION(BlueprintCallable, Category = "Setter")
 	void SetPlayerBoard(ATC_Board* newBoard);
@@ -149,8 +146,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SwapCard(ATC_Card* InCardOne, ATC_Card* InCardTwo);
 
-	void OnStateChange_Implementation(ETC_PlayerState newState, ETC_PlayerState oldState);
-
 	UFUNCTION(BlueprintCallable)
 	void RemoveCardFromHand(ATC_Card* Card);
 
@@ -169,6 +164,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SwitchTransformTransition();
 
+	UFUNCTION(BlueprintCallable)
+	void AddCardToWaitingTargetList(ATC_Card* card);
+	UFUNCTION(BlueprintCallable)
+	bool RemoveCardToWaitingTargetList(ATC_Card* card);
+
 	// === Events ===
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnSelectCard(ATC_Card* card, ATC_Card* oldCard);
@@ -178,6 +178,13 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnChangePhaseState(ETC_PhaseState newPhaseState);
+
+	
+	UFUNCTION(CallInEditor, Category = "Do Rotation")
+	void dorotate();
+	
+	UFUNCTION(BlueprintPure)
+	TArray<ATC_Card*> GetCardsWaitingTargetList();
 
 private:
 
@@ -191,6 +198,8 @@ private:
 	int _playerMaxMana;
 
 	ATC_Card* _playerSelectedCard;
+
+	TArray<ATC_Card*> _cardsWaitingTarget;
 
 	float _transformTransitionTimer;
 	float _transformTransitionTimerGoal;

@@ -70,38 +70,21 @@ ATC_Card* ATC_Player::GetCardFromHandByName(FString name, bool checkAllFaces)
 {
 	for (ATC_Card* Card : _playerHand)
 	{
-		if (Card->GetCardCurrentFace()->GetName() == name)
+		if (checkAllFaces)
 		{
-			return Card;
-		}
-		else if (checkAllFaces)
-		{
-			if (Card->GetCardCurrentFace() == Card->GetCardAttackFace())
+			// I don't know why we can have more than 2 faces but whatever, let's check them all
+			for (UTC_Face* Face : Card->GetCardFaceList())
 			{
-				if (Card->GetCardDefendFace()->GetName() == name)
-				{
+				if (Face->GetName() == name)
 					return Card;
-				}
-				else
-				{
-					return nullptr;
-				}
-			}
-			else
-			{
-				if (Card->GetCardDefendFace()->GetName() == name)
-				{
-					return Card;
-				}
-				else
-				{
-					return nullptr;
-				}
 			}
 		}
 		else
 		{
-			return nullptr;
+			if (Card->GetCardCurrentFace()->GetName() == name)
+			{
+				return Card;
+			}
 		}
 	}
 	return nullptr;
@@ -114,10 +97,6 @@ ATC_Card* ATC_Player::GetCardFromHandById(ETC_CardID id)
 		if (Card->GetCardID() == id)
 		{
 			return Card;
-		}
-		else
-		{
-			continue;
 		}
 	}
 	return nullptr;
@@ -197,6 +176,11 @@ void ATC_Player::dorotate()
 	OnChangePhaseState(ETC_PhaseState::Attack);
 }
 
+TArray<ATC_Card*> ATC_Player::GetCardsWaitingTargetList()
+{
+	return _cardsWaitingTarget;
+}
+
 void ATC_Player::SetPlayerBoard(ATC_Board* newBoard)
 {
 	_playerBoard = newBoard;
@@ -271,6 +255,7 @@ bool ATC_Player::AddCardToDeck(TSubclassOf<ATC_Card> card)
 	return true;
 }
 
+// Can someone smarter that knows how a card hand works rework this function?
 void ATC_Player::ShowHandOnCamera()
 {
 	for (size_t i = 0; i < _playerHand.Num(); i++)
@@ -457,6 +442,16 @@ void ATC_Player::SwitchTransformTransition()
 		SetActorLocationAndRotation(_transformTransitionGoal.GetLocation(), _transformTransitionGoal.Rotator());
 		SetActorScale3D(_transformTransitionGoal.GetScale3D());
 	}
+}
+
+void ATC_Player::AddCardToWaitingTargetList(ATC_Card* card)
+{
+	_cardsWaitingTarget.Add(card);
+}
+
+bool ATC_Player::RemoveCardToWaitingTargetList(ATC_Card* card)
+{
+	return (bool)_cardsWaitingTarget.Remove(card);
 }
 
 bool ATC_Player::CanPlaceCardOnSlot(ATC_Card* Card, ATC_Slot* Slot)

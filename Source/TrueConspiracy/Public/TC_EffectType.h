@@ -20,4 +20,15 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void DoEffect(ATC_Card* caster);
+
+	UFUNCTION(BlueprintPure)
+	bool DoesEffectRequireTarget();
+
+	UFUNCTION(BlueprintCallable)
+	void SetTarget(ATC_Card* target);
+	UFUNCTION(BlueprintPure)
+	ATC_Card* GetTarget();
+
+private:
+	ATC_Card* _target;
 };
