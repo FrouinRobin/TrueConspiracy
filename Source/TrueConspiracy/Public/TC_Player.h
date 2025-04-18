@@ -163,6 +163,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void AddCardToWaitingTargetList(ATC_Card* card);
+	UFUNCTION(BlueprintCallable)
+	bool RemoveCardToWaitingTargetList(ATC_Card* card);
 
 	// === Events ===
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)

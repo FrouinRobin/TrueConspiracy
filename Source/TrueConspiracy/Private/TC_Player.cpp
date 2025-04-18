@@ -400,6 +400,11 @@ void ATC_Player::AddCardToWaitingTargetList(ATC_Card* card)
 	_cardsWaitingTarget.Add(card);
 }
 
+bool ATC_Player::RemoveCardToWaitingTargetList(ATC_Card* card)
+{
+	return (bool)_cardsWaitingTarget.Remove(card);
+}
+
 bool ATC_Player::CanPlaceCardOnSlot(ATC_Card* Card, ATC_Slot* Slot)
 {
 	if (!Card || !Slot) return false;
