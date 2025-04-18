@@ -289,6 +289,19 @@ void ATC_Player::RemoveCardFromHand(ATC_Card* Card)
 	ShowHandOnCamera();
 }
 
+void ATC_Player::RemoveCardFromDeck(ATC_Card* Card)
+{
+	if (!Card) return;
+
+	TSubclassOf<ATC_Card> CardClass = Card->GetClass();
+
+	if (!PlayerDeck.Contains(CardClass)) return;
+
+	PlayerDeck.Remove(CardClass);
+	Card->Destroy();
+	ShowHandOnCamera();
+}
+
 void ATC_Player::SwitchFace(ATC_Card* Card)
 {
 	Card->SwitchPhase();

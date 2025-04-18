@@ -149,6 +149,9 @@ public:
 	void RemoveCardFromHand(ATC_Card* Card);
 
 	UFUNCTION(BlueprintCallable)
+	void RemoveCardFromDeck(ATC_Card* Card);
+
+	UFUNCTION(BlueprintCallable)
 	bool CanPlaceCardOnSlot(ATC_Card* Card, ATC_Slot* Slot);
 
 	UFUNCTION(BlueprintCallable)
