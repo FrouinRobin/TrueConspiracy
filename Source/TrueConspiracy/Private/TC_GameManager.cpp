@@ -123,9 +123,7 @@ void ATC_GameManager::StartTurn()
 
 void ATC_GameManager::StartPhase()
 {
-	ATC_Player* CurrentPlayer = GetCurrentGameState().GetIsPlayer1Turn() 
-		? GetCurrentGameState().GetPlayer1()
-		: GetCurrentGameState().GetPlayer2();
+	ATC_Player* CurrentPlayer = GetCurrentGameState().GetActivePlayer();
 
 	GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
 
@@ -185,6 +183,11 @@ void ATC_GameManager::EndPhase()
 			}
 		}
 	}
+	ATC_Player* ActivePlayer = GetCurrentGameState().GetActivePlayer();
+	FString PhaseStateName = StaticEnum<ETC_PhaseState>()->GetNameStringByValue((int64)ActivePlayer->GetPlayerPhaseState());
+
+	UE_LOG(LogTemp, Error, TEXT("ActivePlayer: %s, PhaseState: %s"),
+		*ActivePlayer->GetName(), *PhaseStateName);
 	if (GetCurrentGameState().GetActivePlayer()->GetPlayerPhaseState() == ETC_PhaseState::Defense)
 	{
 		UE_LOG(LogTemp, Error, TEXT("EndPhase: Appel de EndTurn."));
@@ -193,6 +196,17 @@ void ATC_GameManager::EndPhase()
 	else 
 	{
 		UE_LOG(LogTemp, Error, TEXT("EndPhase: Appel de StartPhase pour joueur 2."));
+		if (ActivePlayer == GetCurrentGameState().GetPlayer1())
+		{
+			ActivePlayer = GetCurrentGameState().GetPlayer2();
+			GetCurrentGameState().SetActivePlayer(ActivePlayer);
+		}
+		else
+		{
+			ActivePlayer = GetCurrentGameState().GetPlayer1();
+			GetCurrentGameState().SetActivePlayer(ActivePlayer);
+		}
+		
 		StartPhase();
 	}
 }
