@@ -10,8 +10,14 @@ ATC_Plate::ATC_Plate()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+
+	RootComponent = SceneComponent;
+
 	PlateMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlateMesh"));
-	RootComponent = PlateMesh;
+	PlateMesh->SetupAttachment(RootComponent);
+
 	BoardPlayerOneAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("BoardPlayerOneAnchor"));
 
 	BoardPlayerTwoAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("BoardPlayerTwoAnchor"));

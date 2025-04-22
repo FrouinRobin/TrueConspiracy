@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Camera/CameraComponent.h"
 #include "Cards/TC_Card.h"
-#include <TC_PlayerState.h>
+#include "TC_PlayerState.h"
 #include "TC_Player.generated.h"
 
 class ATC_Board;
@@ -13,8 +14,8 @@ class ATC_Board;
 UENUM(BlueprintType)
 enum class ETC_PhaseState : uint8
 {
-	Attack,
-	Defense,
+	Attack		UMETA(DisplayName = "Attack"),
+	Defense		UMETA(DisplayName = "Defense")
 };
 
 UCLASS()
@@ -26,143 +27,191 @@ public:
 	// Sets default values for this pawn's properties
 	ATC_Player();
 
-	UPROPERTY(BlueprintReadWrite)
-	uint8 PlayerID;
-	UPROPERTY(BlueprintReadOnly)
-	USceneComponent* _cameraAnchor;
-	UPROPERTY(BlueprintReadOnly)
-	class UCameraComponent* _playerCamera;
-	UPROPERTY(BlueprintReadOnly)
-	class USceneComponent* _cardAnchor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ID")
+	int PlayerID;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Anchor")
+	USceneComponent* MainAnchor;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Anchor")
+	USceneComponent* CameraAnchor;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Anchor")
+	USceneComponent* PlayerCardAnchor;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
+	UCameraComponent* PlayerCamera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Deck")
+	TArray<TSubclassOf<ATC_Card>> PlayerDeck;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TransformMap")
+	TMap<ETC_PlayerState, FTransform> PlayerTransform;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+public:
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+	/*UFUNCTION(BlueprintCallable, Category = "Getter")
+	ATC_Card* GetCardFromDeckByName(FString name, bool checkAllFaces);
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	ATC_Card* GetCardFromDeckById(ETC_CardID id);*/
+	// === Getters ===
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	int GetPlayerRoundWon();
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	ATC_Board* GetPlayerBoard();
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	TArray<TSubclassOf<ATC_Card>> GetDeck();
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	TArray<ATC_Card*> GetHand();
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	ATC_Card* GetCardFromHandByName(FString name, bool checkAllFaces);
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	ATC_Card* GetCardFromHandById(ETC_CardID id);
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	int GetPlayerCurrentMana();
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	int GetPlayerMaxMana();
+
+	UFUNCTION(BlueprintPure, Category = "Getter", meta = (ReturnDisplayName = "Selected Card"))
+	ATC_Card* GetPlayerSelectedCard();
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	ETC_PhaseState GetPlayerPhaseState();
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	ETC_PlayerState GetPlayerState();
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	TArray<ATC_Slot*> GetValidSlotsForCard(ATC_Card* Card);
+
+	UFUNCTION(BlueprintCallable, Category = "Getter", CallInEditor)
+	TArray<ATC_Card*> GetAllPlayerCard(bool takeHand);
+
+	UFUNCTION(BlueprintPure)
+	TArray<ATC_Card*> GetCardsWaitingTargetList();
+
+	// === Setters ===
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	void SetPlayerRoundWon(int newRoundWons);
+
+	UFUNCTION(BlueprintCallable, Category = "Setter")
+	void SetPlayerBoard(ATC_Board* newBoard);
+
+	UFUNCTION(BlueprintCallable, Category = "Setter")
+	void SetPlayerDeck(TArray<TSubclassOf<ATC_Card>> newDeck);
+
+	UFUNCTION(BlueprintCallable, Category = "Setter")
+	void SetPlayerHand(TArray<ATC_Card*> newDeck);
+
+	UFUNCTION(BlueprintCallable, Category = "Setter")
+	void SetPlayerCurrentMana(int newCurrentMana);
+
+	UFUNCTION(BlueprintCallable, Category = "Setter")
+	void SetPlayerMaxMana(int newMaxMana);
+
+	UFUNCTION(BlueprintCallable, Category = "Setter")
+	void SetPlayerPhaseState(ETC_PhaseState newPhaseState);
+
+	UFUNCTION(BlueprintCallable, Category = "Setter")
+	void SetPlayerSelectedCard(ATC_Card* newSelectedCard);
+
+	UFUNCTION(BlueprintCallable, Category = "Setter")
+	void SetPlayerState(ETC_PlayerState newState);
+
+	// === Other Functions ===
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	bool CanPlayCard(ATC_Card* card);
+
+	UFUNCTION(BlueprintCallable)
+	bool AddCardToDeck(TSubclassOf<ATC_Card> card);
+
+	UFUNCTION(BlueprintCallable)
+	void ShowHandOnCamera();
+
+	UFUNCTION(BlueprintCallable)
+	bool AddCardToHand(TSubclassOf<ATC_Card> card);
+
+	UFUNCTION(BlueprintCallable)
+	void PlayCard(ATC_Card* InCard, ATC_Slot* InSlot);
+
+	UFUNCTION(BlueprintCallable)
+	void SwitchFace(ATC_Card* Card);
+
+	UFUNCTION(BlueprintCallable)
+	void MoveCard(ATC_Card* InCard, ATC_Slot* InSlot);
+
+	UFUNCTION(BlueprintCallable)
+	void SwapCard(ATC_Card* InCardOne, ATC_Card* InCardTwo);
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveCardFromHand(ATC_Card* Card);
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveCardFromDeck(ATC_Card* Card);
+
+	UFUNCTION(BlueprintCallable)
+	bool CanPlaceCardOnSlot(ATC_Card* Card, ATC_Slot* Slot);
+
+	UFUNCTION(BlueprintCallable)
+	void ActivateStateTransform(bool on, FTransform goal);
+
+	UFUNCTION(BlueprintCallable)
+	void TickStateTransform(float dt);
+
+	UFUNCTION(BlueprintCallable)
+	void SwitchTransformTransition();
+
+	UFUNCTION(BlueprintCallable)
+	void AddCardToWaitingTargetList(ATC_Card* card);
+	UFUNCTION(BlueprintCallable)
+	bool RemoveCardToWaitingTargetList(ATC_Card* card);
+
+	UFUNCTION(CallInEditor, Category = "Do Rotation")
+	void dorotate();
+
+	// === Events ===
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnSelectCard(ATC_Card* card, ATC_Card* oldCard);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnStateChange(ETC_PlayerState newState, ETC_PlayerState oldState);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnChangePhaseState(ETC_PhaseState newPhaseState);
 	
-
-	uint8 _playerCurrentMana;
-	uint8 _playerMaxMana;
-
-	ATC_Card* _selectedCard;
 
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	TMap<ETC_PlayerState, FTransform> _playerTransform;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	ETC_PhaseState _phaseState;
+
+	int _playerRoundWon;
+
+	ETC_PhaseState _playerPhaseState;
 	ETC_PlayerState _PlayerState;
-	
+
 	ATC_Board* _playerBoard;
 
 	TArray<ATC_Card*> _playerHand;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	TArray<TSubclassOf<ATC_Card>> _playerDeck;
+	int _playerCurrentMana;
+	int _playerMaxMana;
+
+	ATC_Card* _playerSelectedCard;
+
+	TArray<ATC_Card*> _cardsWaitingTarget;
 
 	float _transformTransitionTimer;
 	float _transformTransitionTimerGoal;
 	bool _isTransformTransitionOn;
 	bool _canUseTransformTransition = false;
 	FTransform _transformTransitionGoal;
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	/*UFUNCTION(BlueprintCallable, Category = "Player Deck")
-	ATC_Card* GetCardFromDeckByName(FString name, bool checkAllFaces);
-	UFUNCTION(BlueprintCallable, Category = "Player Deck")
-	ATC_Card* GetCardFromDeckById(ETC_CardID id);*/
-	UFUNCTION(BlueprintCallable, Category = "Player Board")
-	ATC_Board* GetPlayerBoard();
-	UFUNCTION(BlueprintCallable, Category = "Player Board")
-	void SetPlayerBoard(ATC_Board* newBoard);
-	UFUNCTION(BlueprintCallable, Category = "Player Deck")
-	void SetDeck(TArray<TSubclassOf<ATC_Card>> newDeck);
-	UFUNCTION(BlueprintCallable, Category = "Player Deck")
-	TArray<TSubclassOf<ATC_Card>> GetDeck();
-	UFUNCTION(BlueprintCallable, Category = "Player Deck")
-	bool AddCardToDeck(TSubclassOf<ATC_Card> card);
-
-	UFUNCTION(BlueprintCallable, Category = "Player Hand")
-	void SetHand(TArray<ATC_Card*> newDeck);
-	UFUNCTION(BlueprintCallable, Category = "Player Hand")
-	TArray<ATC_Card*> GetHand();
-	UFUNCTION(BlueprintCallable, Category = "Player Hand")
-	ATC_Card* GetCardFromHandByName(FString name, bool checkAllFaces);
-	UFUNCTION(BlueprintCallable, Category = "Player Hand")
-	ATC_Card* GetCardFromHandById(ETC_CardID id);
-	UFUNCTION(BlueprintCallable, Category = "Player Hand")
-	void ShowHandOnCamera();
-	UFUNCTION(BlueprintCallable, Category = "Player Hand")
-	bool AddCardToHand(TSubclassOf<ATC_Card> card);
-
-	UFUNCTION(BlueprintCallable, Category = "Player Hand")
-	TArray<ATC_Card*> GetAvailableCards();
-	UFUNCTION(BlueprintCallable, Category = "Player Hand")
-	bool CanPlayAnyCard();
-	UFUNCTION(BlueprintCallable, Category = "Player Hand")
-	bool CanPlayCard(ATC_Card* card);
-
-	UFUNCTION(BlueprintCallable, Category = "Player Mana")
-	void SetPlayerMana(uint8 mana);
-	UFUNCTION(BlueprintCallable, Category = "Player Mana")
-	uint8 GetPlayerMana() const;
-	UFUNCTION(BlueprintCallable, Category = "Player Mana")
-	uint8 IncreaseManaLimit(uint8 value);
-	UFUNCTION(BlueprintCallable, Category = "Player Mana")
-	uint8 ChangeMana(uint8 value, bool allowOverflow);
-
-	UFUNCTION(BlueprintCallable, Category = "Player Card")
-	void SetSelectedCard(ATC_Card* card);
-	UFUNCTION(BlueprintPure, Category = "Player Card", meta = (ReturnDisplayName = "Selected Card"))
-	ATC_Card* GetSelectedCard();
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnSelectCard(ATC_Card* card, ATC_Card* oldCard);
-
-	void SetPhaseState(ETC_PhaseState InPhaseState);
-	ETC_PhaseState GetPhaseState() const;
-
-	void SetPlayerMaxMana(uint8 InManaMax);
-	uint8 GetPlayerMaxMana() const;
-
-	/*UFUNCTION(BlueprintCallable)
-	TSubclassOf<ATC_Card> FindCardClassFromInstance(ATC_Card* InstanceCard);*/
-
-	UFUNCTION(BlueprintCallable)
-	void PlayCard(ATC_Card* InCard, ATC_Slot* InSlot);
-
-	void SwitchFace(ATC_Card* Card);
-	
-	UFUNCTION(BlueprintCallable)
-	void MoveCard(ATC_Card* InCard, ATC_Slot* InSlot);
-	UFUNCTION(BlueprintCallable)
-	void SwapCard(ATC_Card* InCardOne, ATC_Card* InCardTwo);
-	
-	UFUNCTION(BlueprintCallable)
-	void RemoveCardFromHand(ATC_Card* Card);
-
-	UFUNCTION(BlueprintCallable, Category = "Player State")
-	void SetState(ETC_PlayerState State);
-	UFUNCTION(BlueprintPure, Category = "Player State", meta = (ReturnDisplayName = "Current State"))
-	ETC_PlayerState GetState();
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Player State")
-	void OnStateChange(ETC_PlayerState newState, ETC_PlayerState oldState);
-
-	UFUNCTION(BlueprintCallable, Category = "Card Validation")
-	bool CanPlaceCardOnSlot(ATC_Card* Card, ATC_Slot* Slot);
-
-	UFUNCTION(BlueprintCallable, Category = "Card Validation")
-	TArray<ATC_Slot*> GetValidSlotsForCard(ATC_Card* Card);
-
-private:
-	UFUNCTION(CallInEditor)
-	void ActivateStateTransform(bool on, FTransform goal);
-	void TickStateTransform(float dt);
-	UFUNCTION(CallInEditor)
-	void SwitchTransformTransition();
 };

@@ -43,8 +43,10 @@ void ATC_GameManager::InitGame()
 	//Do a CoinFlip
 	/*CoinFlip();*/
 	//Give the max mana to each player
-	GetCurrentGameState().GetPlayer1()->SetPlayerMana(3);
-	GetCurrentGameState().GetPlayer2()->SetPlayerMana(3);
+	GetCurrentGameState().GetPlayer1()->SetPlayerMaxMana(3);
+	GetCurrentGameState().GetPlayer1()->SetPlayerCurrentMana(3);
+	GetCurrentGameState().GetPlayer2()->SetPlayerMaxMana(3);
+	GetCurrentGameState().GetPlayer2()->SetPlayerCurrentMana(3);
 	//Start the first round
 	StartTurn();
 }
@@ -80,24 +82,11 @@ void ATC_GameManager::StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> Pl
 	GetCurrentGameState().GetGamePlate()->SetPlayerOne(GetCurrentGameState().GetPlayer1());
 	GetCurrentGameState().GetGamePlate()->SetPlayerTwo(GetCurrentGameState().GetPlayer2());
 	GetCurrentGameState().GetGamePlate()->Init();
-
-	//for (AActor* Actor : FoundPlayers)
-	//{
-	//	ATC_Player* Player = Cast<ATC_Player>(Actor);
-	//	if (!Player) continue;
-	//
-	//	if (Player->PlayerID == 1)
-	//	{
-	//		GetCurrentGameState().SetPlayer1(Player);
-	//		//GetCurrentGameState().GetGamePlate()->SetPlayerOne(Player);
-	//	}
-	//	else if (Player->PlayerID == 2)
-	//	{
-	//		GetCurrentGameState().SetPlayer2(Player);
-	//		//GetCurrentGameState().GetGamePlate()->SetPlayerTwo(Player);
-	//	}
-	//}
+	
 	GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
+	GetCurrentGameState().GetActivePlayer()->SetPlayerPhaseState(ETC_PhaseState::Attack);
+	GetCurrentGameState().GetGamePlate()->GetPlayerTwo()->SetPlayerPhaseState(ETC_PhaseState::Defense);
+
 	InitGame();
 }
 
@@ -108,8 +97,8 @@ void ATC_GameManager::StartTurn()
 		//Switch att/def players (cards)
 		SwitchPhase();
 		//Reset ManaMax
-		GetCurrentGameState().GetPlayer1()->SetPlayerMana(GetCurrentGameState().GetPlayer1()->GetPlayerMaxMana() + 1);
-		GetCurrentGameState().GetPlayer2()->SetPlayerMana(GetCurrentGameState().GetPlayer2()->GetPlayerMaxMana() + 1);
+		GetCurrentGameState().GetPlayer1()->SetPlayerCurrentMana(GetCurrentGameState().GetPlayer1()->GetPlayerMaxMana() + 1);
+		GetCurrentGameState().GetPlayer2()->SetPlayerCurrentMana(GetCurrentGameState().GetPlayer2()->GetPlayerMaxMana() + 1);
 		//Switch priority playing players
 		GetCurrentGameState().SetIsPlayer1Turn(!GetCurrentGameState().GetIsPlayer1Turn());
 		//Invoke card OnStartTurn
@@ -120,7 +109,7 @@ void ATC_GameManager::StartTurn()
 				Slot->GetSlotCard()->OnCardStartTurn();
 			}
 		}
-		for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardByPlayer(GetCurrentGameState().GetPlayer1())->GetBoardSlots())
+		for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardByPlayer(GetCurrentGameState().GetPlayer2())->GetBoardSlots())
 		{
 
 			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
@@ -134,17 +123,9 @@ void ATC_GameManager::StartTurn()
 
 void ATC_GameManager::StartPhase()
 {
-	ATC_Player* CurrentPlayer = GetCurrentGameState().GetIsPlayer1Turn() 
-		? GetCurrentGameState().GetPlayer1()
-		: GetCurrentGameState().GetPlayer2();
-	UE_LOG(LogTemp, Error, TEXT("StartPhase: The phase has started, the player playing is : %s."), *GetNameSafe(CurrentPlayer));
+	ATC_Player* CurrentPlayer = GetCurrentGameState().GetActivePlayer();
 
-
-
-	//GetCurrentGameState().SetActivePlayer(CurrentPlayer);
-	//TC_ActionsSystem::DrawCard(GetCurrentGameState(), CurrentPlayer);
 	GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
-	UE_LOG(LogTemp, Error, TEXT("StartPhase: Drawing a card."));
 
 	// Sécuriser les accès à BoardPlayerOne
 	Plate = GetCurrentGameState().GetGamePlate();
@@ -171,33 +152,12 @@ void ATC_GameManager::StartPhase()
 		}
 	}
 
-	//ATC_Player* CurrentPlayer;
-	//if (GetCurrentGameState().GetIsPlayer1Turn())
-	//{
-	//	CurrentPlayer = GetCurrentGameState().GetPlayer1();
-	//}
-	//else
-	//{
-	//	CurrentPlayer = GetCurrentGameState().GetPlayer2();
-	//}
-	//
-	//GetCurrentGameState().SetActivePlayer(CurrentPlayer);
-	//TC_ActionsSystem::DrawCard(GetCurrentGameState(), CurrentPlayer);
-	//
-	//for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerOne()->GetBoardSlots())
-	//{
-	//	for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
-	//	{
-	//		Slot->GetSlotCard()->OnCardStartPhase();
-	//	}
-	//}
-	//for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardPlayerTwo()->GetBoardSlots())
-	//{
-	//	for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
-	//	{
-	//		Slot->GetSlotCard()->OnCardStartPhase();
-	//	}
-	//}
+	FTimerHandle TimerHandle_EndPhase;
+	FTimerManager& TimerManager = GetWorld()->GetTimerManager();
+	TimerManager.ClearTimer(TimerHandle_EndPhase);
+	UE_LOG(LogTemp, Error, TEXT("StartPhase: Démarrage du timer : 30s."));
+	TimerManager.SetTimer(TimerHandle_EndPhase, this, &ATC_GameManager::EndPhase, 30.0f, false);
+
 
 	//Generer toutes les actions valides par mon joueur
 	// lorsqu'aucune action est valide on appelle EndPhase
@@ -223,13 +183,31 @@ void ATC_GameManager::EndPhase()
 			}
 		}
 	}
-	if (GetCurrentGameState().GetActivePlayer()->GetPhaseState() == ETC_PhaseState::Defense)
+	ATC_Player* ActivePlayer = GetCurrentGameState().GetActivePlayer();
+	FString PhaseStateName = StaticEnum<ETC_PhaseState>()->GetNameStringByValue((int64)ActivePlayer->GetPlayerPhaseState());
+
+	UE_LOG(LogTemp, Error, TEXT("ActivePlayer: %s, PhaseState: %s"),
+		*ActivePlayer->GetName(), *PhaseStateName);
+	if (GetCurrentGameState().GetActivePlayer()->GetPlayerPhaseState() == ETC_PhaseState::Defense)
 	{
+		UE_LOG(LogTemp, Error, TEXT("EndPhase: Appel de EndTurn."));
 		EndTurn();
 	}
 	else 
 	{
-		EndPhase();
+		UE_LOG(LogTemp, Error, TEXT("EndPhase: Appel de StartPhase pour joueur 2."));
+		if (ActivePlayer == GetCurrentGameState().GetPlayer1())
+		{
+			ActivePlayer = GetCurrentGameState().GetPlayer2();
+			GetCurrentGameState().SetActivePlayer(ActivePlayer);
+		}
+		else
+		{
+			ActivePlayer = GetCurrentGameState().GetPlayer1();
+			GetCurrentGameState().SetActivePlayer(ActivePlayer);
+		}
+		
+		StartPhase();
 	}
 }
 
@@ -267,6 +245,8 @@ void ATC_GameManager::PlayAction(const FAIActions& InActionToPlay)
 
 void ATC_GameManager::EndTurn()
 {
+	UE_LOG(LogTemp, Error, TEXT("EndTurn: Lancement de EndTurn."));
+
 	for (ATC_Board* Board : GetCurrentGameState().GetGamePlate()->GetPlateBoard())
 	{
 		for (ATC_BoardSlot* BoardSlot : Board->GetBoardSlots())
@@ -283,11 +263,101 @@ void ATC_GameManager::EndTurn()
 			}
 		}
 	}
+	// Inverser les rôles d’attaque / défense
+	if (GetCurrentGameState().GetPlayer1()->GetPlayerPhaseState() == ETC_PhaseState::Attack)
+	{
+		GetCurrentGameState().GetPlayer1()->SetPlayerPhaseState(ETC_PhaseState::Defense);
+		GetCurrentGameState().GetPlayer2()->SetPlayerPhaseState(ETC_PhaseState::Attack);
+		GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer2());
+	}
+	else
+	{
+		GetCurrentGameState().GetPlayer1()->SetPlayerPhaseState(ETC_PhaseState::Attack);
+		GetCurrentGameState().GetPlayer2()->SetPlayerPhaseState(ETC_PhaseState::Defense);
+		GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
+	}
+
+	//UE_LOG(LogTemp, Log, TEXT("EndTurn: Tour %d lancé, %s est en attaque."),GetCurrentGameState().GetCurrentTurn(),*GetNameSafe(GetCurrentGameState().GetActivePlayer()));
+	StartTurn();
 }
 
 void ATC_GameManager::EndGame()
 {
 
+}
+
+void ATC_GameManager::CalculateScore()
+{
+	int ActivePlayerScore = 0;
+	ATC_Player* CurrentPlayer = GetCurrentGameState().GetActivePlayer();
+	ATC_Player* OppositePlayer = GetCurrentGameState().GetActivePlayer()->GetPlayerBoard()->GetBoardSlots()[0]->GetBoardSlotOppositeBoard()->GetBoardSlotBoard()->GetBoardPlayer();
+	for (ATC_Card* Card : CurrentPlayer->GetAllPlayerCard(false))
+	{
+		ActivePlayerScore += Card->GetCardCurrentScore();
+	}
+	for (ATC_Card* Card : OppositePlayer->GetAllPlayerCard(false))
+	{
+		ActivePlayerScore += Card->GetCardCurrentScore();
+	}
+
+	if (ActivePlayerScore > 0)
+	{
+		CurrentPlayer->SetPlayerRoundWon(CurrentPlayer->GetPlayerRoundWon() + 1);
+	}
+	else if (ActivePlayerScore < 0)
+	{
+		OppositePlayer->SetPlayerRoundWon(OppositePlayer->GetPlayerRoundWon() + 1);
+	}
+	else
+	{
+		CurrentPlayer->SetPlayerRoundWon(CurrentPlayer->GetPlayerRoundWon() + 1);
+		OppositePlayer->SetPlayerRoundWon(OppositePlayer->GetPlayerRoundWon() + 1);
+	}
+	CheckForWin();
+}
+
+void ATC_GameManager::CheckForWin()
+{
+	ATC_Player* PlayerOne = GetCurrentGameState().GetPlayer1();
+	ATC_Player* PlayerTwo = GetCurrentGameState().GetPlayer2();
+
+	int PlayerOneRounds = PlayerOne->GetPlayerRoundWon();
+	int PlayerTwoRounds = PlayerTwo->GetPlayerRoundWon();
+
+	int MaxRounds = GetCurrentGameState().GetGameFormat().MaxRounds;
+	int PointsToWin = GetCurrentGameState().GetGameFormat().PointsToWin;
+
+	int TotalRoundsPlayed = PlayerOneRounds + PlayerTwoRounds;
+
+	// Différence max possible avec les rounds restants
+	int RoundsLeft = MaxRounds - TotalRoundsPlayed;
+
+	// Si un joueur atteint PointsToWin et l’autre ne peut plus le rattraper
+	if (PlayerOneRounds >= PointsToWin && PlayerOneRounds > PlayerTwoRounds + RoundsLeft)
+	{
+		// PlayerOne wins
+	}
+	else if (PlayerTwoRounds >= PointsToWin && PlayerTwoRounds > PlayerOneRounds + RoundsLeft)
+	{
+		// PlayerTwo wins
+	}
+	// Sinon si plus aucun round possible, on compare les scores
+	else if (TotalRoundsPlayed >= MaxRounds)
+	{
+		if (PlayerOneRounds > PlayerTwoRounds)
+		{
+			// PlayerOne wins
+		}
+		else if (PlayerTwoRounds > PlayerOneRounds)
+		{
+			// PlayerTwo wins
+		}
+		else
+		{
+			// It's a draw
+		}
+	}
+	// Sinon, le match continue
 }
 
 void ATC_GameManager::SetCurrentGameState(TC_GameStates InCurrentGameState)

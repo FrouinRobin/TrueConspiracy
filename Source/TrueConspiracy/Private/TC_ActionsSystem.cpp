@@ -60,7 +60,7 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 	ATC_Card* SelectedCard = ActivePlayer->GetHand()[InAction.CardinHandIndex];
 
 	// Vérification du coût en mana
-	int32 CurrentMana = ActivePlayer->GetPlayerMana();
+	int32 CurrentMana = ActivePlayer->GetPlayerCurrentMana();
 	if (InAction.CardInHand->GetCardCurrentMana() > CurrentMana)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Mana insuffisant."));
@@ -79,7 +79,7 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 	ActivePlayer->GetHand().Remove(SelectedCard);
 	
 	// Dépenser le mana
-	ActivePlayer->SetPlayerMana(CurrentMana - InAction.CardInHand->GetCardCurrentMana());
+	ActivePlayer->SetPlayerCurrentMana(CurrentMana - InAction.CardInHand->GetCardCurrentMana());
 	
 	// Spawn de la carte
 	UTC_GameInstance* GameInstance = UTC_GameInstance::GetInstance(InAction.PlayingSlot);

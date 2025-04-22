@@ -84,4 +84,6 @@ public:
 	float FaceScore;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category = "Card Effects")
 	TArray<UTC_EffectType*> FaceEffect;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effects")
+	bool _keepTarget;
 };

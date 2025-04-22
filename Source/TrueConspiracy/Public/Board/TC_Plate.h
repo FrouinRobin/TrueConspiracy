@@ -18,6 +18,9 @@ public:
 	// Sets default values for this actor's properties
 	ATC_Plate();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "SceneRoot")
+	USceneComponent* SceneComponent;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh")
 	UStaticMeshComponent* PlateMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardPlayerOneAnchor")

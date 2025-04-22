@@ -3,7 +3,6 @@
 
 #include "TC_Player.h"
 #include "Camera/CameraComponent.h"
-#include <Components/CapsuleComponent.h>
 #include <Cards/Faces/TC_Face.h>
 #include <Components/SphereComponent.h>
 #include <TC_GameInstance.h>
@@ -20,129 +19,41 @@
 // Sets default values
 ATC_Player::ATC_Player()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	RootComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
+	MainAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("MainAnchor"));
+	RootComponent = MainAnchor;
 
-	_cameraAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("CameraAnchor"));
-	_cameraAnchor->SetupAttachment(RootComponent);
+	CameraAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("CameraAnchor"));
+	CameraAnchor->SetupAttachment(RootComponent);
 
-	_playerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
-	_playerCamera->SetupAttachment(_cameraAnchor);
-	_playerCamera->bUsePawnControlRotation = true;
+	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
+	PlayerCamera->SetupAttachment(CameraAnchor);
 
-	_cardAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("CardAnchor"));
-	_cardAnchor->SetupAttachment(_playerCamera);
-	_cardAnchor->SetRelativeLocation(FVector(150, 0, -120));
+	PlayerCardAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("CardAnchor"));
+	PlayerCardAnchor->SetupAttachment(RootComponent);
+	PlayerCardAnchor->SetRelativeLocation(FVector(150, 0, -120));
 
-	//_playerTransform.Add(ETC_PlayerState::SELECTHAND, FTransform())
+
+	_PlayerState = ETC_PlayerState::SELECTHAND;
 }
 
 // Called when the game starts or when spawned
 void ATC_Player::BeginPlay()
 {
 	Super::BeginPlay();
-
-	//_playerCamera->SetRelativeRotation(FRotator(-90, 180, 0));
-
-	FQuat Rotation = FQuat(0.0f, -0.0f, 0.0f, 1.0f);
-	FVector Translation = FVector(1464.0f, 2410.0f, 937.0f);
-	FVector Scale3D = FVector(1.0f, 1.0f, 1.0f);
-
-	FTransform Transform(Rotation, Translation, Scale3D);
-	_playerTransform[ETC_PlayerState::SELECTSLOT] = Transform;
 }
 
 // Called every frame
 void ATC_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (_isTransformTransitionOn)
-		TickStateTransform(DeltaTime);
-
 }
 
-// Called to bind functionality to input
-void ATC_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+int ATC_Player::GetPlayerRoundWon()
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-
-//ATC_Card* ATC_Player::GetCardFromDeckByName(FString name, bool checkAllFaces)
-//{
-//	for (TSubclassOf<ATC_Card> card : GetDeck())
-//	{
-//		if (!checkAllFaces) {
-//			UTC_Face* cardFace = card->GetCardCurrentFace();
-//
-//			if (/*cardFace->name == name */ false) // TODO: See how IDs and names will be implemented
-//				return card;
-//		}
-//		else
-//		{
-//			// Why is there a need for more than two faces I don't know but just in case
-//			TArray<UTC_Face*> cardFaces = card->GetCardFaceList();
-//
-//			for (auto face : cardFaces)
-//			{
-//				if (/*face->name == name */ false) // TODO: Ditto
-//					return card;
-//			}
-//		}
-//	}
-//	UE_LOG(LogTemp, Warning, TEXT("GetCardFromDeckById() did not return any card!"));
-//	return nullptr;
-//}
-
-//ATC_Card* ATC_Player::GetCardFromDeckById(ETC_CardID id)
-//{
-//	for (TSubclassOf<ATC_Card> card : GetDeck())
-//	{
-//		if (card->GetCardID() == id)
-//			return card;
-//	}
-//	UE_LOG(LogTemp, Warning, TEXT("GetCardFromDeckById() did not return any card!"));
-//	return nullptr;
-//}
-
-ATC_Card* ATC_Player::GetCardFromHandByName(FString name, bool checkAllFaces)
-{
-	for (ATC_Card* card : GetHand())
-	{
-		if (!checkAllFaces) {
-			UTC_Face* cardFace = card->GetCardCurrentFace();
-
-			if (/*cardFace->name == name */ false) // TODO: See how IDs and names will be implemented
-				return card;
-		}
-		else
-		{
-			// Why is there a need for more than two faces I don't know but just in case
-			TArray<UTC_Face*> cardFaces = card->GetCardFaceList();
-
-			for (auto face : cardFaces)
-			{
-				if (/*face->name == name */ false) // TODO: Ditto
-					return card;
-			}
-		}
-	}
-	UE_LOG(LogTemp, Warning, TEXT("GetCardFromDeckById() did not return any card!"));
-	return nullptr;
-}
-
-ATC_Card* ATC_Player::GetCardFromHandById(ETC_CardID id)
-{
-	for (ATC_Card* card : GetHand())
-	{
-		if (card->GetCardID() == id)
-			return card;
-	}
-	UE_LOG(LogTemp, Warning, TEXT("GetCardFromDeckById() did not return any card!"));
-	return nullptr;
+	return _playerRoundWon;
 }
 
 ATC_Board* ATC_Player::GetPlayerBoard()
@@ -150,52 +61,9 @@ ATC_Board* ATC_Player::GetPlayerBoard()
 	return _playerBoard;
 }
 
-void ATC_Player::SetPlayerBoard(ATC_Board* newBoard)
-{
-	_playerBoard = newBoard;
-}
-
-void ATC_Player::SetDeck(TArray<TSubclassOf<ATC_Card>> newDeck)
-{
-	_playerDeck = newDeck;
-}
-
 TArray<TSubclassOf<ATC_Card>> ATC_Player::GetDeck()
 {
-
-	return _playerDeck;
-	/*if (_playerDeck.Num() == 0)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("GetDeck() did not return any card!"));
-		return TArray<ATC_Card*>();
-	}
-	return _playerDeck;*/
-}
-
-bool ATC_Player::AddCardToHand(TSubclassOf<ATC_Card> card)
-{
-	
-	ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(card, _cardAnchor->GetComponentLocation(), _cardAnchor->GetComponentRotation());
-	_playerHand.Add(NewCard);
-	NewCard->AttachToComponent(_cardAnchor, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
-	NewCard->CardAnchor->SetWorldRotation(FRotator(-69.f,180.f,0.f));
-	NewCard->SetPlayer(this);
-	NewCard->Init();
-
-	ShowHandOnCamera();
-	return true;
-}
-
-bool ATC_Player::AddCardToDeck(TSubclassOf<ATC_Card> card)
-{
-	_playerDeck.Add(card);
-
-	return true;
-}
-
-void ATC_Player::SetHand(TArray<ATC_Card*> newDeck)
-{
-	_playerHand = newDeck;
+	return PlayerDeck;
 }
 
 TArray<ATC_Card*> ATC_Player::GetHand()
@@ -203,16 +71,201 @@ TArray<ATC_Card*> ATC_Player::GetHand()
 	return _playerHand;
 }
 
-void ATC_Player::SetPlayerMana(uint8 mana)
+ATC_Card* ATC_Player::GetCardFromHandByName(FString name, bool checkAllFaces)
 {
-	_playerCurrentMana = mana;
+	for (ATC_Card* Card : _playerHand)
+	{
+		if (checkAllFaces)
+		{
+			// I don't know why we can have more than 2 faces but whatever, let's check them all
+			for (UTC_Face* Face : Card->GetCardFaceList())
+			{
+				if (Face->GetName() == name)
+					return Card;
+			}
+		}
+		else
+		{
+			if (Card->GetCardCurrentFace()->GetName() == name)
+			{
+				return Card;
+			}
+		}
+	}
+	return nullptr;
 }
 
-uint8 ATC_Player::GetPlayerMana() const
+ATC_Card* ATC_Player::GetCardFromHandById(ETC_CardID id)
+{
+	for (ATC_Card* Card : _playerHand)
+	{
+		if (Card->GetCardID() == id)
+		{
+			return Card;
+		}
+	}
+	return nullptr;
+}
+
+int ATC_Player::GetPlayerCurrentMana()
 {
 	return _playerCurrentMana;
 }
 
+
+int ATC_Player::GetPlayerMaxMana()
+{
+	return _playerMaxMana;
+}
+
+ATC_Card* ATC_Player::GetPlayerSelectedCard()
+{
+	return _playerSelectedCard;
+}
+
+ETC_PhaseState ATC_Player::GetPlayerPhaseState()
+{
+	return _playerPhaseState;
+}
+
+
+ETC_PlayerState ATC_Player::GetPlayerState()
+{
+	return _PlayerState;
+}
+
+TArray<ATC_Slot*> ATC_Player::GetValidSlotsForCard(ATC_Card* Card)
+{
+	TArray<ATC_Slot*> AvailableSlot;
+	for (ATC_BoardSlot* BoardSlot : GetPlayerBoard()->GetBoardSlots())
+	{
+		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		{
+			if (!Slot->HasCard() && Slot->GetSlotCardType() == Card->GetCardType())
+			{
+				AvailableSlot.Add(Slot);
+			}
+		}
+	}
+	return AvailableSlot;
+}
+
+TArray<ATC_Card*> ATC_Player::GetAllPlayerCard(bool takeHand)
+{
+	TArray<ATC_Card*> PlayerCard;
+	if (takeHand)
+	{
+		for (ATC_Card* HandCard : _playerHand)
+		{
+			if (HandCard != nullptr)
+			{
+				PlayerCard.Add(HandCard);
+			}
+		}
+	}
+	for (ATC_BoardSlot* BoardSlot : _playerBoard->GetBoardSlots())
+	{
+		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		{
+			if(Slot->GetSlotCard() != nullptr)
+			{
+				PlayerCard.Add(Slot->GetSlotCard());
+			}
+		}
+	}
+	return PlayerCard;
+}
+
+void ATC_Player::dorotate()
+{
+	OnChangePhaseState(ETC_PhaseState::Attack);
+}
+
+TArray<ATC_Card*> ATC_Player::GetCardsWaitingTargetList()
+{
+	return _cardsWaitingTarget;
+}
+
+void ATC_Player::SetPlayerRoundWon(int newRoundWons)
+{
+	_playerRoundWon = newRoundWons
+}
+
+void ATC_Player::SetPlayerBoard(ATC_Board* newBoard)
+{
+	_playerBoard = newBoard;
+}
+
+void ATC_Player::SetPlayerDeck(TArray<TSubclassOf<ATC_Card>> newDeck)
+{
+	PlayerDeck = newDeck;
+}
+
+void ATC_Player::SetPlayerHand(TArray<ATC_Card*> newDeck)
+{
+	_playerHand = newDeck;
+}
+
+void ATC_Player::SetPlayerCurrentMana(int newCurrrentMana)
+{
+	_playerCurrentMana = newCurrrentMana;
+}
+
+void ATC_Player::SetPlayerPhaseState(ETC_PhaseState newPhaseState)
+{
+	_playerPhaseState = newPhaseState;
+	OnChangePhaseState(_playerPhaseState);
+}
+
+void ATC_Player::SetPlayerMaxMana(int newManaMax)
+{
+	_playerMaxMana = newManaMax;
+}
+
+void ATC_Player::SetPlayerSelectedCard(ATC_Card* newSelectedCard)
+{
+	if (_playerSelectedCard == newSelectedCard)
+		return;
+	ATC_Card* OldCard = _playerSelectedCard;
+	_playerSelectedCard = newSelectedCard;
+	OnSelectCard(_playerSelectedCard, OldCard);
+}
+
+void ATC_Player::SetPlayerState(ETC_PlayerState newState)
+{
+	ETC_PlayerState oldState = _PlayerState;
+	_PlayerState = newState;
+	OnStateChange(_PlayerState, oldState);
+}
+
+
+
+bool ATC_Player::AddCardToHand(TSubclassOf<ATC_Card> card)
+{
+	if (card)
+	{
+		ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(card, PlayerCardAnchor->GetComponentLocation(), PlayerCardAnchor->GetComponentRotation());
+		_playerHand.Add(NewCard);
+		NewCard->AttachToComponent(PlayerCardAnchor, FAttachmentTransformRules(EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, EAttachmentRule::KeepWorld, true));
+		NewCard->SetPlayer(this);
+		NewCard->CardAnchor->SetRelativeRotation(FRotator(-69.f, 180.f, 0.f));
+		NewCard->CardAnchor->UpdateComponentToWorld();
+		NewCard->Init();
+	}
+
+
+	ShowHandOnCamera();
+	return true;
+}
+
+bool ATC_Player::AddCardToDeck(TSubclassOf<ATC_Card> card)
+{
+	PlayerDeck.Add(card);
+
+	return true;
+}
+
+// Can someone smarter that knows how a card hand works rework this function?
 void ATC_Player::ShowHandOnCamera()
 {
 	for (size_t i = 0; i < _playerHand.Num(); i++)
@@ -228,7 +281,7 @@ void ATC_Player::ShowHandOnCamera()
 		UE_LOG(LogTemp, Warning, TEXT("Box is %s"), *box.ToString());
 
 		FVector base = FVector::ZeroVector;
-		if (_playerDeck.Num() % 2 == 0)
+		if (PlayerDeck.Num() % 2 == 0)
 			base = FVector(0, -20, 0);
 
 		float interval = ((float)i - ((float)_playerHand.Num() - 1) / 2) * 50;
@@ -237,75 +290,9 @@ void ATC_Player::ShowHandOnCamera()
 	}
 }
 
-TArray<ATC_Card*> ATC_Player::GetAvailableCards()
-{
-	TArray<ATC_Card*> cards;
-	for(auto card : GetHand())
-	{
-		if (card->GetCardCurrentMana() >= GetPlayerMana())
-			cards.Add(card);
-	}
-	return cards;
-}
-
-bool ATC_Player::CanPlayAnyCard()
-{
-	return GetAvailableCards().Num() > 0;
-}
-
 bool ATC_Player::CanPlayCard(ATC_Card* card)
 {
-	return card->GetCardCurrentMana() >= GetPlayerMana();
-}
-
-uint8 ATC_Player::IncreaseManaLimit(uint8 value)
-{
-	_playerMaxMana += value;
-	return _playerMaxMana;
-}
-
-uint8 ATC_Player::ChangeMana(uint8 value, bool allowOverflow)
-{
-	_playerCurrentMana += value;
-	if (!allowOverflow && _playerCurrentMana > _playerMaxMana)
-		_playerCurrentMana = _playerMaxMana;
-	return _playerCurrentMana;
-}
-
-void ATC_Player::SetSelectedCard(ATC_Card* card)
-{
-	if (_selectedCard == card)
-		return;
-
-	ATC_Card* oldCard = _selectedCard;
-	_selectedCard = card;
-
-	OnSelectCard(card, oldCard);
-}
-
-ATC_Card* ATC_Player::GetSelectedCard()
-{
-	return _selectedCard;
-}
-
-void ATC_Player::SetPhaseState(ETC_PhaseState InPhaseState)
-{
-	_phaseState = InPhaseState;
-}
-
-ETC_PhaseState ATC_Player::GetPhaseState() const
-{
-	return _phaseState;
-}
-
-void ATC_Player::SetPlayerMaxMana(uint8 InMaxMana)
-{
-	_playerMaxMana = InMaxMana;
-}
-
-uint8 ATC_Player::GetPlayerMaxMana() const
-{
-	return _playerMaxMana;
+	return card->GetCardCurrentMana() >= GetPlayerCurrentMana();
 }
 
 //TSubclassOf<ATC_Card> ATC_Player::FindCardClassFromInstance(ATC_Card* InstanceCard)
@@ -329,6 +316,19 @@ void ATC_Player::RemoveCardFromHand(ATC_Card* Card)
 	if (!_playerHand.Contains(Card)) return;
 
 	_playerHand.Remove(Card);
+	Card->Destroy();
+	ShowHandOnCamera();
+}
+
+void ATC_Player::RemoveCardFromDeck(ATC_Card* Card)
+{
+	if (!Card) return;
+
+	TSubclassOf<ATC_Card> CardClass = Card->GetClass();
+
+	if (!PlayerDeck.Contains(CardClass)) return;
+
+	PlayerDeck.Remove(CardClass);
 	Card->Destroy();
 	ShowHandOnCamera();
 }
@@ -416,33 +416,6 @@ void ATC_Player::SwapCard(ATC_Card* InCardOne, ATC_Card* InCardTwo)
 {
 }
 
-void ATC_Player::SetState(ETC_PlayerState State)
-{
-	ETC_PlayerState oldState = _PlayerState;
-	_PlayerState = State;
-	OnStateChange(_PlayerState, oldState);
-}
-
-ETC_PlayerState ATC_Player::GetState()
-{
-	return _PlayerState;
-}
-
-void ATC_Player::OnStateChange_Implementation(ETC_PlayerState newState, ETC_PlayerState oldState)
-{
-	UKismetSystemLibrary::PrintString(GetWorld(), FString("From the C++"), true, NULL, FLinearColor(0, 0, 1));
-	if (_playerTransform.Contains(newState))
-		ActivateStateTransform(true, _playerTransform[newState]);
-	switch (newState)
-	{
-		case (ETC_PlayerState::SELECTHAND):
-		case (ETC_PlayerState::SELECTSLOT):
-		//case (ETC_PlayerState::WAITTURN):
-		default:
-			break;
-	}
-}
-
 void ATC_Player::ActivateStateTransform(bool on, FTransform goal)
 {
 	if (!_canUseTransformTransition) return;
@@ -481,6 +454,16 @@ void ATC_Player::SwitchTransformTransition()
 	}
 }
 
+void ATC_Player::AddCardToWaitingTargetList(ATC_Card* card)
+{
+	_cardsWaitingTarget.Add(card);
+}
+
+bool ATC_Player::RemoveCardToWaitingTargetList(ATC_Card* card)
+{
+	return (bool)_cardsWaitingTarget.Remove(card);
+}
+
 bool ATC_Player::CanPlaceCardOnSlot(ATC_Card* Card, ATC_Slot* Slot)
 {
 	if (!Card || !Slot) return false;
@@ -490,21 +473,4 @@ bool ATC_Player::CanPlaceCardOnSlot(ATC_Card* Card, ATC_Slot* Slot)
 
 	// Appelle les conditions centralisées
 	return ConditionChecker->IsValidForCard(Card, Slot);
-}
-
-TArray<ATC_Slot*> ATC_Player::GetValidSlotsForCard(ATC_Card* Card)
-{
-	TArray<ATC_Slot*> ValidSlots;
-
-	if (!Card || !_playerBoard) return ValidSlots;
-
-	for (ATC_Slot* Slot : _playerBoard->GetAllSlots()) // Supposé avoir cette fonction
-	{
-		if (CanPlaceCardOnSlot(Card, Slot))
-		{
-			ValidSlots.Add(Slot);
-		}
-	}
-
-	return ValidSlots;
 }

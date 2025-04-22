@@ -24,6 +24,7 @@ public:
 	ATC_GameManager();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ATC_Plate* Plate;
+
 	virtual void Tick(float DeltaTime) override;
 
 	// === GAME CONTROL ===
@@ -38,6 +39,9 @@ public:
 	void PlayAction(const FAIActions& InActionToPlay);
 	void EndTurn();
 	void EndGame();
+
+	void CalculateScore();
+	void CheckForWin();
 
 	// --- Setter(s) / Getter(s) ---
 	void SetCurrentGameState(TC_GameStates InCurrentGameState);

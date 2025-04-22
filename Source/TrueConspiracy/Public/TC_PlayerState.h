@@ -7,8 +7,9 @@
 UENUM(BlueprintType)
 enum class ETC_PlayerState : uint8
 {
-	SELECTHAND  UMETA(DisplayName = "Idle"),
-	SELECTSLOT  UMETA(DisplayName = "Selecting Slot"),
+	SELECTHAND   UMETA(DisplayName = "Idle"),
+	SELECTSLOT   UMETA(DisplayName = "Selecting Slot"),
 	SELECTSLOTTOMOVECARD  UMETA(DisplayName = "Selecting Slot To Move Card"),
+	SELECTTARGET UMETA(DisplayName = "Selecting Effect Target")
 	//WAITTURN  UMETA(DisplayName = "Waiting For Turn"),
 };
