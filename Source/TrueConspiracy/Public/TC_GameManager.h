@@ -43,6 +43,8 @@ public:
 	void CalculateScore();
 	void CheckForWin();
 
+	void RunBasicAI();
+
 	// --- Setter(s) / Getter(s) ---
 	void SetCurrentGameState(TC_GameStates InCurrentGameState);
 	TC_GameStates& GetCurrentGameState();

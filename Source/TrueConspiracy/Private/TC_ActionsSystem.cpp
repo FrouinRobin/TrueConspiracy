@@ -104,7 +104,7 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Échec du spawn de la carte."));
 		return;
 	}
-	
+
 	UE_LOG(LogTemp, Log, TEXT("PlayCard: Carte %s jouée avec succès."), *SpawnedCard->GetName());
 
 	if (SelectedCard->Destroy()) 

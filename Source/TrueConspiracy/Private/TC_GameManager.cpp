@@ -43,8 +43,8 @@ void ATC_GameManager::InitGame()
 	//Do a CoinFlip
 	/*CoinFlip();*/
 	//Give the max mana to each player
-	GetCurrentGameState().GetPlayer1()->SetPlayerMaxMana(3);
-	GetCurrentGameState().GetPlayer1()->SetPlayerCurrentMana(3);
+	GetCurrentGameState().GetPlayer1()->SetPlayerMaxMana(30);
+	GetCurrentGameState().GetPlayer1()->SetPlayerCurrentMana(30);
 	GetCurrentGameState().GetPlayer2()->SetPlayerMaxMana(3);
 	GetCurrentGameState().GetPlayer2()->SetPlayerCurrentMana(3);
 	//Start the first round
@@ -158,6 +158,10 @@ void ATC_GameManager::StartPhase()
 	UE_LOG(LogTemp, Error, TEXT("StartPhase: Démarrage du timer : 30s."));
 	TimerManager.SetTimer(TimerHandle_EndPhase, this, &ATC_GameManager::EndPhase, 30.0f, false);
 
+	UE_LOG(LogTemp, Error, TEXT("StartPhase: Running Basic AI."));
+	
+	RunBasicAI();
+
 
 	//Generer toutes les actions valides par mon joueur
 	// lorsqu'aucune action est valide on appelle EndPhase
@@ -241,6 +245,7 @@ void ATC_GameManager::SwitchPhase()
 
 void ATC_GameManager::PlayAction(const FAIActions& InActionToPlay)
 {
+
 }
 
 void ATC_GameManager::EndTurn()
@@ -358,6 +363,45 @@ void ATC_GameManager::CheckForWin()
 		}
 	}
 	// Sinon, le match continue
+}
+
+void ATC_GameManager::RunBasicAI()
+{
+	ATC_Player* AIPlayer = GetCurrentGameState().GetActivePlayer();
+
+	int CurrentMana = AIPlayer->GetPlayerCurrentMana();
+	TArray<ATC_Card*> AIHandCards = AIPlayer->GetHand();
+
+	for (ATC_Card* AICard : AIHandCards)
+	{
+		if (!AICard || AICard->GetCardCurrentMana() > CurrentMana)
+			continue;
+
+		ATC_Board* AIBoard = AIPlayer->GetPlayerBoard();
+		if (!AIBoard)
+			continue;
+
+		for (ATC_BoardSlot* AIBoardSlots : AIBoard->GetBoardSlots())
+		{
+			for (ATC_Slot* AISlot : AIBoardSlots->GetBoardSlotSlots())
+			{
+				if (AISlot && !AISlot->GetSlotCard())
+				{
+					FAIActions PlayAction(EActionType::PlayCard);
+					PlayAction.CardInHand = AICard;
+					PlayAction.PlayingSlot = AISlot;
+					PlayAction.CardinHandIndex = AIHandCards.Find(AICard);
+					PlayAction.BoardSlotIndex = AIBoard->GetBoardSlots().Find(AIBoardSlots);
+					PlayAction.BoardSlotCardIndex = AIBoardSlots->GetBoardSlotSlots().Find(AISlot);
+
+					GetCurrentGameState().ApplyAction(PlayAction);
+
+					UE_LOG(LogTemp, Log, TEXT("RunBasicAI: Card %s spawned by AI."),*AICard->GetName());
+					return;
+				}
+			}
+		}
+	}
 }
 
 void ATC_GameManager::SetCurrentGameState(TC_GameStates InCurrentGameState)

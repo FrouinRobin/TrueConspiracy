@@ -188,7 +188,7 @@ TArray<ATC_Card*> ATC_Player::GetCardsWaitingTargetList()
 
 void ATC_Player::SetPlayerRoundWon(int newRoundWons)
 {
-	_playerRoundWon = newRoundWons
+	_playerRoundWon = newRoundWons;
 }
 
 void ATC_Player::SetPlayerBoard(ATC_Board* newBoard)
