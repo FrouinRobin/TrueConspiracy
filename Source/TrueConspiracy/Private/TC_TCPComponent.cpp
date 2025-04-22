@@ -44,7 +44,8 @@ void UTC_TCPComponent::StopClient()
 {
     if (_tcpClient)
     {
-		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Red, TEXT("STOPPING TCP CLIENT"));
+        UE_LOG(LogTemp, Error, L"Stopping TCP Client");
+        _tcpClient->Stop();
         _tcpClient->Shutdown();
         delete _tcpClient;
         _tcpClient = nullptr;

@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "HAL/Runnable.h"
+#include "HAL/ThreadSafeBool.h"
 #include "Sockets.h"
 #include "SocketSubsystem.h"
 
@@ -26,8 +27,8 @@ public:
     bool Connect();
     void SendMessage(const FString& Message);
     void Shutdown();
+    void EnsureCompletion();
 
-private:
     FString ServerIP;
     int32 ServerPort;
 

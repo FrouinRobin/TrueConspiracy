@@ -4,11 +4,19 @@ FTC_TCPClient::FTC_TCPClient(const FString& InIP, int32 InPort)
     : ServerIP(InIP), ServerPort(InPort), Socket(nullptr), Thread(nullptr), bStopThread(false)
 {
     Thread = FRunnableThread::Create(this, L"TCPClientThread");
+    bStopThread = false;
 }
 
 FTC_TCPClient::~FTC_TCPClient()
 {
     Shutdown();
+
+    if (Thread)
+    {
+        EnsureCompletion();
+        delete Thread;
+        Thread = nullptr;
+    }
 }
 
 bool FTC_TCPClient::Init()
@@ -78,6 +86,12 @@ void FTC_TCPClient::Exit()
     Shutdown();
 }
 
+void FTC_TCPClient::EnsureCompletion()
+{
+    Stop();
+    Thread->WaitForCompletion();
+}
+
 void FTC_TCPClient::Shutdown()
 {
     bStopThread = true;
@@ -90,12 +104,5 @@ void FTC_TCPClient::Shutdown()
         Socket->Close();
         ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->DestroySocket(Socket);
         Socket = nullptr;
-    }
-
-    if (Thread)
-    {
-        Thread->WaitForCompletion();
-        delete Thread;
-        Thread = nullptr;
     }
 }
