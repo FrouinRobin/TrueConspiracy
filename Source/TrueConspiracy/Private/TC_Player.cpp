@@ -51,6 +51,11 @@ void ATC_Player::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+int ATC_Player::GetPlayerRoundWon()
+{
+	return _playerRoundWon;
+}
+
 ATC_Board* ATC_Player::GetPlayerBoard()
 {
 	return _playerBoard;
@@ -179,6 +184,11 @@ void ATC_Player::dorotate()
 TArray<ATC_Card*> ATC_Player::GetCardsWaitingTargetList()
 {
 	return _cardsWaitingTarget;
+}
+
+void ATC_Player::SetPlayerRoundWon(int newRoundWons)
+{
+	_playerRoundWon = newRoundWons
 }
 
 void ATC_Player::SetPlayerBoard(ATC_Board* newBoard)
