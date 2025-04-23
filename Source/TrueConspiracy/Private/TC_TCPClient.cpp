@@ -91,14 +91,10 @@ void FTC_TCPClient::SendMessage(const FString& Message)
 {
     if (!Socket || !Socket->GetConnectionState() == SCS_Connected) return;
 
-    FTCHARToUTF8 Convert(*Message);
+    FString SendingMessage = Message + TEXT("\n");
+    FTCHARToUTF8 Convert(*SendingMessage);
     int32 BytesSent = 0;
     bool bSent = Socket->Send((uint8*)Convert.Get(), Convert.Length(), BytesSent);
-
-    if (!bSent)
-    {
-        UE_LOG(LogTemp, Warning, L"Failed to send message");
-    }
 }
 
 void FTC_TCPClient::Stop()
