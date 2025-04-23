@@ -2,15 +2,15 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "BTT_PlayCard.generated.h"
+#include "TC_BTT_EndTurn.generated.h"
 
 UCLASS()
-class TRUECONSPIRACY_API UBTT_PlayCard : public UBTTaskNode
+class TRUECONSPIRACY_API UTC_BTT_EndTurn : public UBTTaskNode
 {
 	GENERATED_BODY()
 	
 public:
-	UBTT_PlayCard();
+	UTC_BTT_EndTurn();
 
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 };

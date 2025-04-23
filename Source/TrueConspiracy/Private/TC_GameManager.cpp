@@ -26,17 +26,17 @@ void ATC_GameManager::Tick(float DeltaTime)
 void ATC_GameManager::InitGame()
 {
 	//Draw 5 cards for each players
-	//for (int32 i = 0; i < 5; ++i)
-	//{
-	//	GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
-	//	GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
-	//
-	//	GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer2());
-	//	GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
-	//
-	//	//TC_ActionsSystem::DrawCard(GetCurrentGameState(), GetCurrentGameState().GetPlayer1());
-	//	//TC_ActionsSystem::DrawCard(GetCurrentGameState(), GetCurrentGameState().GetPlayer2());
-	//}
+	for (int32 i = 0; i < 5; ++i)
+	{
+		GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
+		GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
+	
+		GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer2());
+		GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
+	
+		//TC_ActionsSystem::DrawCard(GetCurrentGameState(), GetCurrentGameState().GetPlayer1());
+		//TC_ActionsSystem::DrawCard(GetCurrentGameState(), GetCurrentGameState().GetPlayer2());
+	}
 
 
 	GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
@@ -45,8 +45,8 @@ void ATC_GameManager::InitGame()
 	//Give the max mana to each player
 	GetCurrentGameState().GetPlayer1()->SetPlayerMaxMana(30);
 	GetCurrentGameState().GetPlayer1()->SetPlayerCurrentMana(30);
-	GetCurrentGameState().GetPlayer2()->SetPlayerMaxMana(3);
-	GetCurrentGameState().GetPlayer2()->SetPlayerCurrentMana(3);
+	GetCurrentGameState().GetPlayer2()->SetPlayerMaxMana(30);
+	GetCurrentGameState().GetPlayer2()->SetPlayerCurrentMana(30);
 	//Start the first round
 	StartTurn();
 }
@@ -62,7 +62,6 @@ void ATC_GameManager::CoinFlip()
 void ATC_GameManager::StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> Players) //Bouton de lancement de mode de jeu (BO3/BO5/BO7/BO9)
 {
 	UE_LOG(LogTemp, Error, TEXT("StartGame called."));
-
 
 	UTC_GameInstance* GameInstance = UTC_GameInstance::GetInstance(this);
 	if (!GameInstance)
@@ -158,9 +157,9 @@ void ATC_GameManager::StartPhase()
 	UE_LOG(LogTemp, Error, TEXT("StartPhase: Démarrage du timer : 30s."));
 	TimerManager.SetTimer(TimerHandle_EndPhase, this, &ATC_GameManager::EndPhase, 30.0f, false);
 
-	UE_LOG(LogTemp, Error, TEXT("StartPhase: Running Basic AI."));
+	//UE_LOG(LogTemp, Error, TEXT("StartPhase: Running Basic AI."));
 	
-	RunBasicAI();
+	//RunBasicAI();
 
 
 	//Generer toutes les actions valides par mon joueur
