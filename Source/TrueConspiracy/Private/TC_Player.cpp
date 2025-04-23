@@ -256,7 +256,6 @@ bool ATC_Player::AddCardToHand(TSubclassOf<ATC_Card> card)
 		else
 		{
 			NewCard->CardAnchor->SetRelativeRotation(FRotator(-69.f, 180.f + NewCard->CardAnchor->GetRelativeRotation().Roll, 180.f));
-			NewCard->OnCardRotate();
 		}
 		
 		NewCard->CardAnchor->UpdateComponentToWorld();
