@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "GameFramework/GameMode.h"
 #include "TC_GameStates.h"
 
 #include "TC_GameManager.generated.h"
@@ -11,7 +11,7 @@ class ATC_Plate;
 struct FAIActions;
 
 UCLASS()
-class TRUECONSPIRACY_API ATC_GameManager : public AActor
+class TRUECONSPIRACY_API ATC_GameManager : public AGameMode
 {
 	GENERATED_BODY()
 private:
@@ -24,6 +24,9 @@ public:
 	ATC_GameManager();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ATC_Plate* Plate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<ATC_Player*> PlayerLogged;
 
 	virtual void Tick(float DeltaTime) override;
 

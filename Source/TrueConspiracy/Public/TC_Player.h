@@ -45,6 +45,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TransformMap")
 	TMap<ETC_PlayerState, FTransform> PlayerTransform;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsPossessed = false;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
