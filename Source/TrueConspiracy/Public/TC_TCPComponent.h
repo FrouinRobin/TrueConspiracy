@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -32,10 +30,22 @@ public:
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TCP")
+	bool IsConnected = false;
+
 private:
     UFUNCTION(Category = "TCP")
     void _sendPing();
 
+    UFUNCTION(Category = "TCP")
+    void _handleServerMessage(const FString& Message);
+    
+	UFUNCTION(Category = "TCP")
+    void _checkConnectionStatus();
+
+
     FTimerHandle _pingTimerHandle;
     FTC_TCPClient* _tcpClient;
+    FTimerHandle _connectionCheckTimer;
+    FDateTime _lastPongTime;
 };
