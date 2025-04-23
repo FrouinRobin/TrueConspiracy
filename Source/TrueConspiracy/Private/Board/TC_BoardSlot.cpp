@@ -62,13 +62,8 @@ void ATC_BoardSlot::SetBoardSlotOppositeBoard(ATC_BoardSlot* newOppositeBoard)
 
 void ATC_BoardSlot::Init()
 {
-	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotBluePrint, SlotOneAnchor->GetComponentLocation(), SlotOneAnchor->GetComponentRotation()));
-	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotBluePrint, SlotTwoAnchor->GetComponentLocation(), SlotTwoAnchor->GetComponentRotation()));
-	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotBluePrint, SlotThreeAnchor->GetComponentLocation(), SlotThreeAnchor->GetComponentRotation()));
-	_boardSlotSlots.Add(GetWorld()->SpawnActor<ATC_Slot>(SlotBluePrint, SlotFourAnchor->GetComponentLocation(), SlotFourAnchor->GetComponentRotation()));
 	for (ATC_Slot* Slot : _boardSlotSlots)
 	{
-		Slot->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 		Slot->SetSlotBoardSlot(this);
 		Slot->Init();
 	}

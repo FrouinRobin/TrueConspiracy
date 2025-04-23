@@ -78,7 +78,9 @@ private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true))
 	ATC_Player* _playerTwo;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true))
 	TArray<ATC_Board*> _plateBoard;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true))
 	TArray<ATC_LandCardSlot*> _landCardSlots;
 };

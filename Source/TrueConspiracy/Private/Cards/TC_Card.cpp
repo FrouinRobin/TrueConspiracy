@@ -27,8 +27,10 @@ void ATC_Card::BeginPlay()
 void ATC_Card::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	switch (_cardPlayer->GetPlayerPhaseState())
+	if (_cardPlayer)
 	{
+		switch (_cardPlayer->GetPlayerPhaseState())
+		{
 		case(ETC_PhaseState::Attack):
 		{
 			SetCardCurrentFace(CardDefendFace);
@@ -37,9 +39,11 @@ void ATC_Card::Tick(float DeltaTime)
 		{
 			SetCardCurrentFace(CardAttackFace);
 		}
-	default:
-		break;
+		default:
+			break;
+		}
 	}
+	
 }
 
 /*GETTER*/

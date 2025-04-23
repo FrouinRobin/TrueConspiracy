@@ -50,8 +50,12 @@ public:
 
 private:
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true))
 	ATC_Board* _boardSlotBoard;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true))
 	ATC_BoardSlot* _boardSlotOppositeBoard;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true))
 	TArray<ATC_Slot*> _boardSlotSlots;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true))
 	UStaticMesh* _cardMesh;
 };
