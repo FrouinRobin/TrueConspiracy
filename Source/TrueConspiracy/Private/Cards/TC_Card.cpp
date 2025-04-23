@@ -27,19 +27,21 @@ void ATC_Card::BeginPlay()
 void ATC_Card::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	switch (_cardPlayer->GetPlayerPhaseState())
-	{
-		case(ETC_PhaseState::Attack):
-		{
-			SetCardCurrentFace(CardDefendFace);
-		}
-		case(ETC_PhaseState::Defense):
-		{
-			SetCardCurrentFace(CardAttackFace);
-		}
-	default:
-		break;
-	}
+	//switch (_cardPlayer->GetPlayerPhaseState())
+	//{
+	//	case(ETC_PhaseState::Attack):
+	//	{
+	//		SetCardCurrentFace(CardDefendFace);
+	//		break;
+	//	}
+	//	case(ETC_PhaseState::Defense):
+	//	{
+	//		SetCardCurrentFace(CardAttackFace);
+	//		break;
+	//	}
+	//default:
+	//	break;
+	//}
 }
 
 /*GETTER*/
@@ -274,4 +276,37 @@ void ATC_Card::Init()
 	case(ETC_PhaseState::Defense):
 		SetCardCurrentFace(GetCardDefendFace());
 	}
+}
+
+void ATC_Card::AssignCardMaterialsAndTextures(
+	UMaterialInterface* InAttackMaterial, FName InAttackTextureParam, UTexture2D* InAttackTexture,
+	UMaterialInterface* InDefenseMaterial, FName InDefenseTextureParam, UTexture2D* InDefenseTexture)
+{
+	UMaterialInstanceDynamic* LocalAttackMaterialInstance = UMaterialInstanceDynamic::Create(InAttackMaterial, this);
+	UMaterialInstanceDynamic* LocalDefenseMaterialInstance = UMaterialInstanceDynamic::Create(InDefenseMaterial, this);
+
+	if (LocalAttackMaterialInstance && InAttackTexture)
+	{
+		LocalAttackMaterialInstance->SetTextureParameterValue(InAttackTextureParam, InAttackTexture);
+		CardMesh->SetMaterial(0, LocalAttackMaterialInstance);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Attack texture is not valid."));
+	}
+
+	if (LocalDefenseMaterialInstance && InDefenseTexture)
+	{
+		LocalDefenseMaterialInstance->SetTextureParameterValue(InDefenseTextureParam, InDefenseTexture);
+		CardMesh->SetMaterial(2, LocalDefenseMaterialInstance);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Defense texture is not valid."));
+	}
+}
+
+void ATC_Card::SetTexture()
+{
+	OnCardSetTexture();
 }
