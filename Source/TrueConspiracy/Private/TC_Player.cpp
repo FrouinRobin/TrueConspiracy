@@ -188,7 +188,7 @@ TArray<ATC_Card*> ATC_Player::GetCardsWaitingTargetList()
 
 void ATC_Player::SetPlayerRoundWon(int newRoundWons)
 {
-	_playerRoundWon = newRoundWons
+	_playerRoundWon = newRoundWons;
 }
 
 void ATC_Player::SetPlayerBoard(ATC_Board* newBoard)
@@ -246,9 +246,19 @@ bool ATC_Player::AddCardToHand(TSubclassOf<ATC_Card> card)
 	{
 		ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(card, PlayerCardAnchor->GetComponentLocation(), PlayerCardAnchor->GetComponentRotation());
 		_playerHand.Add(NewCard);
-		NewCard->AttachToComponent(PlayerCardAnchor, FAttachmentTransformRules(EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, EAttachmentRule::KeepWorld, true));
+		NewCard->AttachToComponent(PlayerCardAnchor, FAttachmentTransformRules(EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, true));
 		NewCard->SetPlayer(this);
-		NewCard->CardAnchor->SetRelativeRotation(FRotator(-69.f, 180.f, 0.f));
+		if (_playerPhaseState == ETC_PhaseState::Attack)
+		{
+			NewCard->CardAnchor->SetRelativeRotation(FRotator(-69.f, 180.f + NewCard->CardAnchor->GetRelativeRotation().Roll, 0.f));
+			NewCard->SetCardCurrentFace(NewCard->GetCardAttackFace());
+		}
+		else
+		{
+			NewCard->CardAnchor->SetRelativeRotation(FRotator(-69.f, 180.f + NewCard->CardAnchor->GetRelativeRotation().Roll, 180.f));
+			NewCard->OnCardRotate();
+		}
+		
 		NewCard->CardAnchor->UpdateComponentToWorld();
 		NewCard->Init();
 	}

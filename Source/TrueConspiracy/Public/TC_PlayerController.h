@@ -29,6 +29,8 @@ protected:
 
 	void INTERNAL_OnTouchTriggered(const FInputActionValue& Value);
 	void INTERNAL_OnTouchReleased();
+	void INTERNAL_OnHoldTriggered(const FInputActionValue& Value);
+	void INTERNAL_OnHoldCanceled();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnInputStart(UEnhancedInputComponent* EnhancedInputComponent);
@@ -38,12 +40,17 @@ protected:
 	void OnTouchHold(FHitResult hit, bool didHit);
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnTouchReleased();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnHoldTriggered();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnHoldReleased();
 
 	UFUNCTION(BlueprintPure, meta = (ReturnDisplayName = "TC Player", ToolTip = "Return the True Conspiracy Player Pawn"))
 	ATC_Player* GetMyPawn();
 
 private:
 	bool _isTouching;
+	bool _isHolding;
 
 	UPROPERTY(EditDefaultsOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
@@ -51,5 +58,8 @@ private:
 	/* Touch Input Action */
 	UPROPERTY(EditDefaultsOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* TouchAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* HoldAction;
 	
 };

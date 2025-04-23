@@ -45,8 +45,10 @@ void ATC_GameManager::InitGame()
 	//Give the max mana to each player
 	GetCurrentGameState().GetPlayer1()->SetPlayerMaxMana(3);
 	GetCurrentGameState().GetPlayer1()->SetPlayerCurrentMana(3);
+	GetCurrentGameState().GetPlayer1()->GetPlayerBoard()->OnDrawNumberOfCard(5);
 	GetCurrentGameState().GetPlayer2()->SetPlayerMaxMana(3);
 	GetCurrentGameState().GetPlayer2()->SetPlayerCurrentMana(3);
+	GetCurrentGameState().GetPlayer2()->GetPlayerBoard()->OnDrawNumberOfCard(5);
 	//Start the first round
 	StartTurn();
 }
