@@ -234,19 +234,35 @@ bool ATC_Player::AddCardToHand(TSubclassOf<ATC_Card> card)
 {
 	if (card)
 	{
-		ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(card, PlayerCardAnchor->GetComponentLocation(), PlayerCardAnchor->GetComponentRotation());
+		ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(
+			card,
+			PlayerCardAnchor->GetComponentLocation(),
+			PlayerCardAnchor->GetComponentRotation()
+		);
+
 		_playerHand.Add(NewCard);
-		NewCard->AttachToComponent(PlayerCardAnchor, FAttachmentTransformRules(EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, EAttachmentRule::KeepWorld, true));
+
+		NewCard->AttachToComponent(
+			PlayerCardAnchor,
+			FAttachmentTransformRules(
+				EAttachmentRule::KeepRelative,
+				EAttachmentRule::KeepRelative,
+				EAttachmentRule::KeepWorld,
+				true
+			)
+		);
+
 		NewCard->SetPlayer(this);
+
 		NewCard->CardAnchor->SetRelativeRotation(FRotator(-69.f, 180.f, 0.f));
 		NewCard->CardAnchor->UpdateComponentToWorld();
 		NewCard->Init();
 	}
 
-
 	ShowHandOnCamera();
 	return true;
 }
+
 
 bool ATC_Player::AddCardToDeck(TSubclassOf<ATC_Card> card)
 {
@@ -317,10 +333,20 @@ void ATC_Player::RemoveCardFromDeck(ATC_Card* Card)
 	TSubclassOf<ATC_Card> CardClass = Card->GetClass();
 
 	if (!PlayerDeck.Contains(CardClass)) return;
-
 	PlayerDeck.Remove(CardClass);
 	Card->Destroy();
 	ShowHandOnCamera();
+}
+
+void ATC_Player::DrawCardFromDeck()
+{
+	ATC_Card* CardToDraw = _playerBoard->GetBoardDraw()->DrawCard();
+	if (CardToDraw)
+	{
+		TSubclassOf<ATC_Card> CardClass = CardToDraw->GetClass();
+		RemoveCardFromDeck(CardToDraw);
+		AddCardToHand(CardClass);
+	}
 }
 
 void ATC_Player::SwitchFace(ATC_Card* Card)
