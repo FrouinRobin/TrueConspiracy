@@ -8,6 +8,7 @@
 // Sets default values
 ATC_DrawDeck::ATC_DrawDeck()
 {
+    bReplicates = true;
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -216,6 +217,20 @@ void ATC_DrawDeck::Init(TArray<TSubclassOf<ATC_Card>> CardsToSpawn)
         NewCard->Init();
         _drawDeck.Add(NewCard);
     }
+}
+
+void ATC_DrawDeck::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    /*ANCHOR*/
+    DOREPLIFETIME(ATC_DrawDeck, MainAnchor);
+    DOREPLIFETIME(ATC_DrawDeck, CardAnchor);
+
+    /*DATA*/
+    DOREPLIFETIME(ATC_DrawDeck, _drawDeckPlayer);
+    DOREPLIFETIME(ATC_DrawDeck, _drawDeckBoard);
+    DOREPLIFETIME(ATC_DrawDeck, _drawDeck);
 }
 
 

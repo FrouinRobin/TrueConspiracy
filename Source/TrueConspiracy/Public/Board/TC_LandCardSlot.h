@@ -22,7 +22,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_BoardSlot* GetLandCardBordSlotByPlayer(ATC_Player* PlayerReference);
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 private:
+protected:
+	UPROPERTY(Replicated)
 	TArray<ATC_BoardSlot*> _landCardBoardSlots;
 
 };

@@ -68,22 +68,25 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UTC_EffectType* FindEffectOfType(TArray<UTC_EffectType*> FaceEffectList, TSubclassOf<UTC_EffectType> EffectTypeToFind);
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Type")
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Type", Replicated)
 	TArray<ETC_CardAttribute> FaceAttribute;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Illustration")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Illustration", Replicated)
 	UTexture2D* FaceIllustration;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Background")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Background", Replicated)
 	UTexture2D* FaceBackground;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Description")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Description", Replicated)
 	FString FaceDescription;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Mana")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Mana", Replicated)
 	float FaceMana;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Score")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Score", Replicated)
 	float FaceScore;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category = "Card Effects")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category = "Card Effects", Replicated)
 	TArray<UTC_EffectType*> FaceEffect;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effects")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effects", Replicated)
 	bool _keepTarget;
 };

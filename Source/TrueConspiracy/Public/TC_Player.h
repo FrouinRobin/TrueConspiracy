@@ -46,11 +46,46 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TransformMap")
 	TMap<ETC_PlayerState, FTransform> PlayerTransform;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	bool IsPossessed = false;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UPROPERTY(Replicated)
+	int _playerRoundWon;
+
+	UPROPERTY(Replicated)
+	ETC_PhaseState _playerPhaseState;
+	UPROPERTY(Replicated)
+	ETC_PlayerState _PlayerState;
+
+	UPROPERTY(Replicated)
+	ATC_Board* _playerBoard;
+
+	UPROPERTY(Replicated)
+	TArray<ATC_Card*> _playerHand;
+	UPROPERTY(Replicated)
+	int _playerCurrentMana;
+	UPROPERTY(Replicated)
+	int _playerMaxMana;
+
+	UPROPERTY(Replicated)
+	ATC_Card* _playerSelectedCard;
+
+	UPROPERTY(Replicated)
+	TArray<ATC_Card*> _cardsWaitingTarget;
+
+	UPROPERTY(Replicated)
+	float _transformTransitionTimer;
+	UPROPERTY(Replicated)
+	float _transformTransitionTimerGoal;
+	UPROPERTY(Replicated)
+	bool _isTransformTransitionOn;
+	UPROPERTY(Replicated)
+	bool _canUseTransformTransition = false;
+	UPROPERTY(Replicated)
+	FTransform _transformTransitionGoal;
 
 public:
 	// Called every frame
@@ -194,27 +229,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnChangePhaseState(ETC_PhaseState newPhaseState);
 	
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 private:
-
-	int _playerRoundWon;
-
-	ETC_PhaseState _playerPhaseState;
-	ETC_PlayerState _PlayerState;
-
-	ATC_Board* _playerBoard;
-
-	TArray<ATC_Card*> _playerHand;
-	int _playerCurrentMana;
-	int _playerMaxMana;
-
-	ATC_Card* _playerSelectedCard;
-
-	TArray<ATC_Card*> _cardsWaitingTarget;
-
-	float _transformTransitionTimer;
-	float _transformTransitionTimerGoal;
-	bool _isTransformTransitionOn;
-	bool _canUseTransformTransition = false;
-	FTransform _transformTransitionGoal;
+	
 };

@@ -29,6 +29,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	ATC_Card* GetTarget();
 
+
+
 private:
+	UPROPERTY()
 	ATC_Card* _target;
 };

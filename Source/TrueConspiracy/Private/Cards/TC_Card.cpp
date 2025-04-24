@@ -3,9 +3,11 @@
 
 #include "Cards/TC_Card.h"
 #include "TC_Player.h"
+#include <Net/UnrealNetwork.h>
 
 ATC_Card::ATC_Card()
 {
+	bReplicates = true;
 	PrimaryActorTick.bCanEverTick = true;
 	MainAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("MainAnchor"));
 	RootComponent = MainAnchor;
@@ -144,14 +146,17 @@ FRotator ATC_Card::GetCardAnchorRotation()
 
 void ATC_Card::SetCardCurrentFace(UTC_Face* newCurrentFace)
 {
+	if (newCurrentFace)
+	{
+		SetCardMaxMana(_cardCurrentFace->GetCardMana());
+		SetCardCurrentMana(newCurrentFace->GetCardMana() - (GetCardMaxMana() - GetCardCurrentMana()));
+		SetCardCurrentScore(newCurrentFace->GetCardScore() - (GetCardMaxScore() - GetCardCurrentScore()));
+		GetCardAttribute().Empty();
+		SetCardAttributeList(newCurrentFace->GetFaceAttribute());
+		SetCardDescription(newCurrentFace->GetCardDescription());
+		_cardCurrentFace = newCurrentFace;
+	}
 	
-	SetCardMaxMana(_cardCurrentFace->GetCardMana());
-	SetCardCurrentMana(newCurrentFace->FaceMana - (GetCardMaxMana()-GetCardCurrentMana()));
-	SetCardCurrentScore(newCurrentFace->FaceScore - (GetCardMaxScore()-GetCardCurrentScore()));
-	GetCardAttribute().Empty();
-	SetCardAttributeList(newCurrentFace->FaceAttribute);
-	SetCardDescription(newCurrentFace->FaceDescription);
-	_cardCurrentFace = newCurrentFace;
 }
 
 void ATC_Card::SetCardAttackFace(UTC_AttackFace* newAttackFace)
@@ -278,4 +283,30 @@ void ATC_Card::Init()
 	case(ETC_PhaseState::Defense):
 		SetCardCurrentFace(GetCardDefendFace());
 	}
+}
+
+void ATC_Card::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ATC_Card, MainAnchor);
+	DOREPLIFETIME(ATC_Card, CardAnchor);
+	DOREPLIFETIME(ATC_Card, CardMesh);
+	DOREPLIFETIME(ATC_Card, CardAttackFace);
+	DOREPLIFETIME(ATC_Card, CardDefendFace);
+	DOREPLIFETIME(ATC_Card, _cardType);
+	DOREPLIFETIME(ATC_Card, _cardCurrentFace);
+	DOREPLIFETIME(ATC_Card, _cardFaceList);
+	DOREPLIFETIME(ATC_Card, _isEffectActive);
+	DOREPLIFETIME(ATC_Card, _cardAttribute);
+	DOREPLIFETIME(ATC_Card, _cardId);
+	DOREPLIFETIME(ATC_Card, _cardIllustration);
+	DOREPLIFETIME(ATC_Card, _cardBackground);
+	DOREPLIFETIME(ATC_Card, _cardDescription);
+	DOREPLIFETIME(ATC_Card, _cardMaxMana);
+	DOREPLIFETIME(ATC_Card, _cardCurrentMana);
+	DOREPLIFETIME(ATC_Card, _cardMaxScore);
+	DOREPLIFETIME(ATC_Card, _cardCurrentScore);
+	DOREPLIFETIME(ATC_Card, _cardPlayer);
+	DOREPLIFETIME(ATC_Card, _cardSlot);
 }

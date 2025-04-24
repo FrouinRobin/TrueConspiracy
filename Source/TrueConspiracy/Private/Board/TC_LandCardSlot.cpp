@@ -10,6 +10,7 @@
 
 ATC_LandCardSlot::ATC_LandCardSlot()
 {
+	bReplicates = true;
 	PrimaryActorTick.bCanEverTick = false;
 }
 
@@ -33,4 +34,11 @@ ATC_BoardSlot* ATC_LandCardSlot::GetLandCardBordSlotByPlayer(ATC_Player* PlayerR
 		}
 	}
 	return PlayerBoardSlot;
+}
+
+void ATC_LandCardSlot::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ATC_LandCardSlot, _landCardBoardSlots);
 }

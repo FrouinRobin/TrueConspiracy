@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Net/UnrealNetwork.h"
 #include "TC_BoardSlot.generated.h"
 
 class ATC_Slot;
@@ -16,22 +17,32 @@ class TRUECONSPIRACY_API ATC_BoardSlot : public AActor
 public:
 	ATC_BoardSlot();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainAnchor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainAnchor", Replicated)
 	USceneComponent* MainAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotOneAnchor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotOneAnchor", Replicated)
 	USceneComponent* SlotOneAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotTwoAnchor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotTwoAnchor", Replicated)
 	USceneComponent* SlotTwoAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotThreeAnchor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotThreeAnchor", Replicated)
 	USceneComponent* SlotThreeAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotFourAnchor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotFourAnchor", Replicated)
 	USceneComponent* SlotFourAnchor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BluePrintReference")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BluePrintReference", Replicated)
 	TSubclassOf<ATC_Slot> SlotBluePrint;
 	
 protected:
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true), Replicated)
+	ATC_Board* _boardSlotBoard;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true), Replicated)
+	ATC_BoardSlot* _boardSlotOppositeBoard;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true), Replicated)
+	TArray<ATC_Slot*> _boardSlotSlots;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true), Replicated)
+	UStaticMesh* _cardMesh;
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_Board* GetBoardSlotBoard();
@@ -48,14 +59,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Init")
 	void Init();
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 private:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true))
-	ATC_Board* _boardSlotBoard;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true))
-	ATC_BoardSlot* _boardSlotOppositeBoard;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true))
-	TArray<ATC_Slot*> _boardSlotSlots;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true))
-	UStaticMesh* _cardMesh;
+	
 };

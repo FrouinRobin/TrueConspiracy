@@ -31,4 +31,6 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void Activate(ATC_Card* Caster);
+
+
 };

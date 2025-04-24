@@ -48,8 +48,13 @@ protected:
 	UFUNCTION(BlueprintPure, meta = (ReturnDisplayName = "TC Player", ToolTip = "Return the True Conspiracy Player Pawn"))
 	ATC_Player* GetMyPawn();
 
+
+
 private:
+
+	UPROPERTY()
 	bool _isTouching;
+	UPROPERTY()
 	bool _isHolding;
 
 	UPROPERTY(EditDefaultsOnly, Category = Input, meta = (AllowPrivateAccess = "true"))

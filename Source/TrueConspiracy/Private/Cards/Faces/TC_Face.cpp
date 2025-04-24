@@ -2,6 +2,7 @@
 
 
 #include "Cards/Faces/TC_Face.h"
+#include <Net/UnrealNetwork.h>
 
 
 TArray<ETC_CardAttribute> UTC_Face::GetFaceAttribute()
@@ -82,4 +83,18 @@ UTC_EffectType* UTC_Face::FindEffectOfType(TArray<UTC_EffectType*> FaceEffectLis
 	}
 
 	return NULL;
+}
+
+void UTC_Face::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UTC_Face, FaceAttribute);
+	DOREPLIFETIME(UTC_Face, FaceIllustration);
+	DOREPLIFETIME(UTC_Face, FaceBackground);
+	DOREPLIFETIME(UTC_Face, FaceDescription);
+	DOREPLIFETIME(UTC_Face, FaceMana);
+	DOREPLIFETIME(UTC_Face, FaceScore);
+	DOREPLIFETIME(UTC_Face, FaceEffect);
+	DOREPLIFETIME(UTC_Face, _keepTarget);
 }

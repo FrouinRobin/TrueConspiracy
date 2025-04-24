@@ -5,9 +5,11 @@
 #include "Cards/TC_Card.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SceneComponent.h"
+#include <Net/UnrealNetwork.h>
 
 ATC_Slot::ATC_Slot()
 {
+	bReplicates = true;
 	PrimaryActorTick.bCanEverTick = false;
 
 	sceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
@@ -69,5 +71,19 @@ void ATC_Slot::SetSlotCardType(ETC_CardType newSlotCardType)
 
 void ATC_Slot::Init()
 {
+}
+
+void ATC_Slot::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	/*ANCHOR*/
+	DOREPLIFETIME(ATC_Slot, sceneComponent);
+	
+
+	/*DATA*/
+	DOREPLIFETIME(ATC_Slot, _slotCardType);
+	DOREPLIFETIME(ATC_Slot, _slotBoardSlot);
+	DOREPLIFETIME(ATC_Slot, _slotCard);
 }
 

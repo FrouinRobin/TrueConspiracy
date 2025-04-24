@@ -16,17 +16,21 @@ class TRUECONSPIRACY_API ATC_Slot : public AActor
 public:
 	ATC_Slot();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	UStaticMeshComponent* visualMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	USceneComponent* sceneComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	ETC_CardType _slotCardType;
 
 protected:
-
+	UPROPERTY(Replicated)
+	ATC_BoardSlot* _slotBoardSlot;
+	UPROPERTY(Replicated)
+	ATC_Card* _slotCard;
+	//ETC_CardType _slotCardType;
 public:
 
 	UFUNCTION(BlueprintCallable)
@@ -53,10 +57,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Init")
 	void Init();
 
-
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 private:
-	ATC_BoardSlot* _slotBoardSlot;
-	ATC_Card* _slotCard;
-	//ETC_CardType _slotCardType;
+	
 };
