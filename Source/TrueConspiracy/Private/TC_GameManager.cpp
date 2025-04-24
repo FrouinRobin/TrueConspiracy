@@ -25,18 +25,6 @@ void ATC_GameManager::Tick(float DeltaTime)
 
 void ATC_GameManager::InitGame()
 {
-	//Draw 5 cards for each players
-	//for (int32 i = 0; i < 5; ++i)
-	//{
-	//	GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
-	//	GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
-	//
-	//	GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer2());
-	//	GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
-	//
-	//	//TC_ActionsSystem::DrawCard(GetCurrentGameState(), GetCurrentGameState().GetPlayer1());
-	//	//TC_ActionsSystem::DrawCard(GetCurrentGameState(), GetCurrentGameState().GetPlayer2());
-	//}
 
 
 	GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
@@ -158,11 +146,6 @@ void ATC_GameManager::StartPhase()
 	UE_LOG(LogTemp, Error, TEXT("StartPhase: Démarrage du timer : 30s."));
 	TimerManager.SetTimer(TimerHandle_EndPhase, this, &ATC_GameManager::EndPhase, 30.0f, false);
 
-
-	//Generer toutes les actions valides par mon joueur
-	// lorsqu'aucune action est valide on appelle EndPhase
-	//GenerateAllValidActions()
-	//EndPhase();
 }
 
 void ATC_GameManager::EndPhase()
