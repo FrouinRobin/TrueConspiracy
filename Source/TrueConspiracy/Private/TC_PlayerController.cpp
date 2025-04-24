@@ -5,6 +5,9 @@
 #include <EnhancedInputSubsystems.h>
 #include <EnhancedInputComponent.h>
 #include <Kismet/GameplayStatics.h>
+#include "TC_GameInstance.h"
+#include "TC_Player.h"
+#include "Widgets/SWidget.h"
 
 ATC_PlayerController::ATC_PlayerController()
 {
@@ -18,6 +21,8 @@ void ATC_PlayerController::BeginPlay()
 
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
+
+	if (IsLocalController())	Server_SendDeckToServer(Cast<UTC_GameInstance>(GetGameInstance())->SelectedPlayerDeck);
 }
 
 void ATC_PlayerController::SetupInputComponent()
@@ -86,4 +91,17 @@ ATC_Player* ATC_PlayerController::GetMyPawn()
 {
 	APawn* pawn = GetPawn();
 	return Cast<ATC_Player>(pawn);
+}
+
+void ATC_PlayerController::Server_SendDeckToServer_Implementation(const TArray<TSubclassOf<ATC_Card>>& Deck)
+{
+	if (ATC_Player* OwnPawn = Cast<ATC_Player>(GetPawn()))
+	{
+		OwnPawn->SetPlayerDeck(Deck);
+	}
+}
+
+bool ATC_PlayerController::Server_SendDeckToServer_Validate(const TArray<TSubclassOf<ATC_Card>>& Deck)
+{
+	return true;
 }
