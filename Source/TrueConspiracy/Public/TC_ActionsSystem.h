@@ -24,6 +24,7 @@ public:
 	static void PlayCard(TC_GameStates& InGameState, const FAIActions& InAction);
 	static void DrawCard(TC_GameStates& InGameState, const FAIActions& InAction);
 	static void MoveCard(TC_GameStates& InGameState, const FAIActions& InAction);
+	static void EndPhase(TC_GameStates& InGameState, const FAIActions& InAction);
 	static void EndTurn(TC_GameStates& InGameState, const FAIActions& InAction);
 	static void ApplyAction(TC_GameStates& InGameState, const FAIActions& InAction);
 

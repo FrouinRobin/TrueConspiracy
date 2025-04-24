@@ -33,12 +33,7 @@ void ATC_GameManager::InitGame()
 	
 		GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer2());
 		GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
-	
-		//TC_ActionsSystem::DrawCard(GetCurrentGameState(), GetCurrentGameState().GetPlayer1());
-		//TC_ActionsSystem::DrawCard(GetCurrentGameState(), GetCurrentGameState().GetPlayer2());
 	}
-
-
 	GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
 	//Do a CoinFlip
 	/*CoinFlip();*/
@@ -101,21 +96,21 @@ void ATC_GameManager::StartTurn()
 		//Switch priority playing players
 		GetCurrentGameState().SetIsPlayer1Turn(!GetCurrentGameState().GetIsPlayer1Turn());
 		//Invoke card OnStartTurn
-		for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardByPlayer(GetCurrentGameState().GetPlayer1())->GetBoardSlots())
-		{
-			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
-			{
-				Slot->GetSlotCard()->OnCardStartTurn();
-			}
-		}
-		for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardByPlayer(GetCurrentGameState().GetPlayer2())->GetBoardSlots())
-		{
-
-			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
-			{
-				Slot->GetSlotCard()->OnCardStartTurn();
-			}
-		}
+		//for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardByPlayer(GetCurrentGameState().GetPlayer1())->GetBoardSlots())
+		//{
+		//	for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		//	{
+		//		Slot->GetSlotCard()->OnCardStartTurn();
+		//	}
+		//}
+		//for (ATC_BoardSlot* BoardSlot : GetCurrentGameState().GetGamePlate()->GetBoardByPlayer(GetCurrentGameState().GetPlayer2())->GetBoardSlots())
+		//{
+		//
+		//	for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		//	{
+		//		Slot->GetSlotCard()->OnCardStartTurn();
+		//	}
+		//}
 	}
 	StartPhase();
 }
@@ -134,39 +129,39 @@ void ATC_GameManager::StartPhase()
 		return;
 	}
 
-	for (ATC_Board* Board : Plate->GetPlateBoard())
-	{
-		for (ATC_BoardSlot* BoardSlot : Board->GetBoardSlots())
-		{
-
-			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
-			{
-
-				ATC_Card* Card = Slot->GetSlotCard();
-				//if (Card)
-				//{
-				//	Card->OnCardStartPhase();
-				//}
-
-				if (IsValid(Card) && !Card->IsPendingKillPending())
-				{
-					static const FName FuncName = FName(TEXT("OnCardStartPhase"));
-					UFunction* Func = Card->FindFunction(FuncName);
-
-					if (Func && Func->GetOuter() != ATC_Card::StaticClass())
-					{
-						Card->ProcessEvent(Func, nullptr);
-					}
-				}
-			}
-		}
-	}
+	//for (ATC_Board* Board : Plate->GetPlateBoard())
+	//{
+	//	for (ATC_BoardSlot* BoardSlot : Board->GetBoardSlots())
+	//	{
+	//
+	//		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+	//		{
+	//
+	//			ATC_Card* Card = Slot->GetSlotCard();
+	//			//if (Card)
+	//			//{
+	//			//	Card->OnCardStartPhase();
+	//			//}
+	//
+	//			if (IsValid(Card) && !Card->IsPendingKillPending())
+	//			{
+	//				static const FName FuncName = FName(TEXT("OnCardStartPhase"));
+	//				UFunction* Func = Card->FindFunction(FuncName);
+	//
+	//				if (Func && Func->GetOuter() != ATC_Card::StaticClass())
+	//				{
+	//					Card->ProcessEvent(Func, nullptr);
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 
 	FTimerHandle TimerHandle_EndPhase;
 	FTimerManager& TimerManager = GetWorld()->GetTimerManager();
 	TimerManager.ClearTimer(TimerHandle_EndPhase);
 	UE_LOG(LogTemp, Error, TEXT("StartPhase: Démarrage du timer de 30s. Joueur : %s"), *CurrentPlayer->GetName());
-	TimerManager.SetTimer(TimerHandle_EndPhase, this, &ATC_GameManager::EndPhase, 30.0f, false);
+	TimerManager.SetTimer(TimerHandle_EndPhase, this, &ATC_GameManager::EndPhase, 10.0f, false);
 
 	//Generer toutes les actions valides par mon joueur
 	//lorsqu'aucune action est valide on appelle EndPhase
@@ -176,33 +171,32 @@ void ATC_GameManager::StartPhase()
 
 void ATC_GameManager::EndPhase()
 {
-	for (ATC_Board* Board : GetCurrentGameState().GetGamePlate()->GetPlateBoard())
-	{
-		for (ATC_BoardSlot* BoardSlot : Board->GetBoardSlots())
-		{
-
-			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
-			{
-				ATC_Card* Card = Slot->GetSlotCard();
-				//if (Card)
-				if (IsValid(Card) && !Card->IsPendingKillPending())
-				{
-					static const FName FuncName = FName(TEXT("OnCardEndPhase"));
-					UFunction* Func = Card->FindFunction(FuncName);
-
-					if (Func && Func->GetOuter() != ATC_Card::StaticClass())
-					{
-						Card->ProcessEvent(Func, nullptr);
-					}
-					//Card->OnCardEndPhase();
-				}
-			}
-		}
-	}
-
+	//for (ATC_Board* Board : GetCurrentGameState().GetGamePlate()->GetPlateBoard())
+	//{
+	//	for (ATC_BoardSlot* BoardSlot : Board->GetBoardSlots())
+	//	{
+	//		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+	//		{
+	//			ATC_Card* Card = Slot->GetSlotCard();
+	//			//if (Card)
+	//			if (IsValid(Card) && !Card->IsPendingKillPending())
+	//			{
+	//				static const FName FuncName = FName(TEXT("OnCardEndPhase"));
+	//				UFunction* Func = Card->FindFunction(FuncName);
+	//
+	//				if (Func && Func->GetOuter() != ATC_Card::StaticClass())
+	//				{
+	//					Card->ProcessEvent(Func, nullptr);
+	//				}
+	//				//Card->OnCardEndPhase();
+	//			}
+	//		}
+	//	}
+	//}
+	
 	ATC_Player* ActivePlayer = GetCurrentGameState().GetActivePlayer();
 	FString PhaseStateName = StaticEnum<ETC_PhaseState>()->GetNameStringByValue((int64)ActivePlayer->GetPlayerPhaseState());
-
+	
 	UE_LOG(LogTemp, Error, TEXT("ActivePlayer: %s, PhaseState: %s"),*ActivePlayer->GetName(), *PhaseStateName);
 	if (GetCurrentGameState().GetActivePlayer()->GetPlayerPhaseState() == ETC_PhaseState::Defense)
 	{
@@ -222,9 +216,11 @@ void ATC_GameManager::EndPhase()
 			ActivePlayer = GetCurrentGameState().GetPlayer1();
 			GetCurrentGameState().SetActivePlayer(ActivePlayer);
 		}
-		
 		StartPhase();
 	}
+
+	//FAIActions EndPhaseAction(EActionType::EndPhase);
+	//GetCurrentGameState().ApplyAction(EndPhaseAction);
 }
 
 void ATC_GameManager::SwitchPhase()
@@ -244,7 +240,6 @@ void ATC_GameManager::SwitchPhase()
 
 			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
 			{
-
 				ATC_Card* Card = Slot->GetSlotCard();
 				if (Card)
 				{
@@ -264,33 +259,34 @@ void ATC_GameManager::EndTurn()
 {
 	UE_LOG(LogTemp, Error, TEXT("EndTurn: Lancement de EndTurn."));
 
-	for (ATC_Board* Board : GetCurrentGameState().GetGamePlate()->GetPlateBoard())
-	{
-		for (ATC_BoardSlot* BoardSlot : Board->GetBoardSlots())
-		{
-
-			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
-			{
-
-				ATC_Card* Card = Slot->GetSlotCard();
-				//if (Card)
-				//{
-				//	Card->OnCardEndTurn();
-				//}
-
-				if (IsValid(Card) && !Card->IsPendingKillPending())
-				{
-					static const FName FuncName = FName(TEXT("OnCardEndTurn"));
-					UFunction* Func = Card->FindFunction(FuncName);
-
-					if (Func && Func->GetOuter() != ATC_Card::StaticClass())
-					{
-						Card->ProcessEvent(Func, nullptr);
-					}
-				}
-			}
-		}
-	}
+	//for (ATC_Board* Board : GetCurrentGameState().GetGamePlate()->GetPlateBoard())
+	//{
+	//	for (ATC_BoardSlot* BoardSlot : Board->GetBoardSlots())
+	//	{
+	//
+	//		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+	//		{
+	//
+	//			ATC_Card* Card = Slot->GetSlotCard();
+	//			//if (Card)
+	//			//{
+	//			//	Card->OnCardEndTurn();
+	//			//}
+	//
+	//			if (IsValid(Card) && !Card->IsPendingKillPending())
+	//			{
+	//				static const FName FuncName = FName(TEXT("OnCardEndTurn"));
+	//				UFunction* Func = Card->FindFunction(FuncName);
+	//
+	//				if (Func && Func->GetOuter() != ATC_Card::StaticClass())
+	//				{
+	//					Card->ProcessEvent(Func, nullptr);
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
+	
 	// Inverser les rôles d’attaque / défense
 	if (GetCurrentGameState().GetPlayer1()->GetPlayerPhaseState() == ETC_PhaseState::Attack)
 	{
@@ -305,7 +301,6 @@ void ATC_GameManager::EndTurn()
 		GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
 	}
 
-	//UE_LOG(LogTemp, Log, TEXT("EndTurn: Tour %d lancé, %s est en attaque."),GetCurrentGameState().GetCurrentTurn(),*GetNameSafe(GetCurrentGameState().GetActivePlayer()));
 	StartTurn();
 }
 

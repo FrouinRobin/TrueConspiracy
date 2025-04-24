@@ -4,6 +4,8 @@
 #include "TC_Player.h"
 #include "Board/TC_Plate.h"
 #include "TC_GameInstance.h"
+#include "TC_GameManager.h"
+#include "Kismet/GameplayStatics.h"
 
 TC_ActionsSystem::TC_ActionsSystem()
 {
@@ -76,7 +78,9 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 	}
 	
 	// Retirer la carte de la main
-	ActivePlayer->GetHand().Remove(SelectedCard);
+	TArray<ATC_Card*> Hand = ActivePlayer->GetHand();
+	//ActivePlayer->GetHand().Remove(SelectedCard);
+	ActivePlayer->RemoveCardFromHand(SelectedCard);
 	
 	// Dépenser le mana
 	ActivePlayer->SetPlayerCurrentMana(CurrentMana - InAction.CardInHand->GetCardCurrentMana());
@@ -144,7 +148,7 @@ void TC_ActionsSystem::DrawCard(TC_GameStates& InGameState, const FAIActions& In
 	}
 
 	TArray<ATC_Card*> BoardPlayerDrawDeck = CurrentPlayerBoard->GetBoardDraw()->GetDrawDeck();
-	TArray<ATC_Card*> Hand = ActivePlayer->GetHand();
+	//TArray<ATC_Card*> Hand = ActivePlayer->GetHand();
 
 	if (BoardPlayerDrawDeck.Num() == 0)
 	{
@@ -270,6 +274,60 @@ void TC_ActionsSystem::MoveCard(TC_GameStates& InGameState, const FAIActions& In
 	CardToMove->SetActorRotation(DestinationSlot->GetActorRotation());
 }
 
+void TC_ActionsSystem::EndPhase(TC_GameStates& InGameState, const FAIActions& InAction)
+{
+	//ATC_Player* ActivePlayer = InGameState.GetActivePlayer();
+	//if (!ActivePlayer)
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("EndPhase: Aucun joueur actif."));
+	//	return;
+	//}
+	//
+	//ATC_Plate* Plate = InGameState.GetGamePlate();
+	//if (!Plate)
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("EndPhase : GamePlate est nul."));
+	//	return;
+	//}
+	//
+	//for (ATC_Board* Board : Plate->GetPlateBoard())
+	//{
+	//	for (ATC_BoardSlot* BoardSlot : Board->GetBoardSlots())
+	//	{
+	//		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+	//		{
+	//			ATC_Card* Card = Slot->GetSlotCard();
+	//			if (IsValid(Card) && !Card->IsPendingKillPending())
+	//			{
+	//				static const FName FuncName = FName(TEXT("OnCardEndPhase"));
+	//				UFunction* Func = Card->FindFunction(FuncName);
+	//
+	//				if (Func && Func->GetOuter() != ATC_Card::StaticClass())
+	//				{
+	//					Card->ProcessEvent(Func, nullptr);
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
+	//
+	//FString PhaseStateName = StaticEnum<ETC_PhaseState>()->GetNameStringByValue((int64)ActivePlayer->GetPlayerPhaseState());
+	//UE_LOG(LogTemp, Error, TEXT("ActivePlayer: %s, PhaseState: %s"), *ActivePlayer->GetName(), *PhaseStateName);
+	//
+	//if (ActivePlayer->GetPlayerPhaseState() == ETC_PhaseState::Defense)
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("EndPhase: Appel de EndTurn."));
+	//	FAIActions EndTurnAction(EActionType::EndTurn);
+	//	InGameState.ApplyAction(EndTurnAction);
+	//}
+	//else
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("EndPhase: Appel de StartPhase pour joueur suivant."));
+	//	ATC_Player* NextPlayer = (ActivePlayer == InGameState.GetPlayer1()) ? InGameState.GetPlayer2() : InGameState.GetPlayer1();
+	//	InGameState.SetActivePlayer(NextPlayer);
+	//}
+}
+
 //void TC_ActionsSystem::MoveCard(TC_GameStates& InGameState, const FAIActions& InAction)
 //{
 //	//Récupération du joueur actif
@@ -379,6 +437,11 @@ void TC_ActionsSystem::ApplyAction(TC_GameStates& InGameState, const FAIActions&
 	case EActionType::MoveCard:
 	{
 		MoveCard(InGameState, InAction);
+		break;
+	}
+	case EActionType::EndPhase:
+	{
+		EndPhase(InGameState, InAction);
 		break;
 	}
 	case EActionType::EndTurn:
