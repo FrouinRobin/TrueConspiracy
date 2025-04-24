@@ -143,9 +143,20 @@ void ATC_GameManager::StartPhase()
 			{
 
 				ATC_Card* Card = Slot->GetSlotCard();
-				if (Card)
+				//if (Card)
+				//{
+				//	Card->OnCardStartPhase();
+				//}
+
+				if (IsValid(Card) && !Card->IsPendingKillPending())
 				{
-					Card->OnCardStartPhase();
+					static const FName FuncName = FName(TEXT("OnCardStartPhase"));
+					UFunction* Func = Card->FindFunction(FuncName);
+
+					if (Func && Func->GetOuter() != ATC_Card::StaticClass())
+					{
+						Card->ProcessEvent(Func, nullptr);
+					}
 				}
 			}
 		}
@@ -154,16 +165,11 @@ void ATC_GameManager::StartPhase()
 	FTimerHandle TimerHandle_EndPhase;
 	FTimerManager& TimerManager = GetWorld()->GetTimerManager();
 	TimerManager.ClearTimer(TimerHandle_EndPhase);
-	UE_LOG(LogTemp, Error, TEXT("StartPhase: Démarrage du timer : 30s."));
+	UE_LOG(LogTemp, Error, TEXT("StartPhase: Démarrage du timer de 30s. Joueur : %s"), *CurrentPlayer->GetName());
 	TimerManager.SetTimer(TimerHandle_EndPhase, this, &ATC_GameManager::EndPhase, 30.0f, false);
 
-	//UE_LOG(LogTemp, Error, TEXT("StartPhase: Running Basic AI."));
-	
-	//RunBasicAI();
-
-
 	//Generer toutes les actions valides par mon joueur
-	// lorsqu'aucune action est valide on appelle EndPhase
+	//lorsqu'aucune action est valide on appelle EndPhase
 	//GenerateAllValidActions()
 	//EndPhase();
 }
@@ -177,20 +183,27 @@ void ATC_GameManager::EndPhase()
 
 			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
 			{
-
 				ATC_Card* Card = Slot->GetSlotCard();
-				if (Card)
+				//if (Card)
+				if (IsValid(Card) && !Card->IsPendingKillPending())
 				{
-					Card->OnCardEndPhase();
+					static const FName FuncName = FName(TEXT("OnCardEndPhase"));
+					UFunction* Func = Card->FindFunction(FuncName);
+
+					if (Func && Func->GetOuter() != ATC_Card::StaticClass())
+					{
+						Card->ProcessEvent(Func, nullptr);
+					}
+					//Card->OnCardEndPhase();
 				}
 			}
 		}
 	}
+
 	ATC_Player* ActivePlayer = GetCurrentGameState().GetActivePlayer();
 	FString PhaseStateName = StaticEnum<ETC_PhaseState>()->GetNameStringByValue((int64)ActivePlayer->GetPlayerPhaseState());
 
-	UE_LOG(LogTemp, Error, TEXT("ActivePlayer: %s, PhaseState: %s"),
-		*ActivePlayer->GetName(), *PhaseStateName);
+	UE_LOG(LogTemp, Error, TEXT("ActivePlayer: %s, PhaseState: %s"),*ActivePlayer->GetName(), *PhaseStateName);
 	if (GetCurrentGameState().GetActivePlayer()->GetPlayerPhaseState() == ETC_PhaseState::Defense)
 	{
 		UE_LOG(LogTemp, Error, TEXT("EndPhase: Appel de EndTurn."));
@@ -260,9 +273,20 @@ void ATC_GameManager::EndTurn()
 			{
 
 				ATC_Card* Card = Slot->GetSlotCard();
-				if (Card)
+				//if (Card)
+				//{
+				//	Card->OnCardEndTurn();
+				//}
+
+				if (IsValid(Card) && !Card->IsPendingKillPending())
 				{
-					Card->OnCardEndTurn();
+					static const FName FuncName = FName(TEXT("OnCardEndTurn"));
+					UFunction* Func = Card->FindFunction(FuncName);
+
+					if (Func && Func->GetOuter() != ATC_Card::StaticClass())
+					{
+						Card->ProcessEvent(Func, nullptr);
+					}
 				}
 			}
 		}
