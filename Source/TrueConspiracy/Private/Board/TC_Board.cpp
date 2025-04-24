@@ -10,6 +10,7 @@
 
 ATC_Board::ATC_Board()
 {
+    bReplicates = true;
 	PrimaryActorTick.bCanEverTick = false;
 
 
@@ -127,6 +128,7 @@ TArray<TSubclassOf<ATC_Card>> ATC_Board::ShuffleCard(TArray<TSubclassOf<ATC_Card
 
 void ATC_Board::Init()
 {
+    
     _boardDraw = GetWorld()->SpawnActor<ATC_DrawDeck>(DrawDeckBluePrint, BoardDrawAnchor->GetComponentLocation(), BoardDrawAnchor->GetComponentRotation());
     _boardDraw->SetDrawDeckPlayer(GetBoardPlayer());
     _boardDraw->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
@@ -145,5 +147,27 @@ void ATC_Board::Init()
         BoardSlot->SetBoardSlotBoard(this);
         BoardSlot->Init();
     }
+}
     
+
+
+void ATC_Board::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    /*ANCHOR*/
+    DOREPLIFETIME(ATC_Board, MainAnchor);
+    DOREPLIFETIME(ATC_Board, BoardSlotOneAnchor);
+    DOREPLIFETIME(ATC_Board, BoardSlotTwoAnchor);
+    DOREPLIFETIME(ATC_Board, BoardSlotThreeAnchor);
+    DOREPLIFETIME(ATC_Board, BoardDrawAnchor);
+    DOREPLIFETIME(ATC_Board, BoardDiscardAnchor);
+
+    /*DATA*/
+    DOREPLIFETIME(ATC_Board, _boardPlate);
+    DOREPLIFETIME(ATC_Board, _boardPlayer);
+    DOREPLIFETIME(ATC_Board, _boardDraw);
+    DOREPLIFETIME(ATC_Board, _boardDiscard);
+    DOREPLIFETIME(ATC_Board, _boardSlots);
+
 }

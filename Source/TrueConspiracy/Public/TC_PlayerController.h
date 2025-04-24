@@ -54,7 +54,10 @@ protected:
 	virtual void OnPossess(APawn* InPawn) override;
 
 private:
+
+	UPROPERTY()
 	bool _isTouching;
+	UPROPERTY()
 	bool _isHolding;
 
 	UPROPERTY(EditDefaultsOnly, Category = Input, meta = (AllowPrivateAccess = "true"))

@@ -8,6 +8,7 @@
 // Sets default values
 ATC_DiscardDeck::ATC_DiscardDeck()
 {
+    bReplicates = true;
     // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
 
@@ -188,5 +189,18 @@ void ATC_DiscardDeck::AddToDiscard(ATC_Card* CardToDiscard)
     _discardDeck.Add(CardToDiscard);
     GetWorld()->SpawnActor<ATC_Card>(CardToDiscard->GetClass(), FVector(CardAnchor->GetComponentLocation().X, CardAnchor->GetComponentLocation().Y, CardAnchor->GetComponentLocation().Z + 2 * _discardDeck.Num()), CardAnchor->K2_GetComponentRotation());
 
+}
+
+void ATC_DiscardDeck::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    /*ANCHOR*/
+    DOREPLIFETIME(ATC_DiscardDeck, MainAnchor);
+    DOREPLIFETIME(ATC_DiscardDeck, CardAnchor);
+
+    /*DATA*/
+    DOREPLIFETIME(ATC_DiscardDeck, _discardDeckBoard);
+    DOREPLIFETIME(ATC_DiscardDeck, _discardDeck);
 }
 

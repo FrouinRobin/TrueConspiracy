@@ -20,6 +20,7 @@
 ATC_Player::ATC_Player()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	bReplicates = true;
 	PrimaryActorTick.bCanEverTick = false;
 
 	MainAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("MainAnchor"));
@@ -179,6 +180,27 @@ TArray<ATC_Card*> ATC_Player::GetAllPlayerCard(bool takeHand)
 void ATC_Player::dorotate()
 {
 	OnChangePhaseState(ETC_PhaseState::Attack);
+}
+
+void ATC_Player::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ATC_Player, _playerRoundWon);
+	DOREPLIFETIME(ATC_Player, _playerPhaseState);
+	DOREPLIFETIME(ATC_Player, _PlayerState);
+	DOREPLIFETIME(ATC_Player, _playerBoard);
+	DOREPLIFETIME(ATC_Player, _playerHand);
+	DOREPLIFETIME(ATC_Player, _playerCurrentMana);
+	DOREPLIFETIME(ATC_Player, _playerMaxMana);
+	DOREPLIFETIME(ATC_Player, _playerSelectedCard);
+	DOREPLIFETIME(ATC_Player, _cardsWaitingTarget);
+	DOREPLIFETIME(ATC_Player, _transformTransitionTimer);
+	DOREPLIFETIME(ATC_Player, _transformTransitionTimerGoal);
+	DOREPLIFETIME(ATC_Player, _isTransformTransitionOn);
+	DOREPLIFETIME(ATC_Player, _canUseTransformTransition);
+	DOREPLIFETIME(ATC_Player, _transformTransitionGoal);
+	DOREPLIFETIME(ATC_Player, IsPossessed);
 }
 
 TArray<ATC_Card*> ATC_Player::GetCardsWaitingTargetList()
@@ -376,17 +398,21 @@ void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 	UE_LOG(LogTemp, Warning, TEXT("la carte %s "), *InCard->GetName());
 	UE_LOG(LogTemp, Warning, TEXT("Place at slot %s "), *InSlot->GetName());
 	UE_LOG(LogTemp, Warning, TEXT("so Slot have card %s "), *InSlot->GetSlotCard()->GetName());
+	ATC_Card* Card = GetWorld()->SpawnActor<ATC_Card>(InCard->GetClass(), InSlot->sceneComponent->GetRelativeLocation(), InSlot->sceneComponent->GetRelativeRotation());
+	Card->SetPlayer(this);
+	Card->AttachToActor(InSlot, FAttachmentTransformRules::KeepWorldTransform);
+	Card->Init();
 	// R�cup�re le GameManager actif
-	AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
-	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
-	if (!GameManager)
-	{
-		UE_LOG(LogTemp, Error, TEXT("PlayCard: GameManager introuvable."));
-		return;
-	}
+	//AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
+	//ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
+	//if (!GameManager)
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("PlayCard: GameManager introuvable."));
+	//	return;
+	//}
 
-	// Applique l'action au GameState actuel
-	GameManager->GetCurrentGameState().ApplyAction(PlayAction);
+	//// Applique l'action au GameState actuel
+	//GameManager->GetCurrentGameState().ApplyAction(PlayAction);
 	RemoveCardFromHand(InCard);
 }
 

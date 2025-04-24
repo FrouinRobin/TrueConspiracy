@@ -22,28 +22,65 @@ class TRUECONSPIRACY_API ATC_Card : public AActor
 public:
 
 	ATC_Card();
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh", Replicated)
 	USceneComponent* MainAnchor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh", Replicated)
 	USceneComponent* CardAnchor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh", Replicated)
 	UStaticMeshComponent* CardMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category = "Card Faces")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category = "Card Faces", Replicated)
 	UTC_AttackFace* CardAttackFace;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category = "Card Faces")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category = "Card Faces", Replicated)
 	UTC_DefendFace* CardDefendFace;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Properties")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Properties", Replicated)
 	ETC_CardType _cardType;
 
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true), Replicated)
+	UTC_Face* _cardCurrentFace;
+	UPROPERTY(Replicated)
+	TArray<UTC_Face*> _cardFaceList;
+
+	UPROPERTY(Replicated)
+	bool _isEffectActive = true;
+
+	/*UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	ETC_CardType _cardType;*/
+	UPROPERTY(Replicated)
+	TArray<ETC_CardAttribute> _cardAttribute;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true), Replicated)
+	ETC_CardID _cardId;
+
+	UPROPERTY(Replicated)
+	UTexture2D* _cardIllustration;
+	UPROPERTY(Replicated)
+	UTexture2D* _cardBackground;
+	UPROPERTY(Replicated)
+	FString _cardDescription;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true), Replicated)
+	uint8 _cardMaxMana;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true), Replicated)
+	uint8 _cardCurrentMana;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true), Replicated)
+	uint8 _cardMaxScore;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true), Replicated)
+	uint8 _cardCurrentScore;
+
+	UPROPERTY(Replicated)
+	ATC_Player* _cardPlayer;
+	UPROPERTY(Replicated)
+	ATC_Slot* _cardSlot;
 
 public:
 	// Called every frame
@@ -174,34 +211,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Init();
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 private:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
-	UTC_Face* _cardCurrentFace;
-	TArray<UTC_Face*> _cardFaceList;
-
-	bool _isEffectActive = true;
-
-	/*UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
-	ETC_CardType _cardType;*/
-	TArray<ETC_CardAttribute> _cardAttribute;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
-	ETC_CardID _cardId;
-
-	UTexture2D* _cardIllustration;
-	UTexture2D* _cardBackground;
-	FString _cardDescription;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
-	uint8 _cardMaxMana;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
-	uint8 _cardCurrentMana;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
-	uint8 _cardMaxScore;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
-	uint8 _cardCurrentScore;
-
-	ATC_Player* _cardPlayer;
-	ATC_Slot* _cardSlot;
+	
 
 };

@@ -10,6 +10,7 @@
 
 ATC_BoardSlot::ATC_BoardSlot()
 {
+	bReplicates = true;
 	PrimaryActorTick.bCanEverTick = true;
 	RootComponent = this->GetRootComponent();
 
@@ -72,4 +73,22 @@ void ATC_BoardSlot::Init()
 		Slot->SetSlotBoardSlot(this);
 		Slot->Init();
 	}
+}
+
+void ATC_BoardSlot::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	/*ANCHOR*/
+	DOREPLIFETIME(ATC_BoardSlot, MainAnchor);
+	DOREPLIFETIME(ATC_BoardSlot, SlotOneAnchor);
+	DOREPLIFETIME(ATC_BoardSlot, SlotTwoAnchor);
+	DOREPLIFETIME(ATC_BoardSlot, SlotThreeAnchor);
+	DOREPLIFETIME(ATC_BoardSlot, SlotFourAnchor);
+
+	/*DATA*/
+	DOREPLIFETIME(ATC_BoardSlot, _boardSlotBoard);
+	DOREPLIFETIME(ATC_BoardSlot, _boardSlotOppositeBoard);
+	DOREPLIFETIME(ATC_BoardSlot, _boardSlotSlots);
+	DOREPLIFETIME(ATC_BoardSlot, _cardMesh);
 }
