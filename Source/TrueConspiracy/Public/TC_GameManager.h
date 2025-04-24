@@ -40,6 +40,9 @@ public:
 	void EndTurn();
 	void EndGame();
 
+	void CalculateScore();
+	void CheckForWin();
+
 	// --- Setter(s) / Getter(s) ---
 	void SetCurrentGameState(TC_GameStates InCurrentGameState);
 	TC_GameStates& GetCurrentGameState();
