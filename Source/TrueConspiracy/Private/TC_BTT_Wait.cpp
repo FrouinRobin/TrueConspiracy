@@ -2,7 +2,7 @@
 
 UTC_BTT_Wait::UTC_BTT_Wait()
 {
-	NodeName = "Wait";
+	NodeName = "CustomWait";
 	bNotifyTick = true;
 	ElapsedTime = 0.0f;
 }

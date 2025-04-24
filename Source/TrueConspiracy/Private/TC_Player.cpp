@@ -271,6 +271,12 @@ void ATC_Player::ShowHandOnCamera()
 	for (size_t i = 0; i < _playerHand.Num(); i++)
 	{
 		auto card = _playerHand[i];
+		if (!card)
+		{
+			UE_LOG(LogTemp, Error, TEXT("ShowHandOnCamera: Carte %d dans la main est NULL !"), i);
+			return;
+		}
+
 		card->SetActorRelativeLocation(FVector::ZeroVector);
 
 		FVector origin;

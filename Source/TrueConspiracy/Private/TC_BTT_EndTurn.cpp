@@ -46,6 +46,12 @@ EBTNodeResult::Type UTC_BTT_EndTurn::ExecuteTask(UBehaviorTreeComponent& OwnerCo
 		return EBTNodeResult::Failed;
 	}
 	
+	if (GameManager->GetCurrentGameState().GetActivePlayer() != AIPlayer)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UTC_BTT_EndTurn: %s isn't the right player."), *AIPlayer->GetName());
+		return EBTNodeResult::Failed;
+	}
+
 	GameManager->GetCurrentGameState().ApplyAction(FAIActions(EActionType::EndTurn));
 
 	UE_LOG(LogTemp, Log, TEXT("UTC_BTT_EndTurn: AI %s 's player ended his turn."), *AIPlayer->GetName());

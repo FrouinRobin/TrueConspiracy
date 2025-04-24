@@ -47,6 +47,12 @@ EBTNodeResult::Type UBTT_PlayCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 		return EBTNodeResult::Failed;
 	}
 
+	if (GameManager->GetCurrentGameState().GetActivePlayer() != AIPlayer)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("BTTask_PlayCard: %s isn't the right player."), *AIPlayer->GetName());
+		return EBTNodeResult::Failed;
+	}
+
 	int CurrentMana = AIPlayer->GetPlayerCurrentMana();
 	TArray<ATC_Card*> AIHandCards = AIPlayer->GetHand();
 

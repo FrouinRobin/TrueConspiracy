@@ -46,6 +46,12 @@ EBTNodeResult::Type UBTT_DrawCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 		return EBTNodeResult::Failed;
 	}
 
+	if (GameManager->GetCurrentGameState().GetActivePlayer() != AIPlayer)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("BTTask_DrawCard: %s isn't the right player."), *AIPlayer->GetName());
+		return EBTNodeResult::Failed;
+	}
+
 	//Not needed due to current player is already the AIPlayer but in case it's needed for debug purposes.
 	//Setting CurrentPlayer to AIPlayer
 	//GameManager->GetCurrentGameState().SetActivePlayer(AIPlayer);

@@ -155,19 +155,36 @@ void TC_ActionsSystem::DrawCard(TC_GameStates& InGameState, const FAIActions& In
 	//DrawCard from last index on the list
 	ATC_Card* DrawnCard = CurrentPlayerBoard->GetBoardDraw()->GetDrawDeckGameFirstCard();
 
-	if (!DrawnCard)
+	if (!DrawnCard || !DrawnCard->GetClass())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Carte invalide."));
 		return;
 	}
 
 	//Adding card to hand
+	//UWorld* World = DrawnCard->GetWorld();
+	//if (!World)
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("DrawCard : World est nul."));
+	//	return;
+	//}
+	//
+	//ATC_Card* NewCard = World->SpawnActor<ATC_Card>(DrawnCard->GetClass());
+	//if (!NewCard)
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("DrawCard : Échec du SpawnActor de la carte."));
+	//	return;
+	//}
+	//
+	//bool isCardAdded = ActivePlayer->AddCardToHand(NewCard);
+
 	bool isCardAdded = ActivePlayer->AddCardToHand(DrawnCard->GetClass());
 
 	if (isCardAdded)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Carte %s ajoutée à la main."), *DrawnCard->GetName());
 		CurrentPlayerBoard->OnDrawCard(DrawnCard);
+		UE_LOG(LogTemp, Log, TEXT("DrawCard : Il reste %d cartes dans le deck."), CurrentPlayerBoard->GetBoardDraw()->GetDrawDeck().Num());
 	}
 	else
 	{
@@ -183,21 +200,21 @@ void TC_ActionsSystem::MoveCard(TC_GameStates& InGameState, const FAIActions& In
 	ATC_Player* ActivePlayer = InGameState.GetActivePlayer();
 	if (!ActivePlayer)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Aucun joueur actif."));
+		UE_LOG(LogTemp, Warning, TEXT("MoveCard: Aucun joueur actif."));
 		return;
 	}
 	//Récupération du plateau de jeu
 	ATC_Plate* Plate = InGameState.GetGamePlate();
 	if (!Plate)
 	{
-		UE_LOG(LogTemp, Error, TEXT("DrawCard : GamePlate est nul."));
+		UE_LOG(LogTemp, Error, TEXT("MoveCard : GamePlate est nul."));
 		return;
 	}
 	//Récupération du board du joueur actif
 	ATC_Board* PlayerBoard = ActivePlayer->GetPlayerBoard();
 	if (!PlayerBoard)
 	{
-		UE_LOG(LogTemp, Error, TEXT("DrawCard : BoardDraw est nul."));
+		UE_LOG(LogTemp, Error, TEXT("MoveCard : BoardDraw est nul."));
 		return;
 	}
 
