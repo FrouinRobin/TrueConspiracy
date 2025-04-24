@@ -230,11 +230,12 @@ void ATC_Player::SetPlayerState(ETC_PlayerState newState)
 
 
 
-bool ATC_Player::AddCardToHand(TSubclassOf<ATC_Card> card)
+ATC_Card* ATC_Player::AddCardToHand(TSubclassOf<ATC_Card> card)
 {
+	ATC_Card* NewCard = 0;
 	if (card)
 	{
-		ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(card, PlayerCardAnchor->GetComponentLocation(), PlayerCardAnchor->GetComponentRotation());
+		NewCard = GetWorld()->SpawnActor<ATC_Card>(card, PlayerCardAnchor->GetComponentLocation(), PlayerCardAnchor->GetComponentRotation());
 		_playerHand.Add(NewCard);
 		NewCard->AttachToComponent(PlayerCardAnchor, FAttachmentTransformRules(EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, EAttachmentRule::KeepWorld, true));
 		NewCard->SetPlayer(this);
@@ -245,14 +246,12 @@ bool ATC_Player::AddCardToHand(TSubclassOf<ATC_Card> card)
 
 
 	ShowHandOnCamera();
-	return true;
+	return NewCard;
 }
 
-bool ATC_Player::AddCardToDeck(TSubclassOf<ATC_Card> card)
+void ATC_Player::AddCardToDeck(TSubclassOf<ATC_Card> card)
 {
 	PlayerDeck.Add(card);
-
-	return true;
 }
 
 // Can someone smarter that knows how a card hand works rework this function?

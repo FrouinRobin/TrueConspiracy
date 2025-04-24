@@ -126,13 +126,13 @@ public:
 	bool CanPlayCard(ATC_Card* card);
 
 	UFUNCTION(BlueprintCallable)
-	bool AddCardToDeck(TSubclassOf<ATC_Card> card);
+	void AddCardToDeck(TSubclassOf<ATC_Card> card);
 
 	UFUNCTION(BlueprintCallable)
 	void ShowHandOnCamera();
 
 	UFUNCTION(BlueprintCallable)
-	bool AddCardToHand(TSubclassOf<ATC_Card> card);
+	ATC_Card* AddCardToHand(TSubclassOf<ATC_Card> card);
 
 	UFUNCTION(BlueprintCallable)
 	void PlayCard(ATC_Card* InCard, ATC_Slot* InSlot);

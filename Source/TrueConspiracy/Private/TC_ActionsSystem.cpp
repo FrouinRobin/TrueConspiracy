@@ -162,7 +162,7 @@ void TC_ActionsSystem::DrawCard(TC_GameStates& InGameState, const FAIActions& In
 	}
 
 	//Adding card to hand
-	bool isCardAdded = ActivePlayer->AddCardToHand(DrawnCard->GetClass());
+	bool isCardAdded = (ActivePlayer->AddCardToHand(DrawnCard->GetClass()) != NULL);
 
 	if (isCardAdded)
 	{
