@@ -18,10 +18,10 @@ public:
 	// Sets default values for this actor's properties
 	ATC_DiscardDeck();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Anchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Anchor"/*, Replicated*/)
 	USceneComponent* MainAnchor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Anchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Anchor"/*, Replicated*/)
 	USceneComponent* CardAnchor;
 
 protected:

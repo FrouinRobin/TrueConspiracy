@@ -16,20 +16,20 @@ class TRUECONSPIRACY_API ATC_Slot : public AActor
 public:
 	ATC_Slot();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite/*, Replicated*/)
 	UStaticMeshComponent* visualMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite/*, Replicated*/)
 	USceneComponent* sceneComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	ETC_CardType _slotCardType;
-
-protected:
-	UPROPERTY(Replicated)
+	UPROPERTY(Replicated, EditAnywhere)
 	ATC_BoardSlot* _slotBoardSlot;
-	UPROPERTY(Replicated)
+	UPROPERTY(Replicated, EditAnywhere)
 	ATC_Card* _slotCard;
+protected:
+	
 	//ETC_CardType _slotCardType;
 public:
 

@@ -8,7 +8,7 @@
 // Sets default values
 ATC_Plate::ATC_Plate()
 {
-	bReplicates = true;
+	//bReplicates = true;
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -100,23 +100,12 @@ void ATC_Plate::SetPlayerTwo(ATC_Player* newPlayerTwo)
 
 void ATC_Plate::Init()
 {
-	
-	_plateBoard.Add(GetWorld()->SpawnActor<ATC_Board>(BoardBluePrint, BoardPlayerOneAnchor->GetComponentLocation(), BoardPlayerOneAnchor->GetComponentRotation()));
-	
-
-	_playerOne->SetPlayerBoard(_plateBoard[0]);
-	_plateBoard.Add(GetWorld()->SpawnActor<ATC_Board>(BoardBluePrint, BoardPlayerTwoAnchor->GetComponentLocation(), BoardPlayerTwoAnchor->GetComponentRotation()));
 	_playerOne->SetPlayerBoard(_plateBoard[0]);
 	_plateBoard[0]->SetBoardPlayer(_playerOne);
 	_plateBoard[0]->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 	_plateBoard[1]->SetBoardPlayer(_playerTwo);
 	_plateBoard[1]->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
-
 	_playerTwo->SetPlayerBoard(_plateBoard[1]);
-
-	_landCardSlots.Add(GetWorld()->SpawnActor<ATC_LandCardSlot>(LandCardSlotBluePrint, LandCardSlotOneAnchor->GetComponentLocation(), LandCardSlotOneAnchor->GetComponentRotation()));
-	_landCardSlots.Add(GetWorld()->SpawnActor<ATC_LandCardSlot>(LandCardSlotBluePrint, LandCardSlotTwoAnchor->GetComponentLocation(), LandCardSlotTwoAnchor->GetComponentRotation()));
-	_landCardSlots.Add(GetWorld()->SpawnActor<ATC_LandCardSlot>(LandCardSlotBluePrint, LandCardSlotThreeAnchor->GetComponentLocation(), LandCardSlotThreeAnchor->GetComponentRotation()));
 	_plateBoard[0]->Init();
 	_plateBoard[1]->Init();
 
@@ -133,14 +122,14 @@ void ATC_Plate::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	/*ANCHOR*/
-	DOREPLIFETIME(ATC_Plate, BoardPlayerOneAnchor);
-	DOREPLIFETIME(ATC_Plate, BoardPlayerTwoAnchor);
-	DOREPLIFETIME(ATC_Plate, LandCardSlotOneAnchor);
-	DOREPLIFETIME(ATC_Plate, LandCardSlotTwoAnchor);
-	DOREPLIFETIME(ATC_Plate, LandCardSlotThreeAnchor);
+	///*ANCHOR*/
+	//DOREPLIFETIME(ATC_Plate, BoardPlayerOneAnchor);
+	//DOREPLIFETIME(ATC_Plate, BoardPlayerTwoAnchor);
+	//DOREPLIFETIME(ATC_Plate, LandCardSlotOneAnchor);
+	//DOREPLIFETIME(ATC_Plate, LandCardSlotTwoAnchor);
+	//DOREPLIFETIME(ATC_Plate, LandCardSlotThreeAnchor);
 
-	/*DATA*/
+	///*DATA*/
 	DOREPLIFETIME(ATC_Plate, _playerOne);
 	DOREPLIFETIME(ATC_Plate, _playerTwo);
 	DOREPLIFETIME(ATC_Plate, _plateBoard);

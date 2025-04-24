@@ -21,18 +21,18 @@ public:
 
 	ATC_Board();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainAnchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainAnchor"/*, Replicated*/)
 	USceneComponent* MainAnchor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardSlotOneAnchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardSlotOneAnchor"/*, Replicated*/)
 	USceneComponent* BoardSlotOneAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardSlotTwoAnchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardSlotTwoAnchor"/*, Replicated*/)
 	USceneComponent* BoardSlotTwoAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardSlotThreeAnchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardSlotThreeAnchor"/*, Replicated*/)
 	USceneComponent* BoardSlotThreeAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardDrawAnchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardDrawAnchor"/*, Replicated*/)
 	USceneComponent* BoardDrawAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardDiscardAnchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardDiscardAnchor"/*, Replicated*/)
 	USceneComponent* BoardDiscardAnchor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BluePrintReference")

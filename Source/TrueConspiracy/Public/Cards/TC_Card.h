@@ -22,10 +22,10 @@ class TRUECONSPIRACY_API ATC_Card : public AActor
 public:
 
 	ATC_Card();
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh"/*, Replicated*/)
 	USceneComponent* MainAnchor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh"/*, Replicated*/)
 	USceneComponent* CardAnchor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh", Replicated)
@@ -40,6 +40,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Properties", Replicated)
 	ETC_CardType _cardType;
 
+	UPROPERTY(Replicated, EditAnywhere)
+	ATC_Player* _cardPlayer;
 
 protected:
 	// Called when the game starts or when spawned
@@ -77,8 +79,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true), Replicated)
 	uint8 _cardCurrentScore;
 
-	UPROPERTY(Replicated)
-	ATC_Player* _cardPlayer;
+	
 	UPROPERTY(Replicated)
 	ATC_Slot* _cardSlot;
 

@@ -9,7 +9,7 @@
 
 ATC_Slot::ATC_Slot()
 {
-	bReplicates = true;
+	//bReplicates = true;
 	PrimaryActorTick.bCanEverTick = false;
 
 	sceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
@@ -77,11 +77,11 @@ void ATC_Slot::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetime
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	/*ANCHOR*/
-	DOREPLIFETIME(ATC_Slot, sceneComponent);
-	
+	///*ANCHOR*/
+	//DOREPLIFETIME(ATC_Slot, sceneComponent);
+	//
 
-	/*DATA*/
+	///*DATA*/
 	DOREPLIFETIME(ATC_Slot, _slotCardType);
 	DOREPLIFETIME(ATC_Slot, _slotBoardSlot);
 	DOREPLIFETIME(ATC_Slot, _slotCard);

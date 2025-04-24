@@ -195,11 +195,11 @@ void ATC_DiscardDeck::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-    /*ANCHOR*/
-    DOREPLIFETIME(ATC_DiscardDeck, MainAnchor);
-    DOREPLIFETIME(ATC_DiscardDeck, CardAnchor);
+    ///*ANCHOR*/
+    //DOREPLIFETIME(ATC_DiscardDeck, MainAnchor);
+    //DOREPLIFETIME(ATC_DiscardDeck, CardAnchor);
 
-    /*DATA*/
+    ///*DATA*/
     DOREPLIFETIME(ATC_DiscardDeck, _discardDeckBoard);
     DOREPLIFETIME(ATC_DiscardDeck, _discardDeck);
 }

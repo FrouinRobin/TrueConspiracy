@@ -223,11 +223,11 @@ void ATC_DrawDeck::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-    /*ANCHOR*/
-    DOREPLIFETIME(ATC_DrawDeck, MainAnchor);
-    DOREPLIFETIME(ATC_DrawDeck, CardAnchor);
+    ///*ANCHOR*/
+    //DOREPLIFETIME(ATC_DrawDeck, MainAnchor);
+    //DOREPLIFETIME(ATC_DrawDeck, CardAnchor);
 
-    /*DATA*/
+    ///*DATA*/
     DOREPLIFETIME(ATC_DrawDeck, _drawDeckPlayer);
     DOREPLIFETIME(ATC_DrawDeck, _drawDeckBoard);
     DOREPLIFETIME(ATC_DrawDeck, _drawDeck);

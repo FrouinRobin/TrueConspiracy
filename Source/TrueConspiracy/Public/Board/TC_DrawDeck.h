@@ -19,10 +19,10 @@ public:
 	// Sets default values for this actor's properties
 	ATC_DrawDeck();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Anchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Anchor"/*, Replicated*/)
 	USceneComponent* MainAnchor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Anchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Anchor"/*, Replicated*/)
 	USceneComponent* CardAnchor;
 protected:
 	// Called when the game starts or when spawned

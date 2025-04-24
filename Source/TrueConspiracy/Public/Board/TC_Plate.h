@@ -18,26 +18,26 @@ public:
 	// Sets default values for this actor's properties
 	ATC_Plate();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "SceneRoot", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "SceneRoot"/*, Replicated*/)
 	USceneComponent* SceneComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh"/*, Replicated*/)
 	UStaticMeshComponent* PlateMesh;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardPlayerOneAnchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardPlayerOneAnchor"/*, Replicated*/)
 	USceneComponent* BoardPlayerOneAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardPlayerOneAnchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardPlayerOneAnchor"/*, Replicated*/)
 	USceneComponent* BoardPlayerTwoAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardPlayerOneAnchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardPlayerOneAnchor"/*, Replicated*/)
 	USceneComponent* LandCardSlotOneAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCardSlotTwoAnchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCardSlotTwoAnchor"/*, Replicated*/)
 	USceneComponent* LandCardSlotTwoAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCardSlotThreeAnchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCardSlotThreeAnchor"/*, Replicated*/)
 	USceneComponent* LandCardSlotThreeAnchor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCardSlotThreeAnchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCardSlotThreeAnchor"/*, Replicated*/)
 	TSubclassOf<ATC_Board> BoardBluePrint;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCardSlotThreeAnchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCardSlotThreeAnchor"/*, Replicated*/)
 	TSubclassOf<ATC_LandCardSlot> LandCardSlotBluePrint;
 
 protected:

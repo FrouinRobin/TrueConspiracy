@@ -289,8 +289,8 @@ void ATC_Card::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetime
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(ATC_Card, MainAnchor);
-	DOREPLIFETIME(ATC_Card, CardAnchor);
+	//DOREPLIFETIME(ATC_Card, MainAnchor);
+	//DOREPLIFETIME(ATC_Card, CardAnchor);
 	DOREPLIFETIME(ATC_Card, CardMesh);
 	DOREPLIFETIME(ATC_Card, CardAttackFace);
 	DOREPLIFETIME(ATC_Card, CardDefendFace);

@@ -17,30 +17,33 @@ class TRUECONSPIRACY_API ATC_BoardSlot : public AActor
 public:
 	ATC_BoardSlot();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainAnchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainAnchor"/*, Replicated*/)
 	USceneComponent* MainAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotOneAnchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotOneAnchor"/*, Replicated*/)
 	USceneComponent* SlotOneAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotTwoAnchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotTwoAnchor"/*, Replicated*/)
 	USceneComponent* SlotTwoAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotThreeAnchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotThreeAnchor"/*, Replicated*/)
 	USceneComponent* SlotThreeAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotFourAnchor", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotFourAnchor"/*, Replicated*/)
 	USceneComponent* SlotFourAnchor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BluePrintReference", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BluePrintReference"/*, Replicated*/)
 	TSubclassOf<ATC_Slot> SlotBluePrint;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", Replicated)
+	ATC_Board* _boardSlotBoard;
 	
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true), Replicated)
-	ATC_Board* _boardSlotBoard;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true)/*, Replicated*/)
+	//ATC_Board* _boardSlotBoard;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true), Replicated)
 	ATC_BoardSlot* _boardSlotOppositeBoard;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true), Replicated)
 	TArray<ATC_Slot*> _boardSlotSlots;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true), Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true)/*, Replicated*/)
 	UStaticMesh* _cardMesh;
 
 public:
