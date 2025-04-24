@@ -18,11 +18,9 @@ ATC_PlayerController::ATC_PlayerController()
 void ATC_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-
+	UE_LOG(LogTemp, Warning, TEXT("ATC_PlayerController::BeginPlay() called"));
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
-
-	if (IsLocalController())	Server_SendDeckToServer(Cast<UTC_GameInstance>(GetGameInstance())->SelectedPlayerDeck);
 }
 
 void ATC_PlayerController::SetupInputComponent()
@@ -93,11 +91,27 @@ ATC_Player* ATC_PlayerController::GetMyPawn()
 	return Cast<ATC_Player>(pawn);
 }
 
+void ATC_PlayerController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	UE_LOG(LogTemp, Warning, TEXT("OnPossess called"));
+	if (IsLocalController())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Calling Server_SendDeckToServer from OnPossess"));
+		Server_SendDeckToServer(Cast<UTC_GameInstance>(GetGameInstance())->SelectedPlayerDeck);
+	}
+}
+
 void ATC_PlayerController::Server_SendDeckToServer_Implementation(const TArray<TSubclassOf<ATC_Card>>& Deck)
 {
 	if (ATC_Player* OwnPawn = Cast<ATC_Player>(GetPawn()))
 	{
 		OwnPawn->SetPlayerDeck(Deck);
+		for (int i = 0; i < Deck.Num(); i++)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Deck implem %d: %s"), i, *Deck[i]->GetName());
+		}
 	}
 }
 

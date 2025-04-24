@@ -4,6 +4,8 @@
 #include "Engine/World.h"
 #include "Misc/DateTime.h"
 #include "HAL/PlatformTime.h"
+#include "TC_Player.h"
+#include "TC_GameInstance.h"
 
 UTC_TCPComponent::UTC_TCPComponent()
 {
@@ -96,7 +98,6 @@ void UTC_TCPComponent::_handleServerMessage(const FString& Message)
 
         if (CleanLine.Equals("pong", ESearchCase::IgnoreCase))
         {
-            UE_LOG(LogTemp, Warning, TEXT("PONG received"));
             IsConnected = true;
         }
         else if (CleanLine.StartsWith("match:"))
@@ -107,12 +108,18 @@ void UTC_TCPComponent::_handleServerMessage(const FString& Message)
             APlayerController* PC = GetWorld()->GetFirstPlayerController();
             if (PC)
             {
+				ATC_Player* Player = Cast<ATC_Player>(PC->GetPawn());
+                if (Player)
+                {
+                    Cast<UTC_GameInstance>(GetWorld()->GetGameInstance())->SelectedPlayerDeck = Player->GetDeck();
+					UE_LOG(LogTemp, Warning, TEXT("Deck set to GameInstance"));
+					for (int i = 0; i < Player->GetDeck().Num(); i++)
+					{
+						UE_LOG(LogTemp, Warning, TEXT("Deck to instance %d: %s"), i, *Player->GetDeck()[i]->GetName());
+					}
+                }
                 PC->ClientTravel(URL, ETravelType::TRAVEL_Absolute);
             }
-        }
-        else
-        {
-            UE_LOG(LogTemp, Warning, TEXT("Unknown message: %s"), *CleanLine);
         }
     }
 }

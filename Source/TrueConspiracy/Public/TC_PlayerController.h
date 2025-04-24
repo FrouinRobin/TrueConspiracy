@@ -51,6 +51,8 @@ protected:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_SendDeckToServer(const TArray<TSubclassOf<ATC_Card>>& Deck);
 
+	virtual void OnPossess(APawn* InPawn) override;
+
 private:
 	bool _isTouching;
 	bool _isHolding;
