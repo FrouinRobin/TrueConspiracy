@@ -33,8 +33,10 @@ void ATC_GameManager::InitGame()
 	//Give the max mana to each player
 	GetCurrentGameState().GetPlayer1()->SetPlayerMaxMana(3);
 	GetCurrentGameState().GetPlayer1()->SetPlayerCurrentMana(3);
+	GetCurrentGameState().GetPlayer1()->GetPlayerBoard()->OnDrawNumberOfCard(5);
 	GetCurrentGameState().GetPlayer2()->SetPlayerMaxMana(3);
 	GetCurrentGameState().GetPlayer2()->SetPlayerCurrentMana(3);
+	GetCurrentGameState().GetPlayer2()->GetPlayerBoard()->OnDrawNumberOfCard(5);
 	//Start the first round
 	StartTurn();
 }
@@ -267,6 +269,80 @@ void ATC_GameManager::EndTurn()
 void ATC_GameManager::EndGame()
 {
 
+}
+
+void ATC_GameManager::CalculateScore()
+{
+	int ActivePlayerScore = 0;
+	ATC_Player* CurrentPlayer = GetCurrentGameState().GetActivePlayer();
+	ATC_Player* OppositePlayer = GetCurrentGameState().GetActivePlayer()->GetPlayerBoard()->GetBoardSlots()[0]->GetBoardSlotOppositeBoard()->GetBoardSlotBoard()->GetBoardPlayer();
+	for (ATC_Card* Card : CurrentPlayer->GetAllPlayerCard(false))
+	{
+		ActivePlayerScore += Card->GetCardCurrentScore();
+	}
+	for (ATC_Card* Card : OppositePlayer->GetAllPlayerCard(false))
+	{
+		ActivePlayerScore += Card->GetCardCurrentScore();
+	}
+
+	if (ActivePlayerScore > 0)
+	{
+		CurrentPlayer->SetPlayerRoundWon(CurrentPlayer->GetPlayerRoundWon() + 1);
+	}
+	else if (ActivePlayerScore < 0)
+	{
+		OppositePlayer->SetPlayerRoundWon(OppositePlayer->GetPlayerRoundWon() + 1);
+	}
+	else
+	{
+		CurrentPlayer->SetPlayerRoundWon(CurrentPlayer->GetPlayerRoundWon() + 1);
+		OppositePlayer->SetPlayerRoundWon(OppositePlayer->GetPlayerRoundWon() + 1);
+	}
+	CheckForWin();
+}
+
+void ATC_GameManager::CheckForWin()
+{
+	ATC_Player* PlayerOne = GetCurrentGameState().GetPlayer1();
+	ATC_Player* PlayerTwo = GetCurrentGameState().GetPlayer2();
+
+	int PlayerOneRounds = PlayerOne->GetPlayerRoundWon();
+	int PlayerTwoRounds = PlayerTwo->GetPlayerRoundWon();
+
+	int MaxRounds = GetCurrentGameState().GetGameFormat().MaxRounds;
+	int PointsToWin = GetCurrentGameState().GetGameFormat().PointsToWin;
+
+	int TotalRoundsPlayed = PlayerOneRounds + PlayerTwoRounds;
+
+	// Différence max possible avec les rounds restants
+	int RoundsLeft = MaxRounds - TotalRoundsPlayed;
+
+	// Si un joueur atteint PointsToWin et l’autre ne peut plus le rattraper
+	if (PlayerOneRounds >= PointsToWin && PlayerOneRounds > PlayerTwoRounds + RoundsLeft)
+	{
+		// PlayerOne wins
+	}
+	else if (PlayerTwoRounds >= PointsToWin && PlayerTwoRounds > PlayerOneRounds + RoundsLeft)
+	{
+		// PlayerTwo wins
+	}
+	// Sinon si plus aucun round possible, on compare les scores
+	else if (TotalRoundsPlayed >= MaxRounds)
+	{
+		if (PlayerOneRounds > PlayerTwoRounds)
+		{
+			// PlayerOne wins
+		}
+		else if (PlayerTwoRounds > PlayerOneRounds)
+		{
+			// PlayerTwo wins
+		}
+		else
+		{
+			// It's a draw
+		}
+	}
+	// Sinon, le match continue
 }
 
 void ATC_GameManager::SetCurrentGameState(TC_GameStates InCurrentGameState)

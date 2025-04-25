@@ -60,6 +60,9 @@ public:
 	ATC_Card* GetCardFromDeckById(ETC_CardID id);*/
 	// === Getters ===
 	UFUNCTION(BlueprintCallable, Category = "Getter")
+	int GetPlayerRoundWon();
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
 	ATC_Board* GetPlayerBoard();
 
 	UFUNCTION(BlueprintCallable, Category = "Getter")
@@ -95,7 +98,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getter", CallInEditor)
 	TArray<ATC_Card*> GetAllPlayerCard(bool takeHand);
 
+	UFUNCTION(BlueprintPure)
+	TArray<ATC_Card*> GetCardsWaitingTargetList();
+
 	// === Setters ===
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	void SetPlayerRoundWon(int newRoundWons);
+
 	UFUNCTION(BlueprintCallable, Category = "Setter")
 	void SetPlayerBoard(ATC_Board* newBoard);
 
@@ -126,13 +135,13 @@ public:
 	bool CanPlayCard(ATC_Card* card);
 
 	UFUNCTION(BlueprintCallable)
-	bool AddCardToDeck(TSubclassOf<ATC_Card> card);
+	void AddCardToDeck(TSubclassOf<ATC_Card> card);
 
 	UFUNCTION(BlueprintCallable)
 	void ShowHandOnCamera();
 
 	UFUNCTION(BlueprintCallable)
-	bool AddCardToHand(TSubclassOf<ATC_Card> card);
+	ATC_Card* AddCardToHand(TSubclassOf<ATC_Card> card);
 
 	UFUNCTION(BlueprintCallable)
 	void PlayCard(ATC_Card* InCard, ATC_Slot* InSlot);
@@ -172,6 +181,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool RemoveCardToWaitingTargetList(ATC_Card* card);
 
+	UFUNCTION(CallInEditor, Category = "Do Rotation")
+	void dorotate();
+
 	// === Events ===
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnSelectCard(ATC_Card* card, ATC_Card* oldCard);
@@ -181,15 +193,11 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnChangePhaseState(ETC_PhaseState newPhaseState);
-
 	
-	UFUNCTION(CallInEditor, Category = "Do Rotation")
-	void dorotate();
-	
-	UFUNCTION(BlueprintPure)
-	TArray<ATC_Card*> GetCardsWaitingTargetList();
 
 private:
+
+	int _playerRoundWon;
 
 	ETC_PhaseState _playerPhaseState;
 	ETC_PlayerState _PlayerState;

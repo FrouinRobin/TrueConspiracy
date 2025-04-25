@@ -51,6 +51,11 @@ void ATC_Player::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+int ATC_Player::GetPlayerRoundWon()
+{
+	return _playerRoundWon;
+}
+
 ATC_Board* ATC_Player::GetPlayerBoard()
 {
 	return _playerBoard;
@@ -181,6 +186,11 @@ TArray<ATC_Card*> ATC_Player::GetCardsWaitingTargetList()
 	return _cardsWaitingTarget;
 }
 
+void ATC_Player::SetPlayerRoundWon(int newRoundWons)
+{
+	_playerRoundWon = newRoundWons;
+}
+
 void ATC_Player::SetPlayerBoard(ATC_Board* newBoard)
 {
 	_playerBoard = newBoard;
@@ -230,8 +240,9 @@ void ATC_Player::SetPlayerState(ETC_PlayerState newState)
 
 
 
-bool ATC_Player::AddCardToHand(TSubclassOf<ATC_Card> card)
+ATC_Card* ATC_Player::AddCardToHand(TSubclassOf<ATC_Card> card)
 {
+	ATC_Card* NewCard = 0;
 	if (card)
 	{
 		ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(
@@ -260,15 +271,13 @@ bool ATC_Player::AddCardToHand(TSubclassOf<ATC_Card> card)
 	}
 
 	ShowHandOnCamera();
-	return true;
+	return NewCard;
 }
 
 
 bool ATC_Player::AddCardToDeck(TSubclassOf<ATC_Card> card)
 {
 	PlayerDeck.Add(card);
-
-	return true;
 }
 
 // Can someone smarter that knows how a card hand works rework this function?
