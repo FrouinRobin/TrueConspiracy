@@ -10,6 +10,8 @@
 #include "TC_CardType.h"
 #include "TC_CardAttribute.h"
 #include "TC_CardID.h"
+#include "TC_CardIfoGameWiget.h"
+#include "TC_CardDataStruct.h"
 #include "TC_Card.generated.h"
 
 class ATC_Player;
@@ -67,6 +69,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ETC_CardID GetCardID();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
+	FString GetCardName();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
 	UTexture2D* GetCardIllustration();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	UTexture2D* GetCardBackground();
@@ -92,6 +96,8 @@ public:
 	FRotator GetCardAnchorRotation();
 
 
+
+
 	/*SETTER*/
 
 	UFUNCTION(BlueprintCallable, Category = "Setters")
@@ -108,6 +114,8 @@ public:
 	void SetCardAttributeList(TArray<ETC_CardAttribute> newTypeList);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardID(ETC_CardID newID);
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetCardName(FString newName);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardIllustration(UTexture2D* newImage);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
@@ -154,6 +162,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnCardRotate();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnChangeStats();
+
 
 	/*OTHER FUNCTION*/
 
@@ -174,6 +185,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Init();
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateCardUIFunc(FTC_CardDataStruct CardData, UTC_CardIfoGameWiget* widget);
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	UTC_Face* _cardCurrentFace;
@@ -187,7 +201,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	ETC_CardID _cardId;
-
+	FString _cardName;
 	UTexture2D* _cardIllustration;
 	UTexture2D* _cardBackground;
 	FString _cardDescription;

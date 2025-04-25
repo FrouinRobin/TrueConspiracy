@@ -27,19 +27,7 @@ void ATC_Card::BeginPlay()
 void ATC_Card::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	switch (_cardPlayer->GetPlayerPhaseState())
-	{
-		case(ETC_PhaseState::Attack):
-		{
-			SetCardCurrentFace(CardDefendFace);
-		}
-		case(ETC_PhaseState::Defense):
-		{
-			SetCardCurrentFace(CardAttackFace);
-		}
-	default:
-		break;
-	}
+	
 }
 
 /*GETTER*/
@@ -77,6 +65,11 @@ TArray<ETC_CardAttribute> ATC_Card::GetCardAttribute()
 ETC_CardID ATC_Card::GetCardID()
 {
 	return _cardId;
+}
+
+FString ATC_Card::GetCardName()
+{
+	return _cardName;
 }
 
 UTexture2D* ATC_Card::GetCardIllustration()
@@ -148,6 +141,7 @@ void ATC_Card::SetCardCurrentFace(UTC_Face* newCurrentFace)
 	SetCardAttributeList(newCurrentFace->FaceAttribute);
 	SetCardDescription(newCurrentFace->FaceDescription);
 	_cardCurrentFace = newCurrentFace;
+	OnChangeStats();
 }
 
 void ATC_Card::SetCardAttackFace(UTC_AttackFace* newAttackFace)
@@ -168,11 +162,13 @@ void ATC_Card::SetCardFaceList(TArray<UTC_Face*> newFaceList)
 void ATC_Card::SetCardType(ETC_CardType newType)
 {
 	_cardType = newType;
+	OnChangeStats();
 }
 
 void ATC_Card::SetCardAttributeList(TArray<ETC_CardAttribute> newAttributeList)
 {
 	_cardAttribute = newAttributeList;
+	OnChangeStats();
 }
 
 void ATC_Card::SetCardID(ETC_CardID newID)
@@ -180,19 +176,28 @@ void ATC_Card::SetCardID(ETC_CardID newID)
 	_cardId = newID;
 }
 
+void ATC_Card::SetCardName(FString newName)
+{
+	_cardName = newName;
+	OnChangeStats();
+}
+
 void ATC_Card::SetCardIllustration(UTexture2D* newImage)
 {
 	_cardIllustration = newImage;
+	OnChangeStats();
 }
 
 void ATC_Card::SetCardBackground(UTexture2D* newImage)
 {
 	_cardBackground = newImage;
+	OnChangeStats();
 }
 
 void ATC_Card::SetCardDescription(FString newDescription)
 {
 	_cardDescription = newDescription;
+	OnChangeStats();
 }
 
 void ATC_Card::SetCardMaxMana(float newMana)
@@ -203,6 +208,7 @@ void ATC_Card::SetCardMaxMana(float newMana)
 void ATC_Card::SetCardCurrentMana(float newMana)
 {
 	_cardCurrentMana = newMana;
+	OnChangeStats();
 }
 
 void ATC_Card::SetCardMaxScore(float newScore)
@@ -213,6 +219,7 @@ void ATC_Card::SetCardMaxScore(float newScore)
 void ATC_Card::SetCardCurrentScore(float newScore)
 {
 	_cardCurrentScore = newScore;
+	OnChangeStats();
 }
 
 void ATC_Card::SetPlayer(ATC_Player* newPlayer)
@@ -274,4 +281,9 @@ void ATC_Card::Init()
 	case(ETC_PhaseState::Defense):
 		SetCardCurrentFace(GetCardDefendFace());
 	}
+}
+
+void ATC_Card::UpdateCardUIFunc(FTC_CardDataStruct CardData, UTC_CardIfoGameWiget* widget)
+{
+	widget->OnUpdateCardData(CardData);
 }
