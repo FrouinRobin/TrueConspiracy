@@ -160,7 +160,10 @@ public:
 	void RemoveCardFromDeck(ATC_Card* Card);
 
 	UFUNCTION(BlueprintCallable)
-	void DrawCardFromDeck();
+	void DrawFirstCardFromDeck();
+
+	UFUNCTION(BlueprintCallable)
+	void DrawCardFromDeck(TSubclassOf<ATC_Card> card);
 
 	UFUNCTION(BlueprintCallable)
 	bool CanPlaceCardOnSlot(ATC_Card* Card, ATC_Slot* Slot);

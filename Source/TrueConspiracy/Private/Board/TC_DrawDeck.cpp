@@ -87,8 +87,14 @@ ATC_Card* ATC_DrawDeck::DrawCard()
 {
     if (_drawDeck.Num() > 0)
     {
-        ATC_Card* CardToDraw = _drawDeck[_drawDeck.Num() - 1];
-        _drawDeck.RemoveAt(_drawDeck.Num() - 1);
+        ATC_Card* CardToDraw = _drawDeck.Last();
+        _drawDeck.RemoveSingle(CardToDraw);
+
+        if (IsValid(CardToDraw))
+        {
+            CardToDraw->Destroy();
+        }
+
         return CardToDraw;
     }
     return nullptr;

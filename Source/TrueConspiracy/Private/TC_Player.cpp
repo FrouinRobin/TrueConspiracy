@@ -347,7 +347,7 @@ void ATC_Player::RemoveCardFromDeck(ATC_Card* Card)
 	ShowHandOnCamera();
 }
 
-void ATC_Player::DrawCardFromDeck()
+void ATC_Player::DrawFirstCardFromDeck()
 {
 	ATC_Card* CardToDraw = _playerBoard->GetBoardDraw()->DrawCard();
 	if (CardToDraw)
@@ -356,6 +356,35 @@ void ATC_Player::DrawCardFromDeck()
 		RemoveCardFromDeck(CardToDraw);
 		AddCardToHand(CardClass);
 	}
+}
+
+void ATC_Player::DrawCardFromDeck(TSubclassOf<ATC_Card> card)
+{
+	if (!card)
+	{
+		return;
+	}
+
+	ATC_Card* CardToDraw = nullptr;
+	TArray<ATC_Card*> DrawDeck = _playerBoard->GetBoardDraw()->GetDrawDeck();
+
+	for (ATC_Card* DeckCard : DrawDeck)
+	{
+		if (DeckCard && DeckCard->GetClass() == card)
+		{
+			CardToDraw = DeckCard;
+			break;
+		}
+	}
+
+	if (!CardToDraw)
+	{
+		return;
+	}
+
+	RemoveCardFromDeck(CardToDraw);
+	AddCardToHand(card);
+
 }
 
 void ATC_Player::SwitchFace(ATC_Card* Card)
@@ -404,6 +433,7 @@ void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 	// Applique l'action au GameState actuel
 	GameManager->GetCurrentGameState().ApplyAction(PlayAction);
 	RemoveCardFromHand(InCard);
+	UE_LOG(LogTemp, Error, TEXT("Player mana %d"), GetPlayerCurrentMana());
 }
 
 void ATC_Player::MoveCard(ATC_Card* InCard, ATC_Slot* InSlot)
