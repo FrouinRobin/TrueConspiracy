@@ -167,7 +167,7 @@ TArray<ATC_Card*> ATC_Player::GetAllPlayerCard(bool takeHand)
 	{
 		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
 		{
-			if(Slot->GetSlotCard() != nullptr)
+			if (Slot->GetSlotCard() != nullptr)
 			{
 				PlayerCard.Add(Slot->GetSlotCard());
 			}
@@ -245,7 +245,7 @@ ATC_Card* ATC_Player::AddCardToHand(TSubclassOf<ATC_Card> card)
 	ATC_Card* NewCard = 0;
 	if (card)
 	{
-		ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(
+		NewCard = GetWorld()->SpawnActor<ATC_Card>(
 			card,
 			PlayerCardAnchor->GetComponentLocation(),
 			PlayerCardAnchor->GetComponentRotation()
@@ -275,7 +275,7 @@ ATC_Card* ATC_Player::AddCardToHand(TSubclassOf<ATC_Card> card)
 }
 
 
-bool ATC_Player::AddCardToDeck(TSubclassOf<ATC_Card> card)
+void ATC_Player::AddCardToDeck(TSubclassOf<ATC_Card> card)
 {
 	PlayerDeck.Add(card);
 }

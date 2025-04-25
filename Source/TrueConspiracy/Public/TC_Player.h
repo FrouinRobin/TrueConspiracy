@@ -53,6 +53,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+
 	// Called to bind functionality to input
 	/*UFUNCTION(BlueprintCallable, Category = "Getter")
 	ATC_Card* GetCardFromDeckByName(FString name, bool checkAllFaces);
@@ -98,11 +99,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getter", CallInEditor)
 	TArray<ATC_Card*> GetAllPlayerCard(bool takeHand);
 
-	UFUNCTION(BlueprintPure)
-	TArray<ATC_Card*> GetCardsWaitingTargetList();
-
 	// === Setters ===
-	UFUNCTION(BlueprintCallable, Category = "Getter")
+	UFUNCTION(BlueprintCallable, Category = "Setter")
 	void SetPlayerRoundWon(int newRoundWons);
 
 	UFUNCTION(BlueprintCallable, Category = "Setter")
@@ -181,9 +179,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool RemoveCardToWaitingTargetList(ATC_Card* card);
 
-	UFUNCTION(CallInEditor, Category = "Do Rotation")
-	void dorotate();
-
 	// === Events ===
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnSelectCard(ATC_Card* card, ATC_Card* oldCard);
@@ -193,7 +188,13 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnChangePhaseState(ETC_PhaseState newPhaseState);
-	
+
+
+	UFUNCTION(CallInEditor, Category = "Do Rotation")
+	void dorotate();
+
+	UFUNCTION(BlueprintPure)
+	TArray<ATC_Card*> GetCardsWaitingTargetList();
 
 private:
 
