@@ -83,8 +83,9 @@ EBTNodeResult::Type UBTT_PlayCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 					PlayCard.BoardSlotCardIndex = AIBoardSlots->GetBoardSlotSlots().Find(AISlot);
 
 					GameManager->GetCurrentGameState().ApplyAction(PlayCard);
-					UE_LOG(LogTemp, Log, TEXT("BTTask_PlayCard: AI player %s 's has spawned %s card."), *AIPlayer->GetName() , *AICard->GetName());
+					UE_LOG(LogTemp, Log, TEXT("BTTask_PlayCard: AI player %s 's has spawned %s card."), *AIPlayer->GetName(), *AICard->GetName());
 					return EBTNodeResult::Succeeded;
+					
 				}
 			}
 		}

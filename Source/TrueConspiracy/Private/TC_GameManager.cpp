@@ -301,6 +301,7 @@ void ATC_GameManager::EndTurn()
 		GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
 	}
 
+	//GetCurrentGameState().SetCurrentTurn(GetCurrentGameState().GetCurrentTurn() + 1);
 	StartTurn();
 }
 

@@ -26,6 +26,8 @@ TArray<FAIActions> TC_ActionsSystem::GenerateAllValidActions(const TC_GameStates
 
 void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& InAction)
 {
+
+
 	////GPT DEBUG
 	UE_LOG(LogTemp, Warning, TEXT("Player1: %s | Player2: %s | IsPlayer1Turn: %s"),
 		*GetNameSafe(InGameState.GetPlayer1()),
@@ -63,9 +65,12 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 
 	// Vérification du coût en mana
 	int32 CurrentMana = ActivePlayer->GetPlayerCurrentMana();
+	UE_LOG(LogTemp, Warning, TEXT("PlayCard: Current Mana : %i du joueur : %s"), ActivePlayer->GetPlayerCurrentMana(), *ActivePlayer->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("ACTION: Current Mana : %f du joueur : %s"), InAction.CardInHand->GetCardCurrentMana(), *ActivePlayer->GetName());
 	if (InAction.CardInHand->GetCardCurrentMana() > CurrentMana)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Mana insuffisant."));
+		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Mana insuffisant pour le joueur : %s."), *ActivePlayer->GetName());
+		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Current Mana : %i du joueur : %s"), ActivePlayer->GetPlayerCurrentMana(), *ActivePlayer->GetName());
 		return;
 	}
 	
@@ -84,7 +89,8 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 	
 	// Dépenser le mana
 	ActivePlayer->SetPlayerCurrentMana(CurrentMana - InAction.CardInHand->GetCardCurrentMana());
-	
+	UE_LOG(LogTemp, Warning, TEXT("NEW: Current Mana : %i du joueur : %s"), ActivePlayer->GetPlayerCurrentMana(), *ActivePlayer->GetName());
+
 	// Spawn de la carte
 	UTC_GameInstance* GameInstance = UTC_GameInstance::GetInstance(InAction.PlayingSlot);
 	if (!GameInstance)
@@ -108,6 +114,9 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Échec du spawn de la carte."));
 		return;
 	}
+
+	InAction.PlayingSlot->SetSlotCard(InAction.CardInHand);
+	InAction.CardInHand->SetSlot(InAction.PlayingSlot);
 
 	UE_LOG(LogTemp, Log, TEXT("PlayCard: Carte %s jouée avec succès."), *SpawnedCard->GetName());
 
