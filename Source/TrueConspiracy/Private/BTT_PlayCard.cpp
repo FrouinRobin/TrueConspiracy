@@ -17,14 +17,14 @@ EBTNodeResult::Type UBTT_PlayCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 	AAIController* AIController = OwnerComp.GetAIOwner();
 	if (!AIController)
 	{
-		UE_LOG(LogTemp, Error, TEXT("BTTask_PlayCard: AIController not found."));
+		//UE_LOG(LogTemp, Error, TEXT("BTTask_PlayCard: AIController not found."));
 		return EBTNodeResult::Failed;
 	}
 	//Getting AIPawn from AIController
 	ATC_Player* AIPlayer = Cast<ATC_Player>(AIController->GetPawn());
 	if (!AIPlayer)
 	{
-		UE_LOG(LogTemp, Error, TEXT("BTTask_PlayCard: AIPawn not found."));
+		//UE_LOG(LogTemp, Error, TEXT("BTTask_PlayCard: AIPawn not found."));
 		return EBTNodeResult::Failed;
 	}
 
@@ -33,7 +33,7 @@ EBTNodeResult::Type UBTT_PlayCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 	//ATC_GameManager* GameManager = Cast<ATC_GameManager>(AIPlayer->GetWorld()->GetAuthGameMode());
 	//if (!GameManager)
 	//{
-	//	UE_LOG(LogTemp, Error, TEXT("BTTask_PlayCard: GameManager (GameMode) not found."));
+	//	//UE_LOG(LogTemp, Error, TEXT("BTTask_PlayCard: GameManager (GameMode) not found."));
 	//	return EBTNodeResult::Failed;
 	//}
 
@@ -43,13 +43,13 @@ EBTNodeResult::Type UBTT_PlayCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
 	if (!GameManager)
 	{
-		UE_LOG(LogTemp, Error, TEXT("BTTask_PlayCard: GameManager (Actor) not found."));
+		//UE_LOG(LogTemp, Error, TEXT("BTTask_PlayCard: GameManager (Actor) not found."));
 		return EBTNodeResult::Failed;
 	}
 
 	if (GameManager->GetCurrentGameState().GetActivePlayer() != AIPlayer)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("BTTask_PlayCard: %s isn't the right player."), *AIPlayer->GetName());
+		//UE_LOG(LogTemp, Warning, TEXT("BTTask_PlayCard: %s isn't the right player."), *AIPlayer->GetName());
 		return EBTNodeResult::Failed;
 	}
 
@@ -73,7 +73,7 @@ EBTNodeResult::Type UBTT_PlayCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 		{
 			for (ATC_Slot* AISlot : AIBoardSlots->GetBoardSlotSlots())
 			{
-				if (AISlot && !AISlot->GetSlotCard())
+				if (!AISlot->HasCard())
 				{
 					FAIActions PlayCard(EActionType::PlayCard);
 					PlayCard.CardInHand = AICard;

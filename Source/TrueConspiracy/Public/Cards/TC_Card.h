@@ -59,11 +59,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	UTC_DefendFace* GetCardDefendFace();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	TArray<UTC_Face*> GetCardFaceList();
+	TArray<UTC_Face*>& GetCardFaceList();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ETC_CardType GetCardType();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	TArray<ETC_CardAttribute> GetCardAttribute();
+	TArray<ETC_CardAttribute>& GetCardAttribute();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ETC_CardID GetCardID();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
@@ -101,11 +101,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardDefendFace(UTC_DefendFace* newDefendFace);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetCardFaceList(TArray<UTC_Face*> newFaceList);
+	void SetCardFaceList(TArray<UTC_Face*>& newFaceList);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardType(ETC_CardType newType);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetCardAttributeList(TArray<ETC_CardAttribute> newTypeList);
+	void SetCardAttributeList(TArray<ETC_CardAttribute>& newTypeList);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardID(ETC_CardID newID);
 	UFUNCTION(BlueprintCallable, Category = "Setters")

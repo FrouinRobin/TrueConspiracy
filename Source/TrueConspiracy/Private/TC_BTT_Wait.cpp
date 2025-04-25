@@ -19,7 +19,7 @@ void UTC_BTT_Wait::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory
 
 	if (ElapsedTime >= WaitingTime)
 	{
-		UE_LOG(LogTemp, Log, TEXT("BTTask_Wait: Finished waiting %.2f seconds."), WaitingTime);
+		//UE_LOG(LogTemp, Log, TEXT("BTTask_Wait: Finished waiting %.2f seconds."), WaitingTime);
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 }

@@ -273,7 +273,7 @@ void ATC_Player::ShowHandOnCamera()
 		auto card = _playerHand[i];
 		if (!card)
 		{
-			UE_LOG(LogTemp, Error, TEXT("ShowHandOnCamera: Carte %d dans la main est NULL !"), i);
+			//UE_LOG(LogTemp, Error, TEXT("ShowHandOnCamera: Carte %d dans la main est NULL !"), i);
 			return;
 		}
 
@@ -283,8 +283,8 @@ void ATC_Player::ShowHandOnCamera()
 		FVector box;
 		card->GetActorBounds(false, origin, box, false);
 
-		UE_LOG(LogTemp, Warning, TEXT("Origin is %s"), *origin.ToString());
-		UE_LOG(LogTemp, Warning, TEXT("Box is %s"), *box.ToString());
+		//UE_LOG(LogTemp, Warning, TEXT("Origin is %s"), *origin.ToString());
+		//UE_LOG(LogTemp, Warning, TEXT("Box is %s"), *box.ToString());
 
 		FVector base = FVector::ZeroVector;
 		if (PlayerDeck.Num() % 2 == 0)
@@ -354,7 +354,7 @@ void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 
 	if (!InCard || !InSlot)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Parametre invalide (carte ou slot)."));
+		//UE_LOG(LogTemp, Warning, TEXT("PlayCard: Parametre invalide (carte ou slot)."));
 		return;
 	}
 
@@ -370,15 +370,15 @@ void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 	InSlot->SetSlotCard(InCard);
 	InCard->SetSlot(InSlot);
 
-	UE_LOG(LogTemp, Warning, TEXT("la carte %s "), *InCard->GetName());
-	UE_LOG(LogTemp, Warning, TEXT("Place at slot %s "), *InSlot->GetName());
-	UE_LOG(LogTemp, Warning, TEXT("so Slot have card %s "), *InSlot->GetSlotCard()->GetName());
+	//UE_LOG(LogTemp, Warning, TEXT("la carte %s "), *InCard->GetName());
+	//UE_LOG(LogTemp, Warning, TEXT("Place at slot %s "), *InSlot->GetName());
+	//UE_LOG(LogTemp, Warning, TEXT("so Slot have card %s "), *InSlot->GetSlotCard()->GetName());
 	// R�cup�re le GameManager actif
 	AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
 	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
 	if (!GameManager)
 	{
-		UE_LOG(LogTemp, Error, TEXT("PlayCard: GameManager introuvable."));
+		//UE_LOG(LogTemp, Error, TEXT("PlayCard: GameManager introuvable."));
 		return;
 	}
 
@@ -391,7 +391,7 @@ void ATC_Player::MoveCard(ATC_Card* InCard, ATC_Slot* InSlot)
 {
 	if (!InCard || !InSlot)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("MoveCard: Parametre invalide (carte ou slot)."));
+		//UE_LOG(LogTemp, Warning, TEXT("MoveCard: Parametre invalide (carte ou slot)."));
 		return;
 	}
 
@@ -410,7 +410,7 @@ void ATC_Player::MoveCard(ATC_Card* InCard, ATC_Slot* InSlot)
 	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
 	if (!GameManager)
 	{
-		UE_LOG(LogTemp, Error, TEXT("PlayCard: GameManager introuvable."));
+		//UE_LOG(LogTemp, Error, TEXT("PlayCard: GameManager introuvable."));
 		return;
 	}
 

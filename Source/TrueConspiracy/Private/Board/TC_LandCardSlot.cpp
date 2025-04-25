@@ -13,7 +13,7 @@ ATC_LandCardSlot::ATC_LandCardSlot()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-TArray<ATC_BoardSlot*> ATC_LandCardSlot::GetLandCardBordSlot()
+TArray<ATC_BoardSlot*>& ATC_LandCardSlot::GetLandCardBordSlot()
 {
 	return _landCardBoardSlots;
 }
@@ -33,4 +33,10 @@ ATC_BoardSlot* ATC_LandCardSlot::GetLandCardBordSlotByPlayer(ATC_Player* PlayerR
 		}
 	}
 	return PlayerBoardSlot;
+}
+
+void ATC_LandCardSlot::LandCardInit()
+{
+	_landCardBoardSlots[0]->SetBoardSlotOppositeBoard(_landCardBoardSlots[1]);
+	_landCardBoardSlots[1]->SetBoardSlotOppositeBoard(_landCardBoardSlots[0]);
 }

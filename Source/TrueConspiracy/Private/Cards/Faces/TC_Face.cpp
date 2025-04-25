@@ -4,7 +4,7 @@
 #include "Cards/Faces/TC_Face.h"
 
 
-TArray<ETC_CardAttribute> UTC_Face::GetFaceAttribute()
+TArray<ETC_CardAttribute>& UTC_Face::GetFaceAttribute()
 {
 	return FaceAttribute;
 }
@@ -38,7 +38,7 @@ float UTC_Face::GetCardScore()
 
 /*SETTER*/
 
-void UTC_Face::SetCardTypeList(TArray<ETC_CardAttribute> newFaceAttribute)
+void UTC_Face::SetCardTypeList(TArray<ETC_CardAttribute>& newFaceAttribute)
 {
 	FaceAttribute = newFaceAttribute;
 }

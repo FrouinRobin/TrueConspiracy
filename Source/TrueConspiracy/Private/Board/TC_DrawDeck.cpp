@@ -124,7 +124,7 @@ void ATC_DrawDeck::SetDrawDeckDataFirstCard(ATC_Card* newCard)
     }
     else
     {
-        UE_LOG(LogTemp, Warning, TEXT("SetDrawDeckDataFirstCard: Attempted to set the first card, but the board is empty."));
+        //UE_LOG(LogTemp, Warning, TEXT("SetDrawDeckDataFirstCard: Attempted to set the first card, but the board is empty."));
     }
 }
 
@@ -136,11 +136,11 @@ void ATC_DrawDeck::SetDrawDeckDataCardAtIndex(int newIndex, ATC_Card* newCard)
     }
     else if (newIndex == _drawDeck.Num())
     {
-        UE_LOG(LogTemp, Warning, TEXT("SetDrawDeckDataCardAtIndex: Index is out of bounds. Attempted to set card at index %d, but the board only has %d cards."), newIndex, _drawDeck.Num());
+        //UE_LOG(LogTemp, Warning, TEXT("SetDrawDeckDataCardAtIndex: Index is out of bounds. Attempted to set card at index %d, but the board only has %d cards."), newIndex, _drawDeck.Num());
     }
     else
     {
-        UE_LOG(LogTemp, Warning, TEXT("SetDrawDeckDataCardAtIndex: Invalid index. Attempted to set card at index %d, but the board only has %d cards."), newIndex, _drawDeck.Num());
+        //UE_LOG(LogTemp, Warning, TEXT("SetDrawDeckDataCardAtIndex: Invalid index. Attempted to set card at index %d, but the board only has %d cards."), newIndex, _drawDeck.Num());
     }
 }
 
@@ -152,7 +152,7 @@ void ATC_DrawDeck::SetDrawDeckDataLastCard(ATC_Card* newCard)
     }
     else
     {
-        UE_LOG(LogTemp, Warning, TEXT("SetDrawDeckDataLastCard: Attempted to set the last card, but the board is empty."));
+        //UE_LOG(LogTemp, Warning, TEXT("SetDrawDeckDataLastCard: Attempted to set the last card, but the board is empty."));
     }
 }
 
@@ -164,7 +164,7 @@ void ATC_DrawDeck::SetDrawDeckGameFirstCard(ATC_Card* newCard)
     }
     else
     {
-        UE_LOG(LogTemp, Warning, TEXT("SetDrawDeckGameFirstCard: Attempted to set the first card in game mode, but the board is empty."));
+        //UE_LOG(LogTemp, Warning, TEXT("SetDrawDeckGameFirstCard: Attempted to set the first card in game mode, but the board is empty."));
     }
 }
 
@@ -176,7 +176,7 @@ void ATC_DrawDeck::SetDrawDeckGameCardAtIndex(int newIndex, ATC_Card* newCard)
     }
     else
     {
-        UE_LOG(LogTemp, Warning, TEXT("SetDrawDeckGameCardAtIndex: Invalid index in game mode. Attempted to set card at index %d, but the board only has %d cards."), newIndex, _drawDeck.Num());
+        //UE_LOG(LogTemp, Warning, TEXT("SetDrawDeckGameCardAtIndex: Invalid index in game mode. Attempted to set card at index %d, but the board only has %d cards."), newIndex, _drawDeck.Num());
     }
 }
 
@@ -188,7 +188,7 @@ void ATC_DrawDeck::SetDrawDeckGameCardLastCard(ATC_Card* newCard)
     }
     else
     {
-        UE_LOG(LogTemp, Warning, TEXT("SetDrawDeckGameCardLastCard: Attempted to set the last card in game mode, but the board is empty."));
+        //UE_LOG(LogTemp, Warning, TEXT("SetDrawDeckGameCardLastCard: Attempted to set the last card in game mode, but the board is empty."));
     }
 }
 

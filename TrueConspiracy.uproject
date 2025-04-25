@@ -1,13 +1,16 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "{85161216-41D2-E65A-55F5-B0B559E6634C}",
+	"EngineAssociation": "{51F26B25-47CC-ADCE-7FD4-1DB723800793}",
 	"Category": "",
 	"Description": "",
 	"Modules": [
 		{
 			"Name": "TrueConspiracy",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"AIModule"
+			]
 		}
 	],
 	"Plugins": [

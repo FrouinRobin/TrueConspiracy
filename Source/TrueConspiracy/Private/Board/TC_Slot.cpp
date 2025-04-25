@@ -30,7 +30,7 @@ ATC_Slot::ATC_Slot()
 bool ATC_Slot::HasCard()
 {
 	if (_slotCard != nullptr) {
-		UE_LOG(LogTemp, Error, TEXT("Slot is Occupied"));
+		//UE_LOG(LogTemp, Error, TEXT("Slot is Occupied"));
 		return true;
 	}
 	else {
@@ -69,5 +69,6 @@ void ATC_Slot::SetSlotCardType(ETC_CardType newSlotCardType)
 
 void ATC_Slot::Init()
 {
+	
 }
 

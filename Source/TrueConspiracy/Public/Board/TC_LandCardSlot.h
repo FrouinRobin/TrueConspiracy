@@ -18,9 +18,12 @@ public:
 	ATC_LandCardSlot();
 public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	TArray<ATC_BoardSlot*> GetLandCardBordSlot();
+	TArray<ATC_BoardSlot*>& GetLandCardBordSlot();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_BoardSlot* GetLandCardBordSlotByPlayer(ATC_Player* PlayerReference);
+
+	UFUNCTION(BlueprintCallable, Category = "Init")
+	void LandCardInit();
 
 private:
 	TArray<ATC_BoardSlot*> _landCardBoardSlots;

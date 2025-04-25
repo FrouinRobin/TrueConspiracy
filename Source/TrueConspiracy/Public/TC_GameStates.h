@@ -45,7 +45,7 @@ private :
 	//TArray<ATC_Card*> _Player1BoardCard;
 	//TArray<ATC_Card*> _Player2BoardCard;
 
-	int32 _CurrentTurn = 0;
+	int32 _CurrentTurn = 1;
 	//NOMBRE DE ROUND GAGNÉS
 	int32 _Player1Score = 0;
 	int32 _Player2Score = 0;

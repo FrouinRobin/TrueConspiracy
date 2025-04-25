@@ -18,7 +18,7 @@ class TRUECONSPIRACY_API UTC_Face : public UObject
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	TArray<ETC_CardAttribute> GetFaceAttribute();
+	TArray<ETC_CardAttribute>& GetFaceAttribute();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	UTexture2D* GetCardIllustration();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
@@ -31,7 +31,7 @@ public:
 	float GetCardScore();
 
 	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetCardTypeList(TArray<ETC_CardAttribute> newFaceAttribute);
+	void SetCardTypeList(TArray<ETC_CardAttribute>& newFaceAttribute);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardIllustration(UTexture2D* newImage);
 	UFUNCTION(BlueprintCallable, Category = "Setters")

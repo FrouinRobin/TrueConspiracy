@@ -16,14 +16,14 @@ EBTNodeResult::Type UBTT_DrawCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 	AAIController* AIController = OwnerComp.GetAIOwner();
 	if (!AIController)
 	{
-		UE_LOG(LogTemp, Error, TEXT("BTTask_DrawCard: AIController not found."));
+		//UE_LOG(LogTemp, Error, TEXT("BTTask_DrawCard: AIController not found."));
 		return EBTNodeResult::Failed;
 	}
 	//Getting AIPawn from AIController
 	ATC_Player* AIPlayer = Cast<ATC_Player>(AIController->GetPawn());
 	if (!AIPlayer) 
 	{
-		UE_LOG(LogTemp, Error, TEXT("BTTask_DrawCard: AIPawn not found."));
+		//UE_LOG(LogTemp, Error, TEXT("BTTask_DrawCard: AIPawn not found."));
 		return EBTNodeResult::Failed;
 	}
 
@@ -32,7 +32,7 @@ EBTNodeResult::Type UBTT_DrawCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 	//ATC_GameManager* GameManager = Cast<ATC_GameManager>(AIPlayer->GetWorld()->GetAuthGameMode());
 	//if (!GameManager)
 	//{
-	//	UE_LOG(LogTemp, Error, TEXT("BTTask_DrawCard: GameManager (GameMode) not found."));
+	//	//UE_LOG(LogTemp, Error, TEXT("BTTask_DrawCard: GameManager (GameMode) not found."));
 	//	return EBTNodeResult::Failed;
 	//}
 
@@ -42,13 +42,13 @@ EBTNodeResult::Type UBTT_DrawCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
 	if (!GameManager)
 	{
-		UE_LOG(LogTemp, Error, TEXT("BTTask_DrawCard: GameManager (Actor) not found."));
+		//UE_LOG(LogTemp, Error, TEXT("BTTask_DrawCard: GameManager (Actor) not found."));
 		return EBTNodeResult::Failed;
 	}
 
 	if (GameManager->GetCurrentGameState().GetActivePlayer() != AIPlayer)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("BTTask_DrawCard: %s isn't the right player."), *AIPlayer->GetName());
+		//UE_LOG(LogTemp, Warning, TEXT("BTTask_DrawCard: %s isn't the right player."), *AIPlayer->GetName());
 		return EBTNodeResult::Failed;
 	}
 
@@ -58,6 +58,6 @@ EBTNodeResult::Type UBTT_DrawCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 	
 	//Applying the drawing action (DrawCard)
 	GameManager->GetCurrentGameState().ApplyAction(FAIActions(EActionType::DrawCard));
-	UE_LOG(LogTemp, Log, TEXT("BTTask_DrawCard: AI %s 's player has drawn a card."), *AIPlayer->GetName());
+	//UE_LOG(LogTemp, Log, TEXT("BTTask_DrawCard: AI %s 's player has drawn a card."), *AIPlayer->GetName());
 	return EBTNodeResult::Succeeded;
 }

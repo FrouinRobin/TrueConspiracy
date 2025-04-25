@@ -15,14 +15,14 @@ bool UTC_BTD_IsCurrentPlayer::CalculateRawConditionValue(UBehaviorTreeComponent&
 	AAIController* AIController = OwnerComp.GetAIOwner();
 	if (!AIController)
 	{
-		UE_LOG(LogTemp, Error, TEXT("UTC_BTD_IsCurrentPlayer: AIController not found."));
+		//UE_LOG(LogTemp, Error, TEXT("UTC_BTD_IsCurrentPlayer: AIController not found."));
 		return false;
 	}
 	//Getting AIPawn from AIController
 	ATC_Player* AIPlayer = Cast<ATC_Player>(AIController->GetPawn());
 	if (!AIPlayer)
 	{
-		UE_LOG(LogTemp, Error, TEXT("UTC_BTD_IsCurrentPlayer: AIPawn not found."));
+		//UE_LOG(LogTemp, Error, TEXT("UTC_BTD_IsCurrentPlayer: AIPawn not found."));
 		return false;
 	}
 
@@ -31,7 +31,7 @@ bool UTC_BTD_IsCurrentPlayer::CalculateRawConditionValue(UBehaviorTreeComponent&
 	//ATC_GameManager* GameManager = Cast<ATC_GameManager>(AIPlayer->GetWorld()->GetAuthGameMode());
 	//if (!GameManager)
 	//{
-	//	UE_LOG(LogTemp, Error, TEXT("UTC_BTD_IsCurrentPlayer: GameManager (GameMode) not found."));
+	//	//UE_LOG(LogTemp, Error, TEXT("UTC_BTD_IsCurrentPlayer: GameManager (GameMode) not found."));
 	//	return false;
 	//}
 
@@ -41,13 +41,11 @@ bool UTC_BTD_IsCurrentPlayer::CalculateRawConditionValue(UBehaviorTreeComponent&
 	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
 	if (!GameManager)
 	{
-		UE_LOG(LogTemp, Error, TEXT("UTC_BTD_IsCurrentPlayer: GameManager (Actor) not found."));
+		//UE_LOG(LogTemp, Error, TEXT("UTC_BTD_IsCurrentPlayer: GameManager (Actor) not found."));
 		return false;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("IsCurrentPlayer Decorator -> AI: %s | Active: %s"),
-		*GetNameSafe(AIPlayer),
-		*GetNameSafe(GameManager->GetCurrentGameState().GetActivePlayer()));
+	////UE_LOG(LogTemp, Warning, TEXT("IsCurrentPlayer Decorator -> AI: %s | Active: %s"),*GetNameSafe(AIPlayer),*GetNameSafe(GameManager->GetCurrentGameState().GetActivePlayer()));
 
 	return (GameManager->GetCurrentGameState().GetActivePlayer() == AIPlayer);
 }

@@ -13,14 +13,14 @@ bool UTC_BTD_HasEnoughMana::CalculateRawConditionValue(UBehaviorTreeComponent& O
 	AAIController* AIController = OwnerComp.GetAIOwner();
 	if (!AIController)
 	{
-		UE_LOG(LogTemp, Error, TEXT("UTC_BTD_HasEnoughMana: AIController not found."));
+		//UE_LOG(LogTemp, Error, TEXT("UTC_BTD_HasEnoughMana: AIController not found."));
 		return false;
 	}
 	//Getting AIPawn from AIController
 	ATC_Player* AIPlayer = Cast<ATC_Player>(AIController->GetPawn());
 	if (!AIPlayer)
 	{
-		UE_LOG(LogTemp, Error, TEXT("UTC_BTD_HasEnoughMana: AIPawn not found."));
+		//UE_LOG(LogTemp, Error, TEXT("UTC_BTD_HasEnoughMana: AIPawn not found."));
 		return false;
 	}
 

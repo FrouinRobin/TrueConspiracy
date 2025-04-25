@@ -48,7 +48,7 @@ void ATC_DeckZone::AddCard(ATC_Card* Card)
 	if (Card && !_Hand.Contains(Card))
 	{
 		_Hand.Add(Card);
-		UE_LOG(LogTemp, Warning, TEXT("Carte ajoutee a la main."));
+		//UE_LOG(LogTemp, Warning, TEXT("Carte ajoutee a la main."));
 	}
 }
 
@@ -57,7 +57,7 @@ void ATC_DeckZone::RemoveCard(ATC_Card* Card)
 	if (Card && _Hand.Contains(Card))
 	{
 		_Hand.Remove(Card);
-		UE_LOG(LogTemp, Warning, TEXT("Carte retiree de la main."));
+		//UE_LOG(LogTemp, Warning, TEXT("Carte retiree de la main."));
 	}
 }
 

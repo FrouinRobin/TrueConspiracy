@@ -41,7 +41,10 @@ public:
 	void EndGame();
 
 	void CalculateScore();
-	void CheckForWin();
+	bool CheckForWin();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void onEndGame();
 
 	void RunBasicAI();
 
