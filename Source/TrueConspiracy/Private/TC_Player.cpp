@@ -296,10 +296,10 @@ void ATC_Player::ShowHandOnCamera()
 	}
 }
 
-bool ATC_Player::CanPlayCard(ATC_Card* card)
-{
-	return card->GetCardCurrentMana() >= GetPlayerCurrentMana();
-}
+//bool ATC_Player::CanPlayCard(ATC_Card* card)
+//{
+//	return card->GetCardCurrentMana() >= GetPlayerCurrentMana();
+//}
 
 //TSubclassOf<ATC_Card> ATC_Player::FindCardClassFromInstance(ATC_Card* InstanceCard)
 //{
@@ -395,6 +395,7 @@ void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 	// Applique l'action au GameState actuel
 	GameManager->GetCurrentGameState().ApplyAction(PlayAction);
 	RemoveCardFromHand(InCard);
+	UE_LOG(LogTemp, Error, TEXT("Player Mana %d"), GetPlayerCurrentMana());
 }
 
 void ATC_Player::MoveCard(ATC_Card* InCard, ATC_Slot* InSlot)

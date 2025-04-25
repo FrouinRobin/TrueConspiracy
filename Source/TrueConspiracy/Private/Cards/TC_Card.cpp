@@ -142,14 +142,16 @@ FRotator ATC_Card::GetCardAnchorRotation()
 
 void ATC_Card::SetCardCurrentFace(UTC_Face* newCurrentFace)
 {
-	
+	_cardCurrentFace = newCurrentFace; // Met à jour d'abord !
+
 	SetCardMaxMana(_cardCurrentFace->GetCardMana());
-	SetCardCurrentMana(newCurrentFace->FaceMana - (GetCardMaxMana()-GetCardCurrentMana()));
-	SetCardCurrentScore(newCurrentFace->FaceScore - (GetCardMaxScore()-GetCardCurrentScore()));
+	SetCardCurrentMana(_cardCurrentFace->FaceMana); // Reset complet sur les nouvelles valeurs
+	SetCardMaxScore(_cardCurrentFace->FaceScore);
+	SetCardCurrentScore(_cardCurrentFace->FaceScore);
+
 	GetCardAttribute().Empty();
-	SetCardAttributeList(newCurrentFace->FaceAttribute);
-	SetCardDescription(newCurrentFace->FaceDescription);
-	_cardCurrentFace = newCurrentFace;
+	SetCardAttributeList(_cardCurrentFace->FaceAttribute);
+	SetCardDescription(_cardCurrentFace->FaceDescription);
 }
 
 void ATC_Card::SetCardAttackFace(UTC_AttackFace* newAttackFace)
@@ -273,8 +275,10 @@ void ATC_Card::Init()
 	{
 	case(ETC_PhaseState::Attack):
 		SetCardCurrentFace(GetCardAttackFace());
+		break;
 	case(ETC_PhaseState::Defense):
 		SetCardCurrentFace(GetCardDefendFace());
+		break;
 	}
 }
 

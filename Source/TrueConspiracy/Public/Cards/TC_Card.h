@@ -204,13 +204,13 @@ private:
 	UTexture2D* _cardBackground;
 	FString _cardDescription;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	uint8 _cardMaxMana;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	uint8 _cardCurrentMana;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	uint8 _cardMaxScore;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	uint8 _cardCurrentScore;
 
 	ATC_Player* _cardPlayer;

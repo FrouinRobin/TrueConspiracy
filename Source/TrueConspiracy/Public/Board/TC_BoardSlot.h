@@ -36,7 +36,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_Board* GetBoardSlotBoard();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	TArray<ATC_Slot*> GetBoardSlotSlots();
+	TArray<ATC_Slot*>& GetBoardSlotSlots();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_BoardSlot* GetBoardSlotOppositeBoard();
 

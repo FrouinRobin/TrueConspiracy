@@ -25,6 +25,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ETC_CardType _slotCardType;
 
+	UPROPERTY(VisibleAnywhere)
+	ATC_Card* _slotCard;
+
 protected:
 
 public:
@@ -57,6 +60,6 @@ public:
 
 private:
 	ATC_BoardSlot* _slotBoardSlot;
-	ATC_Card* _slotCard;
+	
 	//ETC_CardType _slotCardType;
 };

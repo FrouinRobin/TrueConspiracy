@@ -50,7 +50,7 @@ ATC_Player* ATC_Board::GetBoardPlayer()
 	return _boardPlayer;
 }
 
-TArray<ATC_BoardSlot*> ATC_Board::GetBoardSlots()
+TArray<ATC_BoardSlot*>& ATC_Board::GetBoardSlots()
 {
 	return _boardSlots;
 }

@@ -152,29 +152,31 @@ void TC_ActionsSystem::DrawCard(TC_GameStates& InGameState, const FAIActions& In
 		return;
 	}
 
-	//DrawCard from last index on the list
-	ATC_Card* DrawnCard = CurrentPlayerBoard->GetBoardDraw()->GetDrawDeckGameFirstCard();
+	////DrawCard from last index on the list
+	//ATC_Card* DrawnCard = CurrentPlayerBoard->GetBoardDraw()->GetDrawDeckGameFirstCard();
 
-	if (!DrawnCard)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Carte invalide."));
-		return;
-	}
+	//if (!DrawnCard)
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("DrawCard : Carte invalide."));
+	//	return;
+	//}
 
-	//Adding card to hand
-	bool isCardAdded = ActivePlayer->AddCardToHand(DrawnCard->GetClass());
+	////Adding card to hand
+	//bool isCardAdded = ActivePlayer->AddCardToHand(DrawnCard->GetClass());
 
-	if (isCardAdded)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Carte %s ajoutée à la main."), *DrawnCard->GetName());
-		CurrentPlayerBoard->OnDrawCard(DrawnCard);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("DrawCard : Échec lors de l'ajout à la main. %s"), *DrawnCard->GetName());
-	}
+	//if (isCardAdded)
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("DrawCard : Carte %s ajoutée à la main."), *DrawnCard->GetName());
+	//	CurrentPlayerBoard->OnDrawCard(DrawnCard);
+	//}
+	//else
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("DrawCard : Échec lors de l'ajout à la main. %s"), *DrawnCard->GetName());
+	//}
 
-	ActivePlayer->ShowHandOnCamera();
+	//ActivePlayer->ShowHandOnCamera();
+
+	ActivePlayer->DrawCardFromDeck();
 }
 
 void TC_ActionsSystem::MoveCard(TC_GameStates& InGameState, const FAIActions& InAction)

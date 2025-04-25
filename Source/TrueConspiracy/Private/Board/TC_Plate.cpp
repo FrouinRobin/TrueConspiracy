@@ -71,7 +71,7 @@ ATC_Board* ATC_Plate::GetBoardByPlayer(ATC_Player* PlayerRef)
 	return PlayerBoard;
 }
 
-TArray<ATC_LandCardSlot*> ATC_Plate::GetLandCardSlots()
+TArray<ATC_LandCardSlot*>& ATC_Plate::GetLandCardSlots()
 {
 	return _landCardSlots;
 }
@@ -81,7 +81,7 @@ ATC_LandCardSlot* ATC_Plate::GetLandCardSlotAtIndex(int index)
 	return _landCardSlots[index];
 }
 
-TArray<ATC_Board*> ATC_Plate::GetPlateBoard()
+TArray<ATC_Board*>& ATC_Plate::GetPlateBoard()
 {
 	return _plateBoard;
 }

@@ -40,7 +40,7 @@ ATC_Board* ATC_BoardSlot::GetBoardSlotBoard()
 	return _boardSlotBoard;
 }
 
-TArray<ATC_Slot*> ATC_BoardSlot::GetBoardSlotSlots()
+TArray<ATC_Slot*>& ATC_BoardSlot::GetBoardSlotSlots()
 {
 	return _boardSlotSlots;
 }
