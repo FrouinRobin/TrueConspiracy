@@ -369,8 +369,67 @@ void ATC_Player::SwitchFace(ATC_Card* Card)
 	Card->SwitchPhase();
 }
 
+void ATC_Player::ServerPlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
+{
+}
+
+void ATC_Player::ServerPlayCard_Implementation(ATC_Card* InCard, ATC_Slot* InSlot)
+{
+	if (!InCard || !InSlot)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ServerPlayCard: Invalid parameters (card or slot)."));
+		return;
+	}
+
+	// Create the PlayAction
+	FAIActions PlayAction(EActionType::PlayCard);
+	PlayAction.CardInHand = InCard;
+	PlayAction.PlayingSlot = InSlot;
+	PlayAction.CardinHandIndex = _playerHand.Find(InCard);
+
+	PlayAction.BoardSlotIndex = InSlot->GetSlotBoardSlot()->GetBoardSlotBoard()->GetBoardSlots().Find(InSlot->GetSlotBoardSlot());
+	PlayAction.BoardSlotCardIndex = InSlot->GetSlotBoardSlot()->GetBoardSlotSlots().Find(InSlot);
+
+	InSlot->SetSlotCard(InCard);
+	InCard->SetSlot(InSlot);
+
+	UE_LOG(LogTemp, Warning, TEXT("Server - placing card %s "), *InCard->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("Server - slot %s "), *InSlot->GetName());
+
+	// SPAWN THE CARD ON SERVER
+	ATC_Card* SpawnedCard = GetWorld()->SpawnActor<ATC_Card>(InCard->GetClass(), InSlot->sceneComponent->GetRelativeLocation(), InSlot->sceneComponent->GetRelativeRotation());
+	if (SpawnedCard)
+	{
+		SpawnedCard->SetPlayer(this);
+		SpawnedCard->AttachToActor(InSlot, FAttachmentTransformRules::KeepWorldTransform);
+		SpawnedCard->Init();
+		RemoveCardFromHand(InCard);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to spawn card on server."));
+	}
+
+	// Update the GameManager
+	AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
+	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
+	if (GameManager)
+	{
+		GameManager->GetCurrentGameState().ApplyAction(PlayAction);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("ServerPlayCard: GameManager not found."));
+	}
+}
+
 void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 {
+
+	if (IsOnline)
+	{
+		ServerPlayCard(InCard, InSlot);
+	}
 	//ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(Card->GetClass(), FVector(Slot->GetActorLocation().X, Slot->GetActorLocation().Y, Slot->GetActorLocation().Z + 1), Slot->GetActorRotation());
 	/*AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
 	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
@@ -402,18 +461,19 @@ void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 	Card->SetPlayer(this);
 	Card->AttachToActor(InSlot, FAttachmentTransformRules::KeepWorldTransform);
 	Card->Init();
-	// R�cup�re le GameManager actif
-	//AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
-	//ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
-	//if (!GameManager)
-	//{
-	//	UE_LOG(LogTemp, Error, TEXT("PlayCard: GameManager introuvable."));
-	//	return;
-	//}
-
-	//// Applique l'action au GameState actuel
-	//GameManager->GetCurrentGameState().ApplyAction(PlayAction);
 	RemoveCardFromHand(InCard);
+	// R�cup�re le GameManager actif
+	AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
+	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
+	if (!GameManager)
+	{
+		UE_LOG(LogTemp, Error, TEXT("PlayCard: GameManager introuvable."));
+		return;
+	}
+
+	// Applique l'action au GameState actuel
+	GameManager->GetCurrentGameState().ApplyAction(PlayAction);
+	
 }
 
 void ATC_Player::MoveCard(ATC_Card* InCard, ATC_Slot* InSlot)

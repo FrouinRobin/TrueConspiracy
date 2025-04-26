@@ -10,7 +10,7 @@
 
 ATC_BoardSlot::ATC_BoardSlot()
 {
-	//bReplicates = true;
+	bReplicates = true;
 	PrimaryActorTick.bCanEverTick = true;
 	RootComponent = this->GetRootComponent();
 

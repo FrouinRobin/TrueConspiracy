@@ -81,8 +81,8 @@ void ATC_GameManager::StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> Pl
 	GetCurrentGameState().SetPlayer1(Players[0]);
 	GetCurrentGameState().SetPlayer2(Players[1]);
 
-	GetCurrentGameState().GetGamePlate()->SetPlayerOne(GetCurrentGameState().GetPlayer1());
-	GetCurrentGameState().GetGamePlate()->SetPlayerTwo(GetCurrentGameState().GetPlayer2());
+	GetCurrentGameState().GetGamePlate()->SetPlayerOne(Players[0]);
+	GetCurrentGameState().GetGamePlate()->SetPlayerTwo(Players[1]);
 	GetCurrentGameState().GetGamePlate()->Init();
 	
 	GetCurrentGameState().SetActivePlayer(GetCurrentGameState().GetPlayer1());
@@ -370,4 +370,12 @@ void ATC_GameManager::SetCurrentGameState(TC_GameStates InCurrentGameState)
 TC_GameStates& ATC_GameManager::GetCurrentGameState()
 {
 	return _CurrentGameState;
+}
+
+void ATC_GameManager::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ATC_GameManager, Plate);
+	DOREPLIFETIME(ATC_GameManager, PlayerLogged);
 }

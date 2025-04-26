@@ -8,7 +8,7 @@
 // Sets default values
 ATC_Plate::ATC_Plate()
 {
-	//bReplicates = true;
+	bReplicates = true;
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -114,7 +114,6 @@ void ATC_Plate::Init()
 		LandCardSlot->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 		LandCardSlot->Init();
 	}
-
 	
 }
 

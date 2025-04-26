@@ -72,6 +72,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	TArray<ATC_Board*> GetPlateBoard();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void onInit();
+
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetPlayerOne(ATC_Player* newPlayerOne);
 	UFUNCTION(BlueprintCallable, Category = "Setters")

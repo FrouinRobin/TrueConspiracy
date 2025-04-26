@@ -10,7 +10,7 @@
 
 ATC_Board::ATC_Board()
 {
-    //bReplicates = true;
+    bReplicates = true;
 	PrimaryActorTick.bCanEverTick = false;
 
 
@@ -164,8 +164,8 @@ void ATC_Board::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
     ///*DATA*/
     DOREPLIFETIME(ATC_Board, _boardPlate);
     DOREPLIFETIME(ATC_Board, _boardPlayer);
-    //DOREPLIFETIME(ATC_Board, _boardDraw);
-    //DOREPLIFETIME(ATC_Board, _boardDiscard);
+    DOREPLIFETIME(ATC_Board, _boardDraw);
+    DOREPLIFETIME(ATC_Board, _boardDiscard);
     //DOREPLIFETIME(ATC_Board, _boardSlots);
 
 }

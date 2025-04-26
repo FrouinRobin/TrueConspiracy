@@ -78,8 +78,8 @@ void ATC_Slot::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetime
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	///*ANCHOR*/
-	//DOREPLIFETIME(ATC_Slot, sceneComponent);
-	//
+	DOREPLIFETIME(ATC_Slot, sceneComponent);
+	
 
 	///*DATA*/
 	DOREPLIFETIME(ATC_Slot, _slotCardType);

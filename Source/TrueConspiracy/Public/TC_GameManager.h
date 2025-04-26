@@ -22,10 +22,10 @@ protected:
 
 public:	
 	ATC_GameManager();
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	ATC_Plate* Plate;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	TArray<ATC_Player*> PlayerLogged;
 
 	virtual void Tick(float DeltaTime) override;
@@ -49,4 +49,6 @@ public:
 	// --- Setter(s) / Getter(s) ---
 	void SetCurrentGameState(TC_GameStates InCurrentGameState);
 	TC_GameStates& GetCurrentGameState();
+
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 };
