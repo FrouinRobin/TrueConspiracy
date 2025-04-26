@@ -27,6 +27,7 @@ void ATC_Card::BeginPlay()
 void ATC_Card::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
 	//switch (_cardPlayer->GetPlayerPhaseState())
 	//{
 	//	case(ETC_PhaseState::Attack):
@@ -79,6 +80,11 @@ TArray<ETC_CardAttribute>& ATC_Card::GetCardAttribute()
 ETC_CardID ATC_Card::GetCardID()
 {
 	return _cardId;
+}
+
+FString ATC_Card::GetCardName()
+{
+	return _cardName;
 }
 
 UTexture2D* ATC_Card::GetCardIllustration()
@@ -142,7 +148,7 @@ FRotator ATC_Card::GetCardAnchorRotation()
 
 void ATC_Card::SetCardCurrentFace(UTC_Face* newCurrentFace)
 {
-	_cardCurrentFace = newCurrentFace; // Met à jour d'abord !
+	_cardCurrentFace = newCurrentFace; // Met ï¿½ jour d'abord !
 
 	SetCardMaxMana(_cardCurrentFace->GetCardMana());
 	SetCardCurrentMana(_cardCurrentFace->FaceMana); // Reset complet sur les nouvelles valeurs
@@ -150,8 +156,10 @@ void ATC_Card::SetCardCurrentFace(UTC_Face* newCurrentFace)
 	SetCardCurrentScore(_cardCurrentFace->FaceScore);
 
 	GetCardAttribute().Empty();
-	SetCardAttributeList(_cardCurrentFace->FaceAttribute);
-	SetCardDescription(_cardCurrentFace->FaceDescription);
+	SetCardAttributeList(newCurrentFace->FaceAttribute);
+	SetCardDescription(newCurrentFace->FaceDescription);
+	_cardCurrentFace = newCurrentFace;
+	OnChangeStats();
 }
 
 void ATC_Card::SetCardAttackFace(UTC_AttackFace* newAttackFace)
@@ -172,11 +180,13 @@ void ATC_Card::SetCardFaceList(TArray<UTC_Face*>& newFaceList)
 void ATC_Card::SetCardType(ETC_CardType newType)
 {
 	_cardType = newType;
+	OnChangeStats();
 }
 
 void ATC_Card::SetCardAttributeList(TArray<ETC_CardAttribute>& newAttributeList)
 {
 	_cardAttribute = newAttributeList;
+	OnChangeStats();
 }
 
 void ATC_Card::SetCardID(ETC_CardID newID)
@@ -184,19 +194,28 @@ void ATC_Card::SetCardID(ETC_CardID newID)
 	_cardId = newID;
 }
 
+void ATC_Card::SetCardName(FString newName)
+{
+	_cardName = newName;
+	OnChangeStats();
+}
+
 void ATC_Card::SetCardIllustration(UTexture2D* newImage)
 {
 	_cardIllustration = newImage;
+	OnChangeStats();
 }
 
 void ATC_Card::SetCardBackground(UTexture2D* newImage)
 {
 	_cardBackground = newImage;
+	OnChangeStats();
 }
 
 void ATC_Card::SetCardDescription(FString newDescription)
 {
 	_cardDescription = newDescription;
+	OnChangeStats();
 }
 
 void ATC_Card::SetCardMaxMana(float newMana)
@@ -207,6 +226,7 @@ void ATC_Card::SetCardMaxMana(float newMana)
 void ATC_Card::SetCardCurrentMana(float newMana)
 {
 	_cardCurrentMana = newMana;
+	OnChangeStats();
 }
 
 void ATC_Card::SetCardMaxScore(float newScore)
@@ -217,6 +237,7 @@ void ATC_Card::SetCardMaxScore(float newScore)
 void ATC_Card::SetCardCurrentScore(float newScore)
 {
 	_cardCurrentScore = newScore;
+	OnChangeStats();
 }
 
 void ATC_Card::SetPlayer(ATC_Player* newPlayer)
@@ -313,4 +334,9 @@ void ATC_Card::AssignCardMaterialsAndTextures(
 void ATC_Card::SetTexture()
 {
 	OnCardSetTexture();
+}
+
+void ATC_Card::UpdateCardUIFunc(FTC_CardDataStruct CardData, UTC_CardIfoGameWiget* widget)
+{
+	widget->OnUpdateCardData(CardData);
 }
