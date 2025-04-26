@@ -61,7 +61,7 @@ UTC_DefendFace* ATC_Card::GetCardDefendFace()
 	return CardDefendFace;
 }
 
-TArray<UTC_Face*> ATC_Card::GetCardFaceList()
+TArray<UTC_Face*>& ATC_Card::GetCardFaceList()
 {
 	return _cardFaceList;
 }
@@ -71,7 +71,7 @@ ETC_CardType ATC_Card::GetCardType()
 	return _cardType;
 }
 
-TArray<ETC_CardAttribute> ATC_Card::GetCardAttribute()
+TArray<ETC_CardAttribute>& ATC_Card::GetCardAttribute()
 {
 	return _cardAttribute;
 }
@@ -164,7 +164,7 @@ void ATC_Card::SetCardDefendFace(UTC_DefendFace* newDefendFace)
 	CardDefendFace = newDefendFace;
 }
 
-void ATC_Card::SetCardFaceList(TArray<UTC_Face*> newFaceList)
+void ATC_Card::SetCardFaceList(TArray<UTC_Face*>& newFaceList)
 {
 	_cardFaceList = newFaceList;
 }
@@ -174,7 +174,7 @@ void ATC_Card::SetCardType(ETC_CardType newType)
 	_cardType = newType;
 }
 
-void ATC_Card::SetCardAttributeList(TArray<ETC_CardAttribute> newAttributeList)
+void ATC_Card::SetCardAttributeList(TArray<ETC_CardAttribute>& newAttributeList)
 {
 	_cardAttribute = newAttributeList;
 }

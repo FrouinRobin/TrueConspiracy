@@ -120,7 +120,7 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 		//UE_LOG(LogTemp, Log, TEXT("PlayCard: SelectedCard Destroyed."));
 	}
 
-	//SpawnedCard->OnCardPlace();
+	SpawnedCard->OnCardPlace();
 }
 
 void TC_ActionsSystem::DrawCard(TC_GameStates& InGameState, const FAIActions& InAction)
