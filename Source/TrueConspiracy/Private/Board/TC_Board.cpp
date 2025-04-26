@@ -33,8 +33,6 @@ ATC_Board::ATC_Board()
 
     BoardDiscardAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("BoardDiscardAnchor"));
     BoardDiscardAnchor->SetupAttachment(MainAnchor);
-
-
 }
 
 void ATC_Board::BeginPlay()
@@ -52,7 +50,7 @@ ATC_Player* ATC_Board::GetBoardPlayer()
 	return _boardPlayer;
 }
 
-TArray<ATC_BoardSlot*> ATC_Board::GetBoardSlots()
+TArray<ATC_BoardSlot*>& ATC_Board::GetBoardSlots()
 {
 	return _boardSlots;
 }
@@ -145,5 +143,4 @@ void ATC_Board::Init()
         BoardSlot->SetBoardSlotBoard(this);
         BoardSlot->Init();
     }
-    
 }

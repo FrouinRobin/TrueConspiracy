@@ -28,4 +28,10 @@ public:
 
    UFUNCTION(BlueprintPure, Category = "Checking")
    bool IsSlotAcceptingCard(ATC_Slot* Slot, ATC_Card* Card) const;
+   
+   UFUNCTION(BlueprintPure, Category = "Checking")
+   bool IsSlotPlayer(ATC_Slot* Slot, ATC_Card* Card);
+   
+   UFUNCTION(BlueprintPure, Category = "Checking")
+   bool HasEnoughMana(ATC_Card* Card);
 };

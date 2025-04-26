@@ -40,7 +40,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Properties")
 	ETC_CardType _cardType;
 
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -154,6 +153,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnCardRotate();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnCardSetTexture();
+
 
 	/*OTHER FUNCTION*/
 
@@ -174,6 +176,16 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Init();
+
+	UFUNCTION(BlueprintCallable, Category = "Card")
+	void AssignCardMaterialsAndTextures(
+		UMaterialInterface* InAttackMaterial, FName InAttackTextureParam, UTexture2D* InAttackTexture,
+		UMaterialInterface* InDefenseMaterial, FName InDefenseTextureParam, UTexture2D* InDefenseTexture);
+
+	UFUNCTION(CallInEditor, Category = "Set Texture")
+	void SetTexture();
+
+
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	UTC_Face* _cardCurrentFace;
@@ -192,16 +204,19 @@ private:
 	UTexture2D* _cardBackground;
 	FString _cardDescription;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	uint8 _cardMaxMana;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	uint8 _cardCurrentMana;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	uint8 _cardMaxScore;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
 	uint8 _cardCurrentScore;
 
 	ATC_Player* _cardPlayer;
 	ATC_Slot* _cardSlot;
+
+	UMaterialInstanceDynamic* AttackMaterialInstance;
+	UMaterialInstanceDynamic* DefenseMaterialInstance;
 
 };

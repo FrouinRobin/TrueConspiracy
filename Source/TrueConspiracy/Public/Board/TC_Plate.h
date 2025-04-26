@@ -56,12 +56,12 @@ public:
 	ATC_Board* GetBoardByPlayer(ATC_Player* PlayerRef);
 
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	TArray<ATC_LandCardSlot*> GetLandCardSlots();
+	TArray<ATC_LandCardSlot*>& GetLandCardSlots();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_LandCardSlot* GetLandCardSlotAtIndex(int index);
 
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	TArray<ATC_Board*> GetPlateBoard();
+	TArray<ATC_Board*>& GetPlateBoard();
 
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetPlayerOne(ATC_Player* newPlayerOne);

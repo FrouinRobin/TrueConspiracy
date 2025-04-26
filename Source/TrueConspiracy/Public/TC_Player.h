@@ -131,8 +131,8 @@ public:
 
 	// === Other Functions ===
 
-	UFUNCTION(BlueprintCallable, Category = "Getter")
-	bool CanPlayCard(ATC_Card* card);
+	/*UFUNCTION(BlueprintCallable, Category = "Getter")
+	bool CanPlayCard(ATC_Card* card);*/
 
 	UFUNCTION(BlueprintCallable)
 	bool AddCardToDeck(TSubclassOf<ATC_Card> card);
@@ -160,6 +160,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void RemoveCardFromDeck(ATC_Card* Card);
+
+	UFUNCTION(BlueprintCallable)
+	void DrawCardFromDeck();
 
 	UFUNCTION(BlueprintCallable)
 	bool CanPlaceCardOnSlot(ATC_Card* Card, ATC_Slot* Slot);

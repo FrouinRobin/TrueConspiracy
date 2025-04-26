@@ -50,7 +50,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_Player* GetBoardPlayer();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	TArray<ATC_BoardSlot*> GetBoardSlots();
+	TArray<ATC_BoardSlot*>& GetBoardSlots();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_DrawDeck* GetBoardDraw();
 	UFUNCTION(BlueprintCallable, Category = "Getters")

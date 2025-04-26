@@ -46,6 +46,10 @@ public:
 	ATC_Card* GetDrawDeckDataLastCard();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_Card* GetDrawDeckGameFirstCard();
+
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	ATC_Card* DrawCard();
+
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_Card* GetDrawDeckGameCardAtIndex(int index);
 	UFUNCTION(BlueprintCallable, Category = "Getters")

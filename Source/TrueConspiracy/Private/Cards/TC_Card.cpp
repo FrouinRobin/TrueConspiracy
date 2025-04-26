@@ -27,7 +27,21 @@ void ATC_Card::BeginPlay()
 void ATC_Card::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+	//switch (_cardPlayer->GetPlayerPhaseState())
+	//{
+	//	case(ETC_PhaseState::Attack):
+	//	{
+	//		SetCardCurrentFace(CardDefendFace);
+	//		break;
+	//	}
+	//	case(ETC_PhaseState::Defense):
+	//	{
+	//		SetCardCurrentFace(CardAttackFace);
+	//		break;
+	//	}
+	//default:
+	//	break;
+	//}
 }
 
 /*GETTER*/
@@ -47,7 +61,7 @@ UTC_DefendFace* ATC_Card::GetCardDefendFace()
 	return CardDefendFace;
 }
 
-TArray<UTC_Face*>& ATC_Card::GetCardFaceList()
+TArray<UTC_Face*> ATC_Card::GetCardFaceList()
 {
 	return _cardFaceList;
 }
@@ -57,7 +71,7 @@ ETC_CardType ATC_Card::GetCardType()
 	return _cardType;
 }
 
-TArray<ETC_CardAttribute>& ATC_Card::GetCardAttribute()
+TArray<ETC_CardAttribute> ATC_Card::GetCardAttribute()
 {
 	return _cardAttribute;
 }
@@ -128,15 +142,16 @@ FRotator ATC_Card::GetCardAnchorRotation()
 
 void ATC_Card::SetCardCurrentFace(UTC_Face* newCurrentFace)
 {
-	
-	SetCardMaxMana(_cardCurrentFace->GetCardMana());
-	SetCardCurrentMana(newCurrentFace->GetCardMana() - (GetCardMaxMana() - GetCardCurrentMana()));
-	SetCardCurrentScore(newCurrentFace->GetCardScore() - (GetCardMaxScore() - GetCardCurrentScore()));
-	GetCardAttribute().Empty();
-	SetCardAttributeList(newCurrentFace->GetFaceAttribute());
-	SetCardDescription(newCurrentFace->GetCardDescription());
-	_cardCurrentFace = newCurrentFace;
+	_cardCurrentFace = newCurrentFace; // Met à jour d'abord !
 
+	SetCardMaxMana(_cardCurrentFace->GetCardMana());
+	SetCardCurrentMana(_cardCurrentFace->FaceMana); // Reset complet sur les nouvelles valeurs
+	SetCardMaxScore(_cardCurrentFace->FaceScore);
+	SetCardCurrentScore(_cardCurrentFace->FaceScore);
+
+	GetCardAttribute().Empty();
+	SetCardAttributeList(_cardCurrentFace->FaceAttribute);
+	SetCardDescription(_cardCurrentFace->FaceDescription);
 }
 
 void ATC_Card::SetCardAttackFace(UTC_AttackFace* newAttackFace)
@@ -149,7 +164,7 @@ void ATC_Card::SetCardDefendFace(UTC_DefendFace* newDefendFace)
 	CardDefendFace = newDefendFace;
 }
 
-void ATC_Card::SetCardFaceList(TArray<UTC_Face*>& newFaceList)
+void ATC_Card::SetCardFaceList(TArray<UTC_Face*> newFaceList)
 {
 	_cardFaceList = newFaceList;
 }
@@ -159,7 +174,7 @@ void ATC_Card::SetCardType(ETC_CardType newType)
 	_cardType = newType;
 }
 
-void ATC_Card::SetCardAttributeList(TArray<ETC_CardAttribute>& newAttributeList)
+void ATC_Card::SetCardAttributeList(TArray<ETC_CardAttribute> newAttributeList)
 {
 	_cardAttribute = newAttributeList;
 }
@@ -260,7 +275,42 @@ void ATC_Card::Init()
 	{
 	case(ETC_PhaseState::Attack):
 		SetCardCurrentFace(GetCardAttackFace());
+		break;
 	case(ETC_PhaseState::Defense):
 		SetCardCurrentFace(GetCardDefendFace());
+		break;
 	}
+}
+
+void ATC_Card::AssignCardMaterialsAndTextures(
+	UMaterialInterface* InAttackMaterial, FName InAttackTextureParam, UTexture2D* InAttackTexture,
+	UMaterialInterface* InDefenseMaterial, FName InDefenseTextureParam, UTexture2D* InDefenseTexture)
+{
+	UMaterialInstanceDynamic* LocalAttackMaterialInstance = UMaterialInstanceDynamic::Create(InAttackMaterial, this);
+	UMaterialInstanceDynamic* LocalDefenseMaterialInstance = UMaterialInstanceDynamic::Create(InDefenseMaterial, this);
+
+	if (LocalAttackMaterialInstance && InAttackTexture)
+	{
+		LocalAttackMaterialInstance->SetTextureParameterValue(InAttackTextureParam, InAttackTexture);
+		CardMesh->SetMaterial(0, LocalAttackMaterialInstance);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Attack texture is not valid."));
+	}
+
+	if (LocalDefenseMaterialInstance && InDefenseTexture)
+	{
+		LocalDefenseMaterialInstance->SetTextureParameterValue(InDefenseTextureParam, InDefenseTexture);
+		CardMesh->SetMaterial(2, LocalDefenseMaterialInstance);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Defense texture is not valid."));
+	}
+}
+
+void ATC_Card::SetTexture()
+{
+	OnCardSetTexture();
 }

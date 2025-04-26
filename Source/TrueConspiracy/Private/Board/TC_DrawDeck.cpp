@@ -83,6 +83,23 @@ ATC_Card* ATC_DrawDeck::GetDrawDeckGameFirstCard()
     return nullptr;
 }
 
+ATC_Card* ATC_DrawDeck::DrawCard()
+{
+    if (_drawDeck.Num() > 0)
+    {
+        ATC_Card* CardToDraw = _drawDeck.Last();
+        _drawDeck.RemoveSingle(CardToDraw);
+
+        if (IsValid(CardToDraw))
+        {
+            CardToDraw->Destroy();
+        }
+
+        return CardToDraw;
+    }
+    return nullptr;
+}
+
 ATC_Card* ATC_DrawDeck::GetDrawDeckGameCardAtIndex(int index)
 {
     if (index >= 0 && index < _drawDeck.Num())
