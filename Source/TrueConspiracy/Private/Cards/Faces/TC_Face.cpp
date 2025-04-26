@@ -75,7 +75,7 @@ UTC_EffectType* UTC_Face::FindEffectOfType(TArray<UTC_EffectType*> FaceEffectLis
 {
 	for (UTC_EffectType* EffectType : FaceEffectList)
 	{
-		if (EffectType->IsA(EffectTypeToFind))
+		if (EffectType != nullptr && EffectType->IsA(EffectTypeToFind))
 		{
 			return EffectType;
 		}
