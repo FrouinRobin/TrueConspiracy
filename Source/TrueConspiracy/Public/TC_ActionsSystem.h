@@ -33,4 +33,7 @@ public:
 	//static void EndTurn(TC_GameStates& InGameState, ATC_Player* InCurrentPlayer);
 	//static void ApplyAction(TC_GameStates& InGameState, const FAIActions& InAction, ATC_Player* InCurrentPlayer);
 	//static bool IsActionValid(const TC_GameStates& InGameState, const FAIAction& InAction);
+
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	//static USoundBase* CardPlaceSound;
 };

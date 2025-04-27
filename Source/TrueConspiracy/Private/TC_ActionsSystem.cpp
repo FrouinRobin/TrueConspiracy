@@ -110,6 +110,15 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 		return;
 	}
 
+	if (SpawnedCard)
+	{
+		if (SpawnedCard->CardPlaceSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(SpawnedCard, SpawnedCard->CardPlaceSound, SpawnedCard->GetActorLocation());
+			UE_LOG(LogTemp, Warning, TEXT("PlayCard: PlaySound."));
+		}
+	}
+
 	InAction.PlayingSlot->SetSlotCard(InAction.CardInHand);
 	InAction.CardInHand->SetSlot(InAction.PlayingSlot);
 
