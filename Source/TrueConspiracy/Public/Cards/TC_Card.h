@@ -16,7 +16,7 @@
 
 class ATC_Player;
 
-UCLASS()
+UCLASS(Blueprintable, BlueprintType)
 class TRUECONSPIRACY_API ATC_Card : public AActor
 {
 	GENERATED_BODY()
