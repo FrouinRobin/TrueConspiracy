@@ -184,10 +184,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool AddCardToHand(TSubclassOf<ATC_Card> card);
 
-
+	UFUNCTION(Server, Reliable)
 	void ServerPlayCard(ATC_Card* InCard, ATC_Slot* InSlot);
 
 	void ServerPlayCard_Implementation(ATC_Card* InCard, ATC_Slot* InSlot);
+
 	UFUNCTION(BlueprintCallable)
 	void PlayCard(ATC_Card* InCard, ATC_Slot* InSlot);
 
