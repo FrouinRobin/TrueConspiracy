@@ -18,32 +18,41 @@ public:
 	// Sets default values for this actor's properties
 	ATC_Plate();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "SceneRoot")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "SceneRoot"/*, Replicated*/)
 	USceneComponent* SceneComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh"/*, Replicated*/)
 	UStaticMeshComponent* PlateMesh;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardPlayerOneAnchor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardPlayerOneAnchor"/*, Replicated*/)
 	USceneComponent* BoardPlayerOneAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardPlayerOneAnchor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardPlayerOneAnchor"/*, Replicated*/)
 	USceneComponent* BoardPlayerTwoAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardPlayerOneAnchor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardPlayerOneAnchor"/*, Replicated*/)
 	USceneComponent* LandCardSlotOneAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCardSlotTwoAnchor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCardSlotTwoAnchor"/*, Replicated*/)
 	USceneComponent* LandCardSlotTwoAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCardSlotThreeAnchor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCardSlotThreeAnchor"/*, Replicated*/)
 	USceneComponent* LandCardSlotThreeAnchor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCardSlotThreeAnchor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCardSlotThreeAnchor"/*, Replicated*/)
 	TSubclassOf<ATC_Board> BoardBluePrint;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCardSlotThreeAnchor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LandCardSlotThreeAnchor"/*, Replicated*/)
 	TSubclassOf<ATC_LandCardSlot> LandCardSlotBluePrint;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true), Replicated)
+	ATC_Player* _playerOne;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true), Replicated)
+	ATC_Player* _playerTwo;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true), Replicated)
+	TArray<ATC_Board*> _plateBoard;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true), Replicated)
+	TArray<ATC_LandCardSlot*> _landCardSlots;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -63,6 +72,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	TArray<ATC_Board*>& GetPlateBoard();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void onInit();
+
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetPlayerOne(ATC_Player* newPlayerOne);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
@@ -71,14 +83,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Init")
 	void Init();
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 private:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true))
-	ATC_Player* _playerOne;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true))
-	ATC_Player* _playerTwo;
-
-	TArray<ATC_Board*> _plateBoard;
-	TArray<ATC_LandCardSlot*> _landCardSlots;
 };

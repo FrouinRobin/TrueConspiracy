@@ -20,6 +20,7 @@
 ATC_Player::ATC_Player()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	bReplicates = true;
 	PrimaryActorTick.bCanEverTick = false;
 
 	MainAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("MainAnchor"));
@@ -181,6 +182,27 @@ void ATC_Player::dorotate()
 	OnChangePhaseState(ETC_PhaseState::Attack);
 }
 
+void ATC_Player::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ATC_Player, _playerRoundWon);
+	DOREPLIFETIME(ATC_Player, _playerPhaseState);
+	DOREPLIFETIME(ATC_Player, _PlayerState);
+	DOREPLIFETIME(ATC_Player, _playerBoard);
+	DOREPLIFETIME(ATC_Player, _playerHand);
+	DOREPLIFETIME(ATC_Player, _playerCurrentMana);
+	DOREPLIFETIME(ATC_Player, _playerMaxMana);
+	DOREPLIFETIME(ATC_Player, _playerSelectedCard);
+	DOREPLIFETIME(ATC_Player, _cardsWaitingTarget);
+	DOREPLIFETIME(ATC_Player, _transformTransitionTimer);
+	DOREPLIFETIME(ATC_Player, _transformTransitionTimerGoal);
+	DOREPLIFETIME(ATC_Player, _isTransformTransitionOn);
+	DOREPLIFETIME(ATC_Player, _canUseTransformTransition);
+	DOREPLIFETIME(ATC_Player, _transformTransitionGoal);
+	DOREPLIFETIME(ATC_Player, IsPossessed);
+}
+
 TArray<ATC_Card*> ATC_Player::GetCardsWaitingTargetList()
 {
 	return _cardsWaitingTarget;
@@ -244,35 +266,28 @@ bool ATC_Player::AddCardToHand(TSubclassOf<ATC_Card> card)
 {
 	if (card)
 	{
-		ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(
-			card,
-			PlayerCardAnchor->GetComponentLocation(),
-			PlayerCardAnchor->GetComponentRotation()
-		);
-
+		ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(card, PlayerCardAnchor->GetComponentLocation(), PlayerCardAnchor->GetComponentRotation());
 		_playerHand.Add(NewCard);
-
-		NewCard->AttachToComponent(
-			PlayerCardAnchor,
-			FAttachmentTransformRules(
-				EAttachmentRule::KeepRelative,
-				EAttachmentRule::KeepRelative,
-				EAttachmentRule::KeepWorld,
-				true
-			)
-		);
-
+		NewCard->AttachToComponent(PlayerCardAnchor, FAttachmentTransformRules(EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, true));
 		NewCard->SetPlayer(this);
-
-		NewCard->CardAnchor->SetRelativeRotation(FRotator(-69.f, 180.f, 0.f));
+		if (_playerPhaseState == ETC_PhaseState::Attack)
+		{
+			NewCard->CardAnchor->SetRelativeRotation(FRotator(-69.f, 180.f + NewCard->CardAnchor->GetRelativeRotation().Roll, 0.f));
+			NewCard->SetCardCurrentFace(NewCard->GetCardAttackFace());
+		}
+		else
+		{
+			NewCard->CardAnchor->SetRelativeRotation(FRotator(-69.f, 180.f + NewCard->CardAnchor->GetRelativeRotation().Roll, 180.f));
+		}
+		
 		NewCard->CardAnchor->UpdateComponentToWorld();
 		NewCard->Init();
 	}
 
+
 	ShowHandOnCamera();
 	return true;
 }
-
 
 bool ATC_Player::AddCardToDeck(TSubclassOf<ATC_Card> card)
 {
@@ -287,20 +302,14 @@ void ATC_Player::ShowHandOnCamera()
 	for (size_t i = 0; i < _playerHand.Num(); i++)
 	{
 		auto card = _playerHand[i];
-		if (!card)
-		{
-			//UE_LOG(LogTemp, Error, TEXT("ShowHandOnCamera: Carte %d dans la main est NULL !"), i);
-			return;
-		}
-
 		card->SetActorRelativeLocation(FVector::ZeroVector);
 
 		FVector origin;
 		FVector box;
 		card->GetActorBounds(false, origin, box, false);
 
-		//UE_LOG(LogTemp, Warning, TEXT("Origin is %s"), *origin.ToString());
-		//UE_LOG(LogTemp, Warning, TEXT("Box is %s"), *box.ToString());
+		UE_LOG(LogTemp, Warning, TEXT("Origin is %s"), *origin.ToString());
+		UE_LOG(LogTemp, Warning, TEXT("Box is %s"), *box.ToString());
 
 		FVector base = FVector::ZeroVector;
 		if (PlayerDeck.Num() % 2 == 0)
@@ -312,10 +321,10 @@ void ATC_Player::ShowHandOnCamera()
 	}
 }
 
-//bool ATC_Player::CanPlayCard(ATC_Card* card)
-//{
-//	return card->GetCardCurrentMana() >= GetPlayerCurrentMana();
-//}
+bool ATC_Player::CanPlayCard(ATC_Card* card)
+{
+	return card->GetCardCurrentMana() >= GetPlayerCurrentMana();
+}
 
 //TSubclassOf<ATC_Card> ATC_Player::FindCardClassFromInstance(ATC_Card* InstanceCard)
 //{
@@ -349,20 +358,10 @@ void ATC_Player::RemoveCardFromDeck(ATC_Card* Card)
 	TSubclassOf<ATC_Card> CardClass = Card->GetClass();
 
 	if (!PlayerDeck.Contains(CardClass)) return;
+
 	PlayerDeck.Remove(CardClass);
 	Card->Destroy();
 	ShowHandOnCamera();
-}
-
-void ATC_Player::DrawCardFromDeck()
-{
-	ATC_Card* CardToDraw = _playerBoard->GetBoardDraw()->DrawCard();
-	if (CardToDraw)
-	{
-		TSubclassOf<ATC_Card> CardClass = CardToDraw->GetClass();
-		RemoveCardFromDeck(CardToDraw);
-		AddCardToHand(CardClass);
-	}
 }
 
 void ATC_Player::SwitchFace(ATC_Card* Card)
@@ -370,8 +369,77 @@ void ATC_Player::SwitchFace(ATC_Card* Card)
 	Card->SwitchPhase();
 }
 
+void ATC_Player::ServerPlayCard_Implementation(ATC_Card* InCard, ATC_Slot* InSlot)
+{
+	if (!InCard || !InSlot)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ServerPlayCard: Invalid parameters (card or slot)."));
+		return;
+	}
+	AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
+	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
+	if (!GameManager)
+	{
+		return;
+	}
+	if(GameManager->GetCurrentGameState().GetActivePlayer() != this)
+	{
+		SetPlayerState(ETC_PlayerState::SELECTHAND);
+		SetPlayerSelectedCard(nullptr);
+		return;
+	}
+	else
+	{
+		// Create the PlayAction
+		FAIActions PlayAction(EActionType::PlayCard);
+		PlayAction.CardInHand = InCard;
+		PlayAction.PlayingSlot = InSlot;
+		PlayAction.CardinHandIndex = _playerHand.Find(InCard);
+
+		PlayAction.BoardSlotIndex = InSlot->GetSlotBoardSlot()->GetBoardSlotBoard()->GetBoardSlots().Find(InSlot->GetSlotBoardSlot());
+		PlayAction.BoardSlotCardIndex = InSlot->GetSlotBoardSlot()->GetBoardSlotSlots().Find(InSlot);
+
+		InSlot->SetSlotCard(InCard);
+		InCard->SetSlot(InSlot);
+
+		UE_LOG(LogTemp, Warning, TEXT("Server - placing card %s "), *InCard->GetName());
+		UE_LOG(LogTemp, Warning, TEXT("Server - slot %s "), *InSlot->GetName());
+
+		// SPAWN THE CARD ON SERVER
+		ATC_Card* SpawnedCard = GetWorld()->SpawnActor<ATC_Card>(InCard->GetClass(), InSlot->sceneComponent->GetRelativeLocation(), InSlot->sceneComponent->GetRelativeRotation());
+		if (SpawnedCard)
+		{
+			SpawnedCard->SetPlayer(this);
+			SpawnedCard->AttachToActor(InSlot, FAttachmentTransformRules::KeepWorldTransform);
+			SpawnedCard->Init();
+			RemoveCardFromHand(InCard);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Failed to spawn card on server."));
+		}
+
+		// Update the GameManager
+
+		if (GameManager)
+		{
+			GameManager->GetCurrentGameState().ApplyAction(PlayAction);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("ServerPlayCard: GameManager not found."));
+		}
+	}
+	
+}
+
 void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 {
+
+	if (IsOnline)
+	{
+		ServerPlayCard(InCard, InSlot);
+	}
 	//ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(Card->GetClass(), FVector(Slot->GetActorLocation().X, Slot->GetActorLocation().Y, Slot->GetActorLocation().Z + 1), Slot->GetActorRotation());
 	/*AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
 	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
@@ -380,7 +448,7 @@ void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 
 	if (!InCard || !InSlot)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("PlayCard: Parametre invalide (carte ou slot)."));
+		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Parametre invalide (carte ou slot)."));
 		return;
 	}
 
@@ -396,29 +464,33 @@ void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 	InSlot->SetSlotCard(InCard);
 	InCard->SetSlot(InSlot);
 
-	//UE_LOG(LogTemp, Warning, TEXT("la carte %s "), *InCard->GetName());
-	//UE_LOG(LogTemp, Warning, TEXT("Place at slot %s "), *InSlot->GetName());
-	//UE_LOG(LogTemp, Warning, TEXT("so Slot have card %s "), *InSlot->GetSlotCard()->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("la carte %s "), *InCard->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("Place at slot %s "), *InSlot->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("so Slot have card %s "), *InSlot->GetSlotCard()->GetName());
+	ATC_Card* Card = GetWorld()->SpawnActor<ATC_Card>(InCard->GetClass(), InSlot->sceneComponent->GetRelativeLocation(), InSlot->sceneComponent->GetRelativeRotation());
+	Card->SetPlayer(this);
+	Card->AttachToActor(InSlot, FAttachmentTransformRules::KeepWorldTransform);
+	Card->Init();
+	RemoveCardFromHand(InCard);
 	// R�cup�re le GameManager actif
 	AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
 	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
 	if (!GameManager)
 	{
-		//UE_LOG(LogTemp, Error, TEXT("PlayCard: GameManager introuvable."));
+		UE_LOG(LogTemp, Error, TEXT("PlayCard: GameManager introuvable."));
 		return;
 	}
 
 	// Applique l'action au GameState actuel
 	GameManager->GetCurrentGameState().ApplyAction(PlayAction);
-	RemoveCardFromHand(InCard);
-	UE_LOG(LogTemp, Error, TEXT("Player Mana %d"), GetPlayerCurrentMana());
+	
 }
 
 void ATC_Player::MoveCard(ATC_Card* InCard, ATC_Slot* InSlot)
 {
 	if (!InCard || !InSlot)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("MoveCard: Parametre invalide (carte ou slot)."));
+		UE_LOG(LogTemp, Warning, TEXT("MoveCard: Parametre invalide (carte ou slot)."));
 		return;
 	}
 
@@ -437,7 +509,7 @@ void ATC_Player::MoveCard(ATC_Card* InCard, ATC_Slot* InSlot)
 	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
 	if (!GameManager)
 	{
-		//UE_LOG(LogTemp, Error, TEXT("PlayCard: GameManager introuvable."));
+		UE_LOG(LogTemp, Error, TEXT("PlayCard: GameManager introuvable."));
 		return;
 	}
 

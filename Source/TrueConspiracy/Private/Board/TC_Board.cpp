@@ -10,6 +10,7 @@
 
 ATC_Board::ATC_Board()
 {
+    bReplicates = true;
 	PrimaryActorTick.bCanEverTick = false;
 
 
@@ -33,6 +34,8 @@ ATC_Board::ATC_Board()
 
     BoardDiscardAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("BoardDiscardAnchor"));
     BoardDiscardAnchor->SetupAttachment(MainAnchor);
+
+
 }
 
 void ATC_Board::BeginPlay()
@@ -50,7 +53,7 @@ ATC_Player* ATC_Board::GetBoardPlayer()
 	return _boardPlayer;
 }
 
-TArray<ATC_BoardSlot*>& ATC_Board::GetBoardSlots()
+TArray<ATC_BoardSlot*> ATC_Board::GetBoardSlots()
 {
 	return _boardSlots;
 }
@@ -125,17 +128,16 @@ TArray<TSubclassOf<ATC_Card>> ATC_Board::ShuffleCard(TArray<TSubclassOf<ATC_Card
 
 void ATC_Board::Init()
 {
-    _boardDraw = GetWorld()->SpawnActor<ATC_DrawDeck>(DrawDeckBluePrint, BoardDrawAnchor->GetComponentLocation(), BoardDrawAnchor->GetComponentRotation());
+    
+    
     _boardDraw->SetDrawDeckPlayer(GetBoardPlayer());
     _boardDraw->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
     _boardDraw->SetDrawDeckBoard(this);
     _boardDraw->Init(GetBoardPlayer()->GetDeck());
-    _boardDiscard = GetWorld()->SpawnActor<ATC_DiscardDeck>(DiscardDeckBluePrint, BoardDiscardAnchor->GetComponentLocation(), BoardDiscardAnchor->GetComponentRotation());
+    
     _boardDiscard->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
     _boardDiscard->SetDiscardDeckBoard(this);
-    _boardSlots.Add(GetWorld()->SpawnActor<ATC_BoardSlot>(BoardSlotBluePrint, BoardSlotOneAnchor->GetComponentLocation(), BoardSlotOneAnchor->GetComponentRotation()));
-    _boardSlots.Add(GetWorld()->SpawnActor<ATC_BoardSlot>(BoardSlotBluePrint, BoardSlotTwoAnchor->GetComponentLocation(), BoardSlotTwoAnchor->GetComponentRotation()));
-    _boardSlots.Add(GetWorld()->SpawnActor<ATC_BoardSlot>(BoardSlotBluePrint, BoardSlotThreeAnchor->GetComponentLocation(), BoardSlotThreeAnchor->GetComponentRotation()));
+    
 
     for (ATC_BoardSlot* BoardSlot : _boardSlots)
     {
@@ -143,4 +145,27 @@ void ATC_Board::Init()
         BoardSlot->SetBoardSlotBoard(this);
         BoardSlot->Init();
     }
+}
+    
+
+
+void ATC_Board::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    ///*ANCHOR*/
+    //DOREPLIFETIME(ATC_Board, MainAnchor);
+    //DOREPLIFETIME(ATC_Board, BoardSlotOneAnchor);
+    //DOREPLIFETIME(ATC_Board, BoardSlotTwoAnchor);
+    //DOREPLIFETIME(ATC_Board, BoardSlotThreeAnchor);
+    //DOREPLIFETIME(ATC_Board, BoardDrawAnchor);
+    //DOREPLIFETIME(ATC_Board, BoardDiscardAnchor);
+
+    ///*DATA*/
+    DOREPLIFETIME(ATC_Board, _boardPlate);
+    DOREPLIFETIME(ATC_Board, _boardPlayer);
+    DOREPLIFETIME(ATC_Board, _boardDraw);
+    DOREPLIFETIME(ATC_Board, _boardDiscard);
+    //DOREPLIFETIME(ATC_Board, _boardSlots);
+
 }

@@ -10,8 +10,6 @@
 #include "TC_CardType.h"
 #include "TC_CardAttribute.h"
 #include "TC_CardID.h"
-#include "TC_CardIfoGameWiget.h"
-#include "TC_CardDataStruct.h"
 #include "TC_Card.generated.h"
 
 class ATC_Player;
@@ -24,27 +22,66 @@ class TRUECONSPIRACY_API ATC_Card : public AActor
 public:
 
 	ATC_Card();
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh"/*, Replicated*/)
 	USceneComponent* MainAnchor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh"/*, Replicated*/)
 	USceneComponent* CardAnchor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh", Replicated)
 	UStaticMeshComponent* CardMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category = "Card Faces")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category = "Card Faces", Replicated)
 	UTC_AttackFace* CardAttackFace;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category = "Card Faces")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category = "Card Faces", Replicated)
 	UTC_DefendFace* CardDefendFace;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Properties")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Properties", Replicated)
 	ETC_CardType _cardType;
+
+	UPROPERTY(Replicated, EditAnywhere)
+	ATC_Player* _cardPlayer;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true), Replicated)
+	UTC_Face* _cardCurrentFace;
+	UPROPERTY(Replicated)
+	TArray<UTC_Face*> _cardFaceList;
+
+	UPROPERTY(Replicated)
+	bool _isEffectActive = true;
+
+	/*UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
+	ETC_CardType _cardType;*/
+	UPROPERTY(Replicated)
+	TArray<ETC_CardAttribute> _cardAttribute;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true), Replicated)
+	ETC_CardID _cardId;
+
+	UPROPERTY(Replicated)
+	UTexture2D* _cardIllustration;
+	UPROPERTY(Replicated)
+	UTexture2D* _cardBackground;
+	UPROPERTY(Replicated)
+	FString _cardDescription;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true), Replicated)
+	uint8 _cardMaxMana;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true), Replicated)
+	uint8 _cardCurrentMana;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true), Replicated)
+	uint8 _cardMaxScore;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true), Replicated)
+	uint8 _cardCurrentScore;
+
+	
+	UPROPERTY(Replicated)
+	ATC_Slot* _cardSlot;
 
 public:
 	// Called every frame
@@ -60,15 +97,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	UTC_DefendFace* GetCardDefendFace();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	TArray<UTC_Face*>& GetCardFaceList();
+	TArray<UTC_Face*> GetCardFaceList();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ETC_CardType GetCardType();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	TArray<ETC_CardAttribute>& GetCardAttribute();
+	TArray<ETC_CardAttribute> GetCardAttribute();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ETC_CardID GetCardID();
-	UFUNCTION(BlueprintCallable, Category = "Getters")
-	FString GetCardName();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	UTexture2D* GetCardIllustration();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
@@ -95,8 +130,6 @@ public:
 	FRotator GetCardAnchorRotation();
 
 
-
-
 	/*SETTER*/
 
 	UFUNCTION(BlueprintCallable, Category = "Setters")
@@ -106,15 +139,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardDefendFace(UTC_DefendFace* newDefendFace);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetCardFaceList(TArray<UTC_Face*>& newFaceList);
+	void SetCardFaceList(TArray<UTC_Face*> newFaceList);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardType(ETC_CardType newType);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetCardAttributeList(TArray<ETC_CardAttribute>& newTypeList);
+	void SetCardAttributeList(TArray<ETC_CardAttribute> newTypeList);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardID(ETC_CardID newID);
-	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetCardName(FString newName);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
 	void SetCardIllustration(UTexture2D* newImage);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
@@ -161,12 +192,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnCardRotate();
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void OnChangeStats();
-
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void OnCardSetTexture();
-
 
 	/*OTHER FUNCTION*/
 
@@ -188,49 +213,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Init();
 
-	UFUNCTION(BlueprintCallable)
-	void UpdateCardUIFunc(FTC_CardDataStruct CardData, UTC_CardIfoGameWiget* widget);
-
-	UFUNCTION(BlueprintCallable, Category = "Card")
-	void AssignCardMaterialsAndTextures(
-		UMaterialInterface* InAttackMaterial, FName InAttackTextureParam, UTexture2D* InAttackTexture,
-		UMaterialInterface* InDefenseMaterial, FName InDefenseTextureParam, UTexture2D* InDefenseTexture);
-
-	UFUNCTION(CallInEditor, Category = "Set Texture")
-	void SetTexture();
-
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 private:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
-	UTC_Face* _cardCurrentFace;
-	TArray<UTC_Face*> _cardFaceList;
-
-	bool _isEffectActive = true;
-
-	/*UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
-	ETC_CardType _cardType;*/
-	TArray<ETC_CardAttribute> _cardAttribute;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
-	ETC_CardID _cardId;
-	FString _cardName;
-	UTexture2D* _cardIllustration;
-	UTexture2D* _cardBackground;
-	FString _cardDescription;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
-	uint8 _cardMaxMana;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
-	uint8 _cardCurrentMana;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
-	uint8 _cardMaxScore;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Properties", meta = (AllowPrivateAccess = true))
-	uint8 _cardCurrentScore;
-
-	ATC_Player* _cardPlayer;
-	ATC_Slot* _cardSlot;
-
-	UMaterialInstanceDynamic* AttackMaterialInstance;
-	UMaterialInstanceDynamic* DefenseMaterialInstance;
+	
 
 };

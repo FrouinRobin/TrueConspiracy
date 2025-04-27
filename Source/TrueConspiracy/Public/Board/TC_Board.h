@@ -6,6 +6,7 @@
 #include "Board/TC_BoardSlot.h"
 #include "Board/TC_DrawDeck.h"
 #include "Board/TC_DiscardDeck.h"
+#include "Net/UnrealNetwork.h"
 #include "TC_Board.generated.h"
 
 class ATC_Player;
@@ -20,18 +21,18 @@ public:
 
 	ATC_Board();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainAnchor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainAnchor"/*, Replicated*/)
 	USceneComponent* MainAnchor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardSlotOneAnchor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardSlotOneAnchor"/*, Replicated*/)
 	USceneComponent* BoardSlotOneAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardSlotTwoAnchor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardSlotTwoAnchor"/*, Replicated*/)
 	USceneComponent* BoardSlotTwoAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardSlotThreeAnchor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardSlotThreeAnchor"/*, Replicated*/)
 	USceneComponent* BoardSlotThreeAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardDrawAnchor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardDrawAnchor"/*, Replicated*/)
 	USceneComponent* BoardDrawAnchor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardDiscardAnchor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoardDiscardAnchor"/*, Replicated*/)
 	USceneComponent* BoardDiscardAnchor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BluePrintReference")
@@ -43,6 +44,17 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true), Replicated)
+	ATC_Plate* _boardPlate;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true), Replicated)
+	ATC_Player* _boardPlayer;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true), Replicated)
+	ATC_DrawDeck* _boardDraw;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true), Replicated)
+	ATC_DiscardDeck* _boardDiscard;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlateMesh", meta = (AllowPrivateAccess = true), Replicated)
+	TArray<ATC_BoardSlot*> _boardSlots;
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
@@ -83,11 +95,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Init")
 	void Init();
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 private:
-	ATC_Plate* _boardPlate;
-	ATC_Player* _boardPlayer;
-	ATC_DrawDeck* _boardDraw;
-	ATC_DiscardDeck* _boardDiscard;
-	TArray<ATC_BoardSlot*> _boardSlots;
+	
+
 };

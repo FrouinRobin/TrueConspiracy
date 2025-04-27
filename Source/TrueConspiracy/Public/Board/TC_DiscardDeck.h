@@ -18,15 +18,20 @@ public:
 	// Sets default values for this actor's properties
 	ATC_DiscardDeck();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Anchor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Anchor"/*, Replicated*/)
 	USceneComponent* MainAnchor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Anchor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Anchor"/*, Replicated*/)
 	USceneComponent* CardAnchor;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UPROPERTY(Replicated)
+	ATC_Board* _discardDeckBoard;
+	UPROPERTY(Replicated)
+	TArray<ATC_Card*> _discardDeck;
 
 public:
 	// Called every frame
@@ -68,8 +73,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Add")
 	void AddToDiscard(ATC_Card* CardToDiscard);
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 private:
-	ATC_Board* _discardDeckBoard;
-	TArray<ATC_Card*> _discardDeck;
+
 };

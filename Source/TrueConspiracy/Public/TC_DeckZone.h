@@ -22,8 +22,10 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
+	UPROPERTY()
 	int32 _PlayerID;
 
+	UPROPERTY()
 	TArray<ATC_Card*> _Hand;
 
 	UPROPERTY(VisibleAnywhere, Category = "DeckZone")
@@ -48,4 +50,6 @@ public:
 	ATC_Card* GetCard(float Index) const;
 
 	ATC_Card* GetCard(ATC_Card* CardRef) const;
+
+
 };
