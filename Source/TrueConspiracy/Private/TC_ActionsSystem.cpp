@@ -123,7 +123,7 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 		ATC_LandCard* SpawnedCard = GameInstance->GetWorld()->SpawnActor<ATC_LandCard>(
 			SelectedCard->GetClass(),
 			Plate->GetLandCardSlots()[InAction.LandSlotIndex]->GetActorLocation(),
-			Plate->GetLandCardSlots()[InAction.LandSlotIndex]->GetActorRotation());
+			FRotator(0));
 		SpawnedCard->SetPlayer(ActivePlayer);
 		SpawnedCard->Init();
 		InAction.PlayingLandSlot->SetLandCard(SpawnedCard);
