@@ -1,0 +1,22 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{C8CFE188-429B-F4C4-84D0-C1B3FC474E8D}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "TrueConspiracy",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "ModelingToolsEditorMode",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
+		}
+	]
+}
