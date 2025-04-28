@@ -137,8 +137,31 @@ ETC_PlayerState ATC_Player::GetPlayerState()
 TArray<ATC_Slot*> ATC_Player::GetValidSlotsForCard(ATC_Card* Card)
 {
 	TArray<ATC_Slot*> AvailableSlot;
+	for (ATC_BoardSlot* BoardSlot : GetPlayerBoard()->GetBoardSlots())
+	{
+		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		{
+			if (!Slot->HasCard() && Slot->GetSlotCardType() == Card->GetCardType())
+			{
+				AvailableSlot.Add(Slot);
+			}
+		}
+	}
+	return AvailableSlot;
+}
+
+TArray<ATC_Slot*> ATC_Player::GetValidSlotsForCardTarget(ATC_Card* Card)
+{
+	TArray<ATC_Slot*> AvailableSlot;
 	UTC_Face* face = Card->GetCardCurrentFace();
-	UTC_EffectType* effect = face->FindEffectOfType(face->FaceEffect, Card->GetWaitingEffectFromBlueprint()->GetClass());
+
+	UTC_EffectType* effect = Card->GetWaitingEffectFromBlueprint();
+
+	if (!IsValid(effect)) return AvailableSlot;
+
+	effect = face->FindEffectOfType(face->FaceEffect, effect->GetClass());
+
+	if (!IsValid(effect)) return AvailableSlot;
 
 	ATC_Board* boardArray[2]{};
 
@@ -164,7 +187,7 @@ TArray<ATC_Slot*> ATC_Player::GetValidSlotsForCard(ATC_Card* Card)
 		{
 			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
 			{
-				if (!Slot->HasCard() && Slot->GetSlotCardType() == Card->GetCardType())
+				if (Slot->HasCard() && Slot->GetSlotCardType() == Card->GetCardType())
 				{
 					AvailableSlot.Add(Slot);
 				}
