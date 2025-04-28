@@ -217,4 +217,7 @@ private:
 	bool _isTransformTransitionOn;
 	bool _canUseTransformTransition = false;
 	FTransform _transformTransitionGoal;
+
+	float _maxCardRotation = 5.f;
+	float _minCardRotation = -5.f;
 };

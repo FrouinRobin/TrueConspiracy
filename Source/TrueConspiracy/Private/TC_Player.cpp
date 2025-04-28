@@ -264,7 +264,15 @@ bool ATC_Player::AddCardToHand(TSubclassOf<ATC_Card> card)
 
 		NewCard->SetPlayer(this);
 
-		NewCard->CardAnchor->SetRelativeRotation(FRotator(-69.f, 180.f, 0.f));
+		if (_playerPhaseState == ETC_PhaseState::Attack)
+		{
+			NewCard->CardAnchor->SetRelativeRotation(FRotator(-69.f, 180.f, 0.f));
+		}
+		else
+		{
+			NewCard->CardAnchor->SetRelativeRotation(FRotator(-69.f, 180.f, 180.f));
+		}
+		
 		NewCard->CardAnchor->UpdateComponentToWorld();
 		NewCard->Init();
 	}
@@ -281,34 +289,52 @@ bool ATC_Player::AddCardToDeck(TSubclassOf<ATC_Card> card)
 	return true;
 }
 
-// Can someone smarter that knows how a card hand works rework this function?
 void ATC_Player::ShowHandOnCamera()
 {
-	for (size_t i = 0; i < _playerHand.Num(); i++)
+	int32 CardCount = _playerHand.Num();
+	if (CardCount == 0)
+		return;
+
+	// Paramètres configurables
+	float TotalAngle = 45.0f; // Angle total de l'éventail (en degrés)
+	float Radius = 300.0f;    // Rayon du cercle sur lequel les cartes sont disposées
+	float HorizontalSpacing = 30.0f; // Espacement manuel sur Y pour éviter superpositions
+
+	// Calcul des steps
+	float AngleStep = (CardCount > 1) ? TotalAngle / (CardCount - 1) : 0.0f;
+	float StartAngle = -TotalAngle / 2.0f;
+
+	for (int32 i = 0; i < CardCount; i++)
 	{
-		auto card = _playerHand[i];
-		if (!card)
+		ATC_Card* Card = _playerHand[i];
+		if (!Card)
 		{
-			//UE_LOG(LogTemp, Error, TEXT("ShowHandOnCamera: Carte %d dans la main est NULL !"), i);
-			return;
+			UE_LOG(LogTemp, Error, TEXT("ShowHandOnCamera: Carte %d dans la main est NULL !"), i);
+			continue;
 		}
 
-		card->SetActorRelativeLocation(FVector::ZeroVector);
+		FVector Origin, BoxExtent;
+		Card->GetActorBounds(false, Origin, BoxExtent, false);
 
-		FVector origin;
-		FVector box;
-		card->GetActorBounds(false, origin, box, false);
+		// Calculer l'angle de la carte
+		float AngleDeg = StartAngle + (i * AngleStep);
+		float AngleRad = FMath::DegreesToRadians(AngleDeg);
 
-		//UE_LOG(LogTemp, Warning, TEXT("Origin is %s"), *origin.ToString());
-		//UE_LOG(LogTemp, Warning, TEXT("Box is %s"), *box.ToString());
+		// Positionner la carte en relatif au PlayerCardAnchor
+		FVector NewRelativeLocation;
+		NewRelativeLocation.X = 0.0f;
+		NewRelativeLocation.Y = (i - (CardCount - 1) / 2.0f) * HorizontalSpacing;
+		NewRelativeLocation.Z = -Radius * (1 - FMath::Cos(AngleRad));
 
-		FVector base = FVector::ZeroVector;
-		if (PlayerDeck.Num() % 2 == 0)
-			base = FVector(0, -20, 0);
+		// Optionnel : lever légèrement pour éviter chevauchements en Z
+		NewRelativeLocation.Z += BoxExtent.Z * 0.5f;
 
-		float interval = ((float)i - ((float)_playerHand.Num() - 1) / 2) * 50;
+		// Calcul de la rotation
+		FRotator NewRelativeRotation = FRotator(0.0f, 0.f, AngleDeg);
 
-		card->SetActorLocation(card->GetActorLocation() + base + FVector(0, 0, box.Y) + FVector(0, interval, 0));
+		// Appliquer la position et rotation relative
+		Card->SetActorRelativeLocation(NewRelativeLocation);
+		Card->SetActorRelativeRotation(NewRelativeRotation);
 	}
 }
 

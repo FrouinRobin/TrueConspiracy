@@ -103,6 +103,10 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 		ActivePlayer->GetPlayerBoard()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex]->GetActorLocation(),
 		ActivePlayer->GetPlayerBoard()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex]->GetActorRotation());
 	SpawnedCard->SetPlayer(ActivePlayer);
+	if (SpawnedCard->GetPlayer()->GetPlayerPhaseState() == ETC_PhaseState::Defense)
+	{
+		SpawnedCard->SetActorRelativeRotation(SpawnedCard->GetActorRotation() + FRotator(0.f, 180.f, 180.f));
+	}
 	SpawnedCard->Init();
 	if (!SpawnedCard)
 	{
@@ -110,7 +114,7 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 		return;
 	}
 
-	InAction.PlayingSlot->SetSlotCard(InAction.CardInHand);
+	InAction.PlayingSlot->SetSlotCard(SpawnedCard);
 	InAction.CardInHand->SetSlot(InAction.PlayingSlot);
 
 	//UE_LOG(LogTemp, Log, TEXT("PlayCard: Carte %s jouée avec succès."), *SpawnedCard->GetName());
