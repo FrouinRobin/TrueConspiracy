@@ -179,6 +179,17 @@ TArray<ATC_Card*> ATC_Player::GetAllPlayerCard(bool takeHand)
 void ATC_Player::dorotate()
 {
 	OnChangePhaseState(ETC_PhaseState::Attack);
+	for (ATC_Card* Card : GetAllPlayerCard(true))
+	{
+		if (_playerPhaseState == ETC_PhaseState::Attack)
+		{
+			Card->SetCardCurrentFace(Card->GetCardAttackFace());
+		}
+		else
+		{
+			Card->SetCardCurrentFace(Card->GetCardDefendFace());
+		}
+	}
 }
 
 TArray<ATC_Card*> ATC_Player::GetCardsWaitingTargetList()
