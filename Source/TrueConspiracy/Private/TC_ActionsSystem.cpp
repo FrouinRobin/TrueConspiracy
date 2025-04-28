@@ -110,7 +110,7 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 		return;
 	}
 
-	InAction.PlayingSlot->SetSlotCard(InAction.CardInHand);
+	InAction.PlayingSlot->SetSlotCard(SpawnedCard);
 	InAction.CardInHand->SetSlot(InAction.PlayingSlot);
 
 	//UE_LOG(LogTemp, Log, TEXT("PlayCard: Carte %s jouée avec succès."), *SpawnedCard->GetName());
@@ -128,78 +128,26 @@ void TC_ActionsSystem::DrawCard(TC_GameStates& InGameState, const FAIActions& In
 	ATC_Player* ActivePlayer = InGameState.GetActivePlayer();
 	if (!ActivePlayer)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("PlayCard: Aucun joueur actif."));
 		return;
 	}
 
-	ATC_Plate* Plate = InGameState.GetGamePlate();
-	if (!Plate)
+	ATC_Board* PlayerBoard = ActivePlayer->GetPlayerBoard();
+	if (!PlayerBoard)
 	{
-		//UE_LOG(LogTemp, Error, TEXT("DrawCard : GamePlate est nul."));
 		return;
 	}
 
-	ATC_Board* CurrentPlayerBoard = nullptr;
-
-	if (!ActivePlayer->GetPlayerBoard())
+	ATC_Card* CardToDraw = PlayerBoard->GetBoardDraw()->DrawCard();
+	if (!CardToDraw)
 	{
-		//UE_LOG(LogTemp, Error, TEXT("DrawCard : BoardDraw est nul."));
-		return;
-	}
-	else
-	{
-		CurrentPlayerBoard = ActivePlayer->GetPlayerBoard();
-	}
-
-	TArray<ATC_Card*> BoardPlayerDrawDeck = CurrentPlayerBoard->GetBoardDraw()->GetDrawDeck();
-	//TArray<ATC_Card*> Hand = ActivePlayer->GetHand();
-
-	if (BoardPlayerDrawDeck.Num() == 0)
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("DrawCard : Deck vide, pioche impossible."));
 		return;
 	}
 
-	//DrawCard from last index on the list
-	ATC_Card* DrawnCard = CurrentPlayerBoard->GetBoardDraw()->GetDrawDeckGameFirstCard();
+	TSubclassOf<ATC_Card> CardClass = CardToDraw->GetClass();
 
-	if (!DrawnCard || !DrawnCard->GetClass())
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("DrawCard : Carte invalide."));
-		return;
-	}
+	ActivePlayer->RemoveCardFromDeck(CardToDraw);
 
-	//Adding card to hand
-	//UWorld* World = DrawnCard->GetWorld();
-	//if (!World)
-	//{
-	//	//UE_LOG(LogTemp, Error, TEXT("DrawCard : World est nul."));
-	//	return;
-	//}
-	//
-	//ATC_Card* NewCard = World->SpawnActor<ATC_Card>(DrawnCard->GetClass());
-	//if (!NewCard)
-	//{
-	//	//UE_LOG(LogTemp, Error, TEXT("DrawCard : Échec du SpawnActor de la carte."));
-	//	return;
-	//}
-	//
-	//bool isCardAdded = ActivePlayer->AddCardToHand(NewCard);
-
-	bool isCardAdded = ActivePlayer->AddCardToHand(DrawnCard->GetClass());
-
-	if (isCardAdded)
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("DrawCard : Carte %s ajoutée à la main."), *DrawnCard->GetName());
-		CurrentPlayerBoard->OnDrawCard(DrawnCard);
-		//UE_LOG(LogTemp, Log, TEXT("DrawCard : Il reste %d cartes dans le deck."), CurrentPlayerBoard->GetBoardDraw()->GetDrawDeck().Num());
-	}
-	else
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("DrawCard : Échec lors de l'ajout à la main. %s"), *DrawnCard->GetName());
-	}
-
-	ActivePlayer->ShowHandOnCamera();
+	ActivePlayer->AddCardToHand(CardClass);
 }
 
 void TC_ActionsSystem::MoveCard(TC_GameStates& InGameState, const FAIActions& InAction)

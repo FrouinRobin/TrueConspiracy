@@ -61,7 +61,7 @@ ATC_Board* ATC_Player::GetPlayerBoard()
 	return _playerBoard;
 }
 
-TArray<TSubclassOf<ATC_Card>> ATC_Player::GetDeck()
+TArray<TSubclassOf<ATC_Card>>& ATC_Player::GetDeck()
 {
 	return PlayerDeck;
 }
@@ -312,27 +312,6 @@ void ATC_Player::ShowHandOnCamera()
 	}
 }
 
-//bool ATC_Player::CanPlayCard(ATC_Card* card)
-//{
-//	return card->GetCardCurrentMana() >= GetPlayerCurrentMana();
-//}
-
-//TSubclassOf<ATC_Card> ATC_Player::FindCardClassFromInstance(ATC_Card* InstanceCard)
-//{
-//	if (!InstanceCard) return nullptr;
-//
-//	for (TSubclassOf<ATC_Card> CardClass : _playerHand)
-//	{
-//		if (CardClass && InstanceCard->GetClass() == CardClass)
-//		{
-//			return CardClass;
-//		}
-//	}
-//
-//	return nullptr;
-//}
-
-
 void ATC_Player::RemoveCardFromHand(ATC_Card* Card)
 {
 	if (!_playerHand.Contains(Card)) return;
@@ -354,17 +333,6 @@ void ATC_Player::RemoveCardFromDeck(ATC_Card* Card)
 	ShowHandOnCamera();
 }
 
-void ATC_Player::DrawCardFromDeck()
-{
-	ATC_Card* CardToDraw = _playerBoard->GetBoardDraw()->DrawCard();
-	if (CardToDraw)
-	{
-		TSubclassOf<ATC_Card> CardClass = CardToDraw->GetClass();
-		RemoveCardFromDeck(CardToDraw);
-		AddCardToHand(CardClass);
-	}
-}
-
 void ATC_Player::SwitchFace(ATC_Card* Card)
 {
 	Card->SwitchPhase();
@@ -372,11 +340,6 @@ void ATC_Player::SwitchFace(ATC_Card* Card)
 
 void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 {
-	//ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(Card->GetClass(), FVector(Slot->GetActorLocation().X, Slot->GetActorLocation().Y, Slot->GetActorLocation().Z + 1), Slot->GetActorRotation());
-	/*AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
-	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
-
-	TC_ActionsSystem::PlayCard(GameManager->GetCurrentGameState(), Card, Slot);*/
 
 	if (!InCard || !InSlot)
 	{

@@ -66,7 +66,7 @@ public:
 	ATC_Board* GetPlayerBoard();
 
 	UFUNCTION(BlueprintCallable, Category = "Getter")
-	TArray<TSubclassOf<ATC_Card>> GetDeck();
+	TArray<TSubclassOf<ATC_Card>>& GetDeck();
 
 	UFUNCTION(BlueprintCallable, Category = "Getter")
 	TArray<ATC_Card*> GetHand();
@@ -160,9 +160,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void RemoveCardFromDeck(ATC_Card* Card);
-
-	UFUNCTION(BlueprintCallable)
-	void DrawCardFromDeck();
 
 	UFUNCTION(BlueprintCallable)
 	bool CanPlaceCardOnSlot(ATC_Card* Card, ATC_Slot* Slot);
