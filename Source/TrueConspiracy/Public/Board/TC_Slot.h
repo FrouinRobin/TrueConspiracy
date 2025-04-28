@@ -25,7 +25,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ETC_CardType _slotCardType;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	ATC_Card* _slotCard;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Slot Properties", meta = (AllowPrivateAccess = true))

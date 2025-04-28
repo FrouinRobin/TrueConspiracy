@@ -3,6 +3,7 @@
 
 #include "Cards/TC_Card.h"
 #include "TC_Player.h"
+#include <UObject/UnrealTypePrivate.h>
 
 ATC_Card::ATC_Card()
 {
@@ -339,4 +340,36 @@ void ATC_Card::SetTexture()
 void ATC_Card::UpdateCardUIFunc(FTC_CardDataStruct CardData, UTC_CardIfoGameWiget* widget)
 {
 	widget->OnUpdateCardData(CardData);
+}
+
+// In any world, those two functions would be a bad idea
+// But we're out of time, I'm not redoing half the targetting logic
+UTC_EffectType* ATC_Card::GetWaitingEffectFromBlueprint()
+{
+	FProperty* prop = GetClass()->FindPropertyByName(TEXT("WaitingEffect"));
+	if (!prop)
+		prop = GetClass()->FindPropertyByName(TEXT("Waiting Effect"));
+
+	if (!prop) return nullptr;
+
+	FClassProperty* ClassProp = CastField<FClassProperty>(prop);
+	if (!ClassProp) return nullptr;
+
+	UClass* WaitingEffectClass = Cast<UClass>(ClassProp->GetPropertyValue_InContainer(this));
+	if (!WaitingEffectClass) return nullptr;
+
+	return WaitingEffectClass->GetDefaultObject<UTC_EffectType>();
+}
+void ATC_Card::ResetWaitingEffectInBlueprint()
+{
+	FProperty* prop = GetClass()->FindPropertyByName(TEXT("WaitingEffect"));
+	if (!prop)
+		prop = GetClass()->FindPropertyByName(TEXT("Waiting Effect"));
+
+	if (!prop) return;
+
+	if (FClassProperty* ClassProp = CastField<FClassProperty>(prop))
+	{
+		ClassProp->SetPropertyValue_InContainer(this, nullptr);
+	}
 }
