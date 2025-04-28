@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/TextBlock.h"
 #include "TC_BoardSlotUI.generated.h"
 
 class ATC_BoardSlot;
@@ -19,9 +20,13 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetBoardSlot(ATC_BoardSlot* newBoardSlot);
+	UFUNCTION(BlueprintCallable)
+	void SetMyText(const FString& NewText, UTextBlock* TextScore);
 
 	UFUNCTION(BlueprintImplementableEvent, CallInEditor)
 	void OnUpdate();
+
+protected:
 
 private:
 
