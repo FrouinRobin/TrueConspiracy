@@ -35,6 +35,21 @@ ATC_BoardSlot* ATC_LandCardSlot::GetLandCardBordSlotByPlayer(ATC_Player* PlayerR
 	return PlayerBoardSlot;
 }
 
+void ATC_LandCardSlot::SetLandCard(ATC_LandCard* InCard)
+{
+	_landSlot = InCard;
+}
+
+void ATC_LandCardSlot::SetLandPlate(ATC_Plate* InPlate)
+{
+	_landPlate = InPlate;
+}
+
+ATC_Plate* ATC_LandCardSlot::GetLandPlate()
+{
+	return _landPlate;
+}
+
 void ATC_LandCardSlot::LandCardInit()
 {
 	_landCardBoardSlots[0]->SetBoardSlotOppositeBoard(_landCardBoardSlots[1]);

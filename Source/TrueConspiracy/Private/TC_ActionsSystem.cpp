@@ -6,6 +6,8 @@
 #include "TC_GameInstance.h"
 #include "TC_GameManager.h"
 #include "Kismet/GameplayStatics.h"
+#include "Board/TC_LandCardSlot.h"
+#include "Cards/TC_LandCard.h"
 
 TC_ActionsSystem::TC_ActionsSystem()
 {
@@ -97,21 +99,37 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 	//ATC_Slot* SlotCard = ActivePlayer->GetPlayerBoard()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex];
 	//ActivePlayer->GetPlayerBoard()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex]->SetSlotCard(InAction.CardInHand); //Attribution de la carte au slot
 	//ActivePlayer->GetPlayerBoard()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex]->GetSlotCard()->SetSlot(InAction.PlayingSlot); //Attribution du slot à la carte
-
-	ATC_Card* SpawnedCard = GameInstance->GetWorld()->SpawnActor<ATC_Card>(
-		SelectedCard->GetClass(),
-		ActivePlayer->GetPlayerBoard()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex]->GetActorLocation(),
-		ActivePlayer->GetPlayerBoard()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex]->GetActorRotation());
-	SpawnedCard->SetPlayer(ActivePlayer);
-	SpawnedCard->Init();
-	if (!SpawnedCard)
+	if (SelectedCard->GetCardType() == ETC_CardType::ClassicCard)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("PlayCard: Échec du spawn de la carte."));
-		return;
-	}
+		ATC_Card* SpawnedCard = GameInstance->GetWorld()->SpawnActor<ATC_Card>(
+			SelectedCard->GetClass(),
+			ActivePlayer->GetPlayerBoard()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex]->GetActorLocation(),
+			ActivePlayer->GetPlayerBoard()->GetBoardSlots()[InAction.BoardSlotIndex]->GetBoardSlotSlots()[InAction.BoardSlotCardIndex]->GetActorRotation());
+		SpawnedCard->SetPlayer(ActivePlayer);
+		SpawnedCard->Init();
+		if (!SpawnedCard)
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("PlayCard: Échec du spawn de la carte."));
+			return;
+		}
 
-	InAction.PlayingSlot->SetSlotCard(SpawnedCard);
-	InAction.CardInHand->SetSlot(InAction.PlayingSlot);
+		InAction.PlayingSlot->SetSlotCard(SpawnedCard);
+		InAction.CardInHand->SetSlot(InAction.PlayingSlot);
+
+		SpawnedCard->OnCardPlace();
+	}
+	else if (SelectedCard->GetCardType() == ETC_CardType::LandCard)
+	{
+		ATC_LandCard* SpawnedCard = GameInstance->GetWorld()->SpawnActor<ATC_LandCard>(
+			SelectedCard->GetClass(),
+			Plate->GetLandCardSlots()[InAction.LandSlotIndex]->GetActorLocation(),
+			Plate->GetLandCardSlots()[InAction.LandSlotIndex]->GetActorRotation());
+		SpawnedCard->SetPlayer(ActivePlayer);
+		SpawnedCard->Init();
+		InAction.PlayingLandSlot->SetLandCard(SpawnedCard);
+		InAction.LandCardInHand->SetLandSlot(InAction.PlayingLandSlot);
+	}
+	
 
 	//UE_LOG(LogTemp, Log, TEXT("PlayCard: Carte %s jouée avec succès."), *SpawnedCard->GetName());
 
@@ -120,7 +138,6 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 		//UE_LOG(LogTemp, Log, TEXT("PlayCard: SelectedCard Destroyed."));
 	}
 
-	SpawnedCard->OnCardPlace();
 }
 
 void TC_ActionsSystem::DrawCard(TC_GameStates& InGameState, const FAIActions& InAction)

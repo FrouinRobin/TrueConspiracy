@@ -12,6 +12,7 @@ class TC_GameStates;
 class ATC_Player;
 class ATC_Slot;
 class ATC_Card;
+class ATC_LandCard;
 
 class TRUECONSPIRACY_API TC_ActionsSystem //-> contient la logique (fonctions utilitaires que l’IA peut utiliser)
 {

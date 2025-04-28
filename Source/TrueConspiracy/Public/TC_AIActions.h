@@ -6,6 +6,8 @@
 
 class ATC_Card;
 class ATC_Slot;
+class ATC_LandCardSlot;
+class ATC_LandCard;
 
 // AIActions = Une commande dans un resto : "Plat 3, Table 4"
 // AIActionsSystem = Le serveur ou la cuisine qui sait comment préparer ce plat et vérifier la commande
@@ -27,6 +29,8 @@ struct FAIActions //-> represente une seule action
     EActionType Type;
     ATC_Card* CardInHand;
     ATC_Slot* PlayingSlot;
+    ATC_LandCardSlot* PlayingLandSlot;
+    ATC_LandCard* LandCardInHand;
 
     int CardinHandIndex; //Index de la carte en main
     int BoardSlotIndex; //Index du BoardSlot (0, 1 ou 2)
@@ -35,7 +39,10 @@ struct FAIActions //-> represente une seule action
     int DestinationBoardSlotIndex; //Index du BoardSlot de destination (0, 1 ou 2)
     int DestinationBoardSlotCardIndex; //Index du slot de destination de la carte dans le boardSlot (0,1,2 ou 3)
 
+    int LandSlotIndex;
+    int LandCardInHandIndex;
 
+    
     //int TerrainIndex;
     //int PlayingSlotIndex;
 

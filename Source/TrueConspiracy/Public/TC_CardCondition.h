@@ -8,6 +8,8 @@
 
 class ATC_Card;
 class ATC_Slot;
+class ATC_LandCard;
+class ATC_LandCardSlot;
 
 UCLASS(Blueprintable, BlueprintType, EditInlineNew, DefaultToInstanced)
 class TRUECONSPIRACY_API UTC_CardCondition : public UTC_Condition
@@ -34,4 +36,10 @@ public:
    
    UFUNCTION(BlueprintPure, Category = "Checking")
    bool HasEnoughMana(ATC_Card* Card);
+
+   UFUNCTION(BlueprintPure, Category = "Checking")
+   bool IsLandSlotAcceptingCard(ATC_LandCardSlot* LandSlot, ATC_LandCard* LandCard) const;
+
+   UFUNCTION(BlueprintPure, Category = "Checking")
+   bool IsSlotLand(ATC_Slot* LandSlot);
 };

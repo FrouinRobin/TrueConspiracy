@@ -6,6 +6,8 @@
 #include "TC_Card.h"
 #include "TC_LandCard.generated.h"
 
+class ATC_LandCardSlot;
+
 /**
  * 
  */
@@ -14,8 +16,10 @@ class TRUECONSPIRACY_API ATC_LandCard : public ATC_Card
 {
 	GENERATED_BODY()
 public:
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetLandSlot(ATC_LandCardSlot* InLandSlot);
 public:
 private:
-
+	ATC_LandCardSlot* LandCardSlot;
 	
 };
