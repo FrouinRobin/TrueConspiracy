@@ -13,6 +13,9 @@
 #include "Board/TC_Slot.h"
 #include "Board/TC_Board.h"
 #include "TC_CardCondition.h"
+#include "Cards/TC_LandCard.h"
+#include "Board/TC_LandCardSlot.h"
+#include "Board/TC_Plate.h"
 
 
 
@@ -61,7 +64,7 @@ ATC_Board* ATC_Player::GetPlayerBoard()
 	return _playerBoard;
 }
 
-TArray<TSubclassOf<ATC_Card>> ATC_Player::GetDeck()
+TArray<TSubclassOf<ATC_Card>>& ATC_Player::GetDeck()
 {
 	return PlayerDeck;
 }
@@ -137,6 +140,8 @@ ETC_PlayerState ATC_Player::GetPlayerState()
 TArray<ATC_Slot*> ATC_Player::GetValidSlotsForCard(ATC_Card* Card)
 {
 	TArray<ATC_Slot*> AvailableSlot;
+
+	// Recherche sur le Board normal
 	for (ATC_BoardSlot* BoardSlot : GetPlayerBoard()->GetBoardSlots())
 	{
 		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
@@ -147,9 +152,20 @@ TArray<ATC_Slot*> ATC_Player::GetValidSlotsForCard(ATC_Card* Card)
 			}
 		}
 	}
+
+	// Recherche sur les Lands (NOUVEAU)
+	if (ATC_Plate* Plate = GetPlayerBoard()->GetBoardPlate())
+	{
+		for (ATC_LandCardSlot* LandSlot : Plate->GetLandCardSlots())
+		{
+			if (!LandSlot->HasCard() && LandSlot->GetSlotCardType() == Card->GetCardType())
+			{
+				AvailableSlot.Add(LandSlot);
+			}
+		}
+	}
 	return AvailableSlot;
 }
-
 TArray<ATC_Card*> ATC_Player::GetAllPlayerCard(bool takeHand)
 {
 	TArray<ATC_Card*> PlayerCard;
@@ -349,27 +365,6 @@ void ATC_Player::ShowHandOnCamera()
 	}
 }
 
-//bool ATC_Player::CanPlayCard(ATC_Card* card)
-//{
-//	return card->GetCardCurrentMana() >= GetPlayerCurrentMana();
-//}
-
-//TSubclassOf<ATC_Card> ATC_Player::FindCardClassFromInstance(ATC_Card* InstanceCard)
-//{
-//	if (!InstanceCard) return nullptr;
-//
-//	for (TSubclassOf<ATC_Card> CardClass : _playerHand)
-//	{
-//		if (CardClass && InstanceCard->GetClass() == CardClass)
-//		{
-//			return CardClass;
-//		}
-//	}
-//
-//	return nullptr;
-//}
-
-
 void ATC_Player::RemoveCardFromHand(ATC_Card* Card)
 {
 	if (!_playerHand.Contains(Card)) return;
@@ -391,17 +386,6 @@ void ATC_Player::RemoveCardFromDeck(ATC_Card* Card)
 	ShowHandOnCamera();
 }
 
-void ATC_Player::DrawCardFromDeck()
-{
-	ATC_Card* CardToDraw = _playerBoard->GetBoardDraw()->DrawCard();
-	if (CardToDraw)
-	{
-		TSubclassOf<ATC_Card> CardClass = CardToDraw->GetClass();
-		RemoveCardFromDeck(CardToDraw);
-		AddCardToHand(CardClass);
-	}
-}
-
 void ATC_Player::SwitchFace(ATC_Card* Card)
 {
 	Card->SwitchPhase();
@@ -409,11 +393,6 @@ void ATC_Player::SwitchFace(ATC_Card* Card)
 
 void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 {
-	//ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(Card->GetClass(), FVector(Slot->GetActorLocation().X, Slot->GetActorLocation().Y, Slot->GetActorLocation().Z + 1), Slot->GetActorRotation());
-	/*AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
-	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
-
-	TC_ActionsSystem::PlayCard(GameManager->GetCurrentGameState(), Card, Slot);*/
 
 	if (!InCard || !InSlot)
 	{
@@ -427,11 +406,26 @@ void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 	PlayAction.PlayingSlot = InSlot;
 	PlayAction.CardinHandIndex = _playerHand.Find(InCard);
 
-	PlayAction.BoardSlotIndex = InSlot->GetSlotBoardSlot()->GetBoardSlotBoard()->GetBoardSlots().Find(InSlot->GetSlotBoardSlot());
-	PlayAction.BoardSlotCardIndex = InSlot->GetSlotBoardSlot()->GetBoardSlotSlots().Find(InSlot);
+	if (InCard->GetCardType() == ETC_CardType::ClassicCard)
+	{
+		PlayAction.BoardSlotIndex = InSlot->GetSlotBoardSlot()->GetBoardSlotBoard()->GetBoardSlots().Find(InSlot->GetSlotBoardSlot());
+		PlayAction.BoardSlotCardIndex = InSlot->GetSlotBoardSlot()->GetBoardSlotSlots().Find(InSlot);
+		InSlot->SetSlotCard(InCard);
+		InCard->SetSlot(InSlot);
+	}
+	else
+	{
+		ATC_LandCard* _InLandCard = Cast<ATC_LandCard>(InCard);
+		ATC_LandCardSlot* _InLandSlot = Cast<ATC_LandCardSlot>(InSlot);
+		PlayAction.LandCardInHand = _InLandCard;
+		PlayAction.PlayingLandSlot = _InLandSlot ;
+		PlayAction.LandCardInHandIndex = _playerHand.Find(_InLandCard);
+		PlayAction.LandSlotIndex = _InLandSlot->GetLandPlate()->GetLandCardSlots().Find(_InLandSlot);
+		PlayAction.LandCardInHand->SetLandSlot(_InLandSlot);
+		PlayAction.PlayingLandSlot->SetLandCard(_InLandCard);
+	}
 
-	InSlot->SetSlotCard(InCard);
-	InCard->SetSlot(InSlot);
+	
 
 	//UE_LOG(LogTemp, Warning, TEXT("la carte %s "), *InCard->GetName());
 	//UE_LOG(LogTemp, Warning, TEXT("Place at slot %s "), *InSlot->GetName());

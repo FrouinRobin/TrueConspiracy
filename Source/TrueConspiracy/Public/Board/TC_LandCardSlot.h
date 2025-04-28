@@ -8,6 +8,7 @@
 
 class ATC_LandCard;
 class ATC_Player;
+class ATC_Plate;
 
 UCLASS()
 class TRUECONSPIRACY_API ATC_LandCardSlot : public ATC_Slot
@@ -22,10 +23,21 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_BoardSlot* GetLandCardBordSlotByPlayer(ATC_Player* PlayerReference);
 
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetLandCard(ATC_LandCard* InCard);
+
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetLandPlate(ATC_Plate* InPlate);
+
+	ATC_Plate* GetLandPlate();
+
 	UFUNCTION(BlueprintCallable, Category = "Init")
 	void LandCardInit();
 
 private:
 	TArray<ATC_BoardSlot*> _landCardBoardSlots;
+	ATC_LandCard* _landSlot;
+
+	ATC_Plate* _landPlate;
 
 };

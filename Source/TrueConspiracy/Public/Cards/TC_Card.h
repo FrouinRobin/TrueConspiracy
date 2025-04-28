@@ -167,6 +167,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnCardSetTexture();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnCardAction();
+
 
 	/*OTHER FUNCTION*/
 
