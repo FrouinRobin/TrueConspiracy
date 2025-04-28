@@ -144,7 +144,7 @@ public:
 	bool AddCardToHand(TSubclassOf<ATC_Card> card);
 
 	UFUNCTION(BlueprintCallable)
-	void PlayCard(ATC_Card* InCard, ATC_Slot* InSlot);
+	ATC_Card* PlayCard(ATC_Card* InCard, ATC_Slot* InSlot);
 
 	UFUNCTION(BlueprintCallable)
 	void SwitchFace(ATC_Card* Card);

@@ -137,13 +137,37 @@ ETC_PlayerState ATC_Player::GetPlayerState()
 TArray<ATC_Slot*> ATC_Player::GetValidSlotsForCard(ATC_Card* Card)
 {
 	TArray<ATC_Slot*> AvailableSlot;
-	for (ATC_BoardSlot* BoardSlot : GetPlayerBoard()->GetBoardSlots())
+	UTC_Face* face = Card->GetCardCurrentFace();
+	UTC_EffectType* effect = face->FindEffectOfType(face->FaceEffect, Card->GetWaitingEffectFromBlueprint()->GetClass());
+
+	ATC_Board* boardArray[2]{};
+
+	for (UTC_CardEffect* eff : effect->EffectList)
 	{
-		for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
+		if (eff->TargetType == ETC_TargetType::All)
 		{
-			if (!Slot->HasCard() && Slot->GetSlotCardType() == Card->GetCardType())
+			boardArray[0] = GetPlayerBoard();
+			boardArray[1] = GetPlayerBoard()->GetBoardSlots()[0]->GetBoardSlotOppositeBoard()->GetBoardSlotBoard();
+			break;
+		}
+		else if (eff->TargetType == ETC_TargetType::Ally)
+			boardArray[0] = GetPlayerBoard();
+		else if (eff->TargetType == ETC_TargetType::Enemy)
+			boardArray[0] = GetPlayerBoard()->GetBoardSlots()[0]->GetBoardSlotOppositeBoard()->GetBoardSlotBoard();
+	}
+
+	for (ATC_Board* Board : boardArray)
+	{
+		if (!Board) continue;
+
+		for (ATC_BoardSlot* BoardSlot : Board->GetBoardSlots())
+		{
+			for (ATC_Slot* Slot : BoardSlot->GetBoardSlotSlots())
 			{
-				AvailableSlot.Add(Slot);
+				if (!Slot->HasCard() && Slot->GetSlotCardType() == Card->GetCardType())
+				{
+					AvailableSlot.Add(Slot);
+				}
 			}
 		}
 	}
@@ -370,7 +394,7 @@ void ATC_Player::SwitchFace(ATC_Card* Card)
 	Card->SwitchPhase();
 }
 
-void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
+ATC_Card* ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 {
 	//ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(Card->GetClass(), FVector(Slot->GetActorLocation().X, Slot->GetActorLocation().Y, Slot->GetActorLocation().Z + 1), Slot->GetActorRotation());
 	/*AActor* GameManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATC_GameManager::StaticClass());
@@ -381,7 +405,7 @@ void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 	if (!InCard || !InSlot)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("PlayCard: Parametre invalide (carte ou slot)."));
-		return;
+		return nullptr;
 	}
 
 	// Cr�e une action PlayCard
@@ -405,13 +429,14 @@ void ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 	if (!GameManager)
 	{
 		//UE_LOG(LogTemp, Error, TEXT("PlayCard: GameManager introuvable."));
-		return;
+		return nullptr;
 	}
 
 	// Applique l'action au GameState actuel
 	GameManager->GetCurrentGameState().ApplyAction(PlayAction);
 	RemoveCardFromHand(InCard);
 	UE_LOG(LogTemp, Error, TEXT("Player Mana %d"), GetPlayerCurrentMana());
+	return InSlot->GetSlotCard();
 }
 
 void ATC_Player::MoveCard(ATC_Card* InCard, ATC_Slot* InSlot)
