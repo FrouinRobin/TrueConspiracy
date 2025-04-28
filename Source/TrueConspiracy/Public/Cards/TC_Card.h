@@ -44,6 +44,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
 	USoundBase* CardPlaceSound;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* CardDrawnSound;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

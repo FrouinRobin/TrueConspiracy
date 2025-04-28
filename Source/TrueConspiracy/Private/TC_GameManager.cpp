@@ -67,6 +67,9 @@ void ATC_GameManager::StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> Pl
 
 	GameInstance->SetSelectedFormat(InFormat);
 	SetCurrentGameState(TC_GameStates(GameInstance->GetSelectedFormat()));
+
+	//UE_LOG(LongTemp, Error, TEXT("", GameInstance->GetSelectedFormat());
+	UE_LOG(LogTemp, Error, TEXT("SelectedFormat = %s"), *UEnum::GetValueAsString(GameInstance->GetSelectedFormat()));
 	
 	GetCurrentGameState().SetGamePlate(Plate);
 	
@@ -327,12 +330,6 @@ void ATC_GameManager::EndGame()
 {
 	UE_LOG(LogTemp, Error, TEXT("EndGame: Called !"));
 	onEndGame();
-	/*#if WITH_EDITOR
-	if (GIsEditor)
-	{
-		GEngine->Exec(GetWorld(), TEXT("QUIT_EDITOR"));
-	}
-	#endif*/
 }
 
 void ATC_GameManager::CalculateScore()

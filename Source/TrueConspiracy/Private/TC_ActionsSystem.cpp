@@ -201,6 +201,11 @@ void TC_ActionsSystem::DrawCard(TC_GameStates& InGameState, const FAIActions& In
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("DrawCard : Carte %s ajoutée à la main."), *DrawnCard->GetName());
 		CurrentPlayerBoard->OnDrawCard(DrawnCard);
+		if (DrawnCard->CardDrawnSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(DrawnCard, DrawnCard->CardDrawnSound, DrawnCard->GetActorLocation());
+			UE_LOG(LogTemp, Warning, TEXT("DrawCard: PlaySound."));
+		}
 		//UE_LOG(LogTemp, Log, TEXT("DrawCard : Il reste %d cartes dans le deck."), CurrentPlayerBoard->GetBoardDraw()->GetDrawDeck().Num());
 	}
 	else
