@@ -27,12 +27,41 @@ ATC_BoardSlot::ATC_BoardSlot()
 
 	SlotFourAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("SlotFourAnchor"));
 	SlotFourAnchor->SetupAttachment(MainAnchor);
+
+	WidgetAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("WidgetAnchor"));
+	WidgetAnchor->SetupAttachment(MainAnchor);
+
+	Widget = CreateDefaultSubobject<UWidgetComponent>(TEXT("BoardSlotWidget"));
+	Widget->SetupAttachment(WidgetAnchor);
+
+	Widget->SetWidgetSpace(EWidgetSpace::World); // "World" pour un widget 3D
+	Widget->SetDrawSize(FVector2D(500.0f, 500.0f)); // Taille du widget
+
+	// Charger un Widget Blueprint et l'assigner au WidgetComponent
+	
+
 }
 
 
 void ATC_BoardSlot::BeginPlay()
 {
-	Super::BeginPlay(); 
+	Super::BeginPlay();
+
+	UUserWidget* CreatedWidget = Widget->GetWidget();
+	CreatedWidget->Initialize();
+
+	if (CreatedWidget)
+	{
+		UTC_BoardSlotUI* BoardSlotWidget = Cast<UTC_BoardSlotUI>(CreatedWidget);
+
+		if (BoardSlotWidget)
+		{
+			BoardSlotWidget->SetWidgetBoardSlot(this);
+			BoardSlotWidget->Initialize();
+			
+			WidgetReference = BoardSlotWidget;
+		}
+	}
 }
 
 ATC_Board* ATC_BoardSlot::GetBoardSlotBoard()
