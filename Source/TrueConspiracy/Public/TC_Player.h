@@ -69,7 +69,7 @@ public:
 	TArray<TSubclassOf<ATC_Card>>& GetDeck();
 
 	UFUNCTION(BlueprintCallable, Category = "Getter")
-	TArray<ATC_Card*> GetHand();
+	TArray<ATC_Card*>& GetHand();
 
 	UFUNCTION(BlueprintCallable, Category = "Getter")
 	ATC_Card* GetCardFromHandByName(FString name, bool checkAllFaces);
@@ -112,10 +112,10 @@ public:
 	void SetPlayerBoard(ATC_Board* newBoard);
 
 	UFUNCTION(BlueprintCallable, Category = "Setter")
-	void SetPlayerDeck(TArray<TSubclassOf<ATC_Card>> newDeck);
+	void SetPlayerDeck(TArray<TSubclassOf<ATC_Card>>& newDeck);
 
 	UFUNCTION(BlueprintCallable, Category = "Setter")
-	void SetPlayerHand(TArray<ATC_Card*> newDeck);
+	void SetPlayerHand(TArray<ATC_Card*>& newDeck);
 
 	UFUNCTION(BlueprintCallable, Category = "Setter")
 	void SetPlayerCurrentMana(int newCurrentMana);

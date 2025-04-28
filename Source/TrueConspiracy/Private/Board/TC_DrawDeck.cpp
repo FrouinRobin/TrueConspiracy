@@ -228,7 +228,7 @@ void ATC_DrawDeck::Init(TArray<TSubclassOf<ATC_Card>> CardsToSpawn)
     for (TSubclassOf<ATC_Card> Card : ShuffleCard(CardsToSpawn))
     {
         ATC_Card* NewCard = GetWorld()->SpawnActor<ATC_Card>(Card, FVector(CardAnchor->GetComponentLocation().X, CardAnchor->GetComponentLocation().Y, CardAnchor->GetComponentLocation().Z + 2 * _drawDeck.Num()), CardAnchor->GetComponentRotation());
-        NewCard->SetPlayer(GetDrawDeckPlayer());
+        NewCard->SetPlayer(_drawDeckPlayer);
         NewCard->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
         NewCard->Init();
         _drawDeck.Add(NewCard);

@@ -69,7 +69,7 @@ TArray<TSubclassOf<ATC_Card>>& ATC_Player::GetDeck()
 	return PlayerDeck;
 }
 
-TArray<ATC_Card*> ATC_Player::GetHand()
+TArray<ATC_Card*>& ATC_Player::GetHand()
 {
 	return _playerHand;
 }
@@ -271,12 +271,12 @@ void ATC_Player::SetPlayerBoard(ATC_Board* newBoard)
 	_playerBoard = newBoard;
 }
 
-void ATC_Player::SetPlayerDeck(TArray<TSubclassOf<ATC_Card>> newDeck)
+void ATC_Player::SetPlayerDeck(TArray<TSubclassOf<ATC_Card>>& newDeck)
 {
 	PlayerDeck = newDeck;
 }
 
-void ATC_Player::SetPlayerHand(TArray<ATC_Card*> newDeck)
+void ATC_Player::SetPlayerHand(TArray<ATC_Card*>& newDeck)
 {
 	_playerHand = newDeck;
 }
@@ -402,7 +402,7 @@ void ATC_Player::ShowHandOnCamera()
 		NewRelativeLocation.Z = -Radius * (1 - FMath::Cos(AngleRad));
 
 		// Optionnel : lever légèrement pour éviter chevauchements en Z
-		NewRelativeLocation.Z += BoxExtent.Z * 0.5f;
+		NewRelativeLocation.Z += 0.5f;
 
 		// Calcul de la rotation
 		FRotator NewRelativeRotation = FRotator(0.0f, 0.f, AngleDeg);
