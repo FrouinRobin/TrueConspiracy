@@ -22,7 +22,6 @@ class TRUECONSPIRACY_API ATC_Card : public AActor
 	GENERATED_BODY()
 
 public:
-
 	ATC_Card();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh")
 	USceneComponent* MainAnchor;
@@ -41,6 +40,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Properties")
 	ETC_CardType _cardType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* CardPlaceSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* CardDrawnSound;
 
 protected:
 	// Called when the game starts or when spawned
