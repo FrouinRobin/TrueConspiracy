@@ -1,10 +1,12 @@
 #include "TC_TCPClient.h"
 #include "Async/Async.h"
+#include "Sockets.h"
+#include "SocketSubsystem.h"
 
 FTC_TCPClient::FTC_TCPClient(const FString& InIP, int32 InPort)
     : ServerIP(InIP), ServerPort(InPort), Socket(nullptr), Thread(nullptr), bStopThread(false)
 {
-    Thread = FRunnableThread::Create(this, L"TCPClientThread");
+    Thread = FRunnableThread::Create(this, TEXT("TCPClientThread"));
     bStopThread = false;
 }
 
@@ -36,11 +38,11 @@ bool FTC_TCPClient::Connect()
 
     if (!bIsValid)
     {
-        UE_LOG(LogTemp, Error, L"Invalid IP address");
+        UE_LOG(LogTemp, Error, TEXT("Invalid IP address"));
         return false;
     }
 
-    Socket = SocketSubsystem->CreateSocket(NAME_Stream, L"TCPClientSocket", false);
+    Socket = SocketSubsystem->CreateSocket(NAME_Stream, TEXT("TCPClientSocket"), false);
     Socket->SetNonBlocking(true);
 
     bool bConnected = Socket->Connect(*Addr);
@@ -91,14 +93,10 @@ void FTC_TCPClient::SendMessage(const FString& Message)
 {
     if (!Socket || !Socket->GetConnectionState() == SCS_Connected) return;
 
-    FTCHARToUTF8 Convert(*Message);
+    FString SendingMessage = Message + TEXT("\n");
+    FTCHARToUTF8 Convert(*SendingMessage);
     int32 BytesSent = 0;
     bool bSent = Socket->Send((uint8*)Convert.Get(), Convert.Length(), BytesSent);
-
-    if (!bSent)
-    {
-        UE_LOG(LogTemp, Warning, L"Failed to send message");
-    }
 }
 
 void FTC_TCPClient::Stop()
@@ -121,7 +119,7 @@ void FTC_TCPClient::Shutdown()
 {
     bStopThread = true;
 
-    SendMessage(L"\n");
+    SendMessage(TEXT("\n"));
 
     if (Socket)
     {

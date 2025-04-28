@@ -16,7 +16,7 @@ private:
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TArray<int32> SelectedPlayerDeck;
+	TArray<TSubclassOf<ATC_Card>> SelectedPlayerDeck;
 
 	static UTC_GameInstance* GetInstance(UObject* InWorldContext);
 	static UTC_GameInstance* GetInstanceFromWorld(UWorld* InWorld);

@@ -48,7 +48,12 @@ protected:
 	UFUNCTION(BlueprintPure, meta = (ReturnDisplayName = "TC Player", ToolTip = "Return the True Conspiracy Player Pawn"))
 	ATC_Player* GetMyPawn();
 
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_SendDeckToServer(const TArray<TSubclassOf<ATC_Card>>& Deck);
 
+	virtual void BeginPlayingState();
+
+	void SendDeckToServerDelayed();
 
 private:
 

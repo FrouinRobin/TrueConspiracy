@@ -4,6 +4,8 @@
 #include "Engine/World.h"
 #include "Misc/DateTime.h"
 #include "HAL/PlatformTime.h"
+#include "TC_Player.h"
+#include "TC_GameInstance.h"
 
 UTC_TCPComponent::UTC_TCPComponent()
 {
@@ -24,7 +26,7 @@ void UTC_TCPComponent::_sendPing()
 {
     if (_tcpClient && CanPing)
     {
-        _tcpClient->SendMessage(L"ping\n");
+        _tcpClient->SendMessage(L"ping");
     }
 }
 
@@ -33,7 +35,6 @@ void UTC_TCPComponent::StartClient(const FString& ServerIP, int32 ServerPort)
     if (!_tcpClient)
     {
         _tcpClient = new FTC_TCPClient(ServerIP, ServerPort);
-		UE_LOG(LogTemp, Error, L"Starting TCP Client");
         _tcpClient->SetOnMessageReceivedCallback([this](const FString& Message)
         {
             _handleServerMessage(Message);
@@ -84,24 +85,37 @@ void UTC_TCPComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void UTC_TCPComponent::_handleServerMessage(const FString& Message)
 {
-    if (Message.Contains("pong"))
+	FString CleanMessage = Message;
+    CleanMessage = CleanMessage.Replace(TEXT("\r"), TEXT(""));
+    CleanMessage = CleanMessage.TrimStartAndEnd();
+
+    TArray<FString> Lines;
+    Message.ParseIntoArrayLines(Lines);
+
+    for (const FString& Line : Lines)
     {
-        _lastPongTime = FDateTime::UtcNow();  // Update the last pong time
+        FString CleanLine = Line.TrimStartAndEnd();
+
+        if (CleanLine.Equals("pong", ESearchCase::IgnoreCase))
+        {
+            IsConnected = true;
     }   
-    else if (Message.StartsWith("match:"))
+        else if (CleanLine.StartsWith("match:"))
     {
-        FString MatchData = Message.RightChop(6); // remove "match:"
-        FString MatchIP;
-        FString MatchPortStr;
-        MatchData.Split(":", &MatchIP, &MatchPortStr);
+            FString URL = CleanLine.RightChop(6);
+            UE_LOG(LogTemp, Warning, TEXT("Match message: %s"), *URL);
 
-        int32 MatchPort = FCString::Atoi(*MatchPortStr);
-
-		UE_LOG(LogTemp, Warning, L"Match found! IP: %s, Port: %d", *MatchIP, MatchPort);
+            APlayerController* PC = GetWorld()->GetFirstPlayerController();
+            if (PC)
+            {
+				ATC_Player* Player = Cast<ATC_Player>(PC->GetPawn());
+                if (Player)
+                {
+                    Cast<UTC_GameInstance>(GetWorld()->GetGameInstance())->SelectedPlayerDeck = Player->GetDeck();
+                }
+                PC->ClientTravel(URL, ETravelType::TRAVEL_Absolute);
+            }
     }
-    else
-    {
-		UE_LOG(LogTemp, Warning, L"Unknown Message: %s", *Message);
     }
 }
 
@@ -113,7 +127,6 @@ void UTC_TCPComponent::_checkConnectionStatus()
     FTimespan TimeSinceLastPong = Now - _lastPongTime;
 
     IsConnected = (TimeSinceLastPong.GetTotalSeconds() <= PingTimeoutSeconds);
-	UE_LOG(LogTemp, Warning, L"Connection status: %s", IsConnected ? L"Connected" : L"Disconnected");
 
     if (!IsConnected)
     {
