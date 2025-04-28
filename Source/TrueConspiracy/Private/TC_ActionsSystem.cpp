@@ -110,8 +110,13 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 		return;
 	}
 
-	InAction.PlayingSlot->SetSlotCard(InAction.CardInHand);
+	InAction.PlayingSlot->SetSlotCard(SpawnedCard);
 	InAction.CardInHand->SetSlot(InAction.PlayingSlot);
+	UTC_BoardSlotUI* BoardSlotWidget = Cast<UTC_BoardSlotUI>(InAction.PlayingSlot->GetSlotBoardSlot()->Widget->GetWidget());
+	if (BoardSlotWidget)
+	{
+		BoardSlotWidget->OnUpdate();
+	}
 
 	//UE_LOG(LogTemp, Log, TEXT("PlayCard: Carte %s jouée avec succès."), *SpawnedCard->GetName());
 

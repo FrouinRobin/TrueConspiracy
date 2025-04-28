@@ -2,6 +2,7 @@
 
 
 #include "Board/TC_Slot.h"
+#include "Board/TC_BoardSlot.h"
 #include "Cards/TC_Card.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SceneComponent.h"
@@ -65,6 +66,11 @@ void ATC_Slot::SetSlotBoardSlot(ATC_BoardSlot* newSlotBoardSlot)
 void ATC_Slot::SetSlotCardType(ETC_CardType newSlotCardType)
 {
 	_slotCardType = newSlotCardType;
+}
+
+void ATC_Slot::SetCardScoreFromCard()
+{
+	_slotCurrentScore;
 }
 
 void ATC_Slot::Init()

@@ -28,6 +28,9 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	ATC_Card* _slotCard;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Slot Properties", meta = (AllowPrivateAccess = true))
+	uint8 _slotCurrentScore;
+
 protected:
 
 public:
@@ -52,6 +55,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	void SetSlotCardType(ETC_CardType newSlotCardType);
+
+	UFUNCTION(BlueprintCallable, Category = "Slot Properties")
+	void SetCardScoreFromCard();
 
 	UFUNCTION(BlueprintCallable, Category = "Init")
 	void Init();

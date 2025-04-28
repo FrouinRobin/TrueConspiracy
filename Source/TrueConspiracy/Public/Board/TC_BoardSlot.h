@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/WidgetComponent.h"
+#include "Board/TC_BoardSlotUI.h"
 #include "TC_BoardSlot.generated.h"
 
 class ATC_Slot;
@@ -26,6 +28,13 @@ public:
 	USceneComponent* SlotThreeAnchor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SlotFourAnchor")
 	USceneComponent* SlotFourAnchor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WidgetAnchor")
+	USceneComponent* WidgetAnchor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
+	UWidgetComponent* Widget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WidgetReference")
+	UTC_BoardSlotUI* WidgetReference;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BluePrintReference")
 	TSubclassOf<ATC_Slot> SlotBluePrint;
