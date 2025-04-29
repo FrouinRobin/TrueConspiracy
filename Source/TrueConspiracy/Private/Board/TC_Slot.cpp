@@ -68,11 +68,6 @@ void ATC_Slot::SetSlotCardType(ETC_CardType newSlotCardType)
 	_slotCardType = newSlotCardType;
 }
 
-void ATC_Slot::SetCardScoreFromCard()
-{
-	_slotCurrentScore;
-}
-
 void ATC_Slot::Init()
 {
 	
