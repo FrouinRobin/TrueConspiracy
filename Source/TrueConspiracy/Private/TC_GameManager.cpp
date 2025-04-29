@@ -7,6 +7,7 @@
 #include "Board/TC_Plate.h"
 #include "Board/TC_BoardSlot.h"
 #include "Kismet/GameplayStatics.h"
+#include "TC_AIController.h"
 
 ATC_GameManager::ATC_GameManager()
 {
@@ -207,8 +208,21 @@ void ATC_GameManager::EndPhase()
 	//}
 	
 	ATC_Player* ActivePlayer = GetCurrentGameState().GetActivePlayer();
-	FString PhaseStateName = StaticEnum<ETC_PhaseState>()->GetNameStringByValue((int64)ActivePlayer->GetPlayerPhaseState());
-	
+	if (ActivePlayer)
+	{
+		AController* Controller = ActivePlayer->GetController();
+		if (Controller)
+		{
+			ATC_AIController* AIController = Cast<ATC_AIController>(Controller);
+			if (AIController)
+			{
+				AIController->ResetRandomDifficulty();
+				//UE_LOG(LogTemp, Log, TEXT("EndPhase: ResetRandomDifficulty effectué pour IA %s."), *GetNameSafe(ActivePlayer));
+			}
+		}
+	}
+	//FString PhaseStateName = StaticEnum<ETC_PhaseState>()->GetNameStringByValue((int64)ActivePlayer->GetPlayerPhaseState());
+
 	//////UE_LOG(LogTemp, Error, TEXT("ActivePlayer: %s, PhaseState: %s"),*GetNameSafe(ActivePlayer), *PhaseStateName);
 
 	if (GetCurrentGameState().GetActivePlayer()->GetPlayerPhaseState() == ETC_PhaseState::Defense)

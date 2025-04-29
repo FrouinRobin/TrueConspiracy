@@ -1,17 +1,17 @@
-#include "BTT_PlayCard.h"
+#include "TC_BTT_PlayMaxCard.h"
 #include "TC_Player.h"
 #include "AIController.h"
 #include "TC_GameManager.h"
 #include "Kismet/GameplayStatics.h"
-#include "TC_AIActions.h"
 #include "Board/TC_Plate.h"
+#include "TC_AIActions.h"
 
-UBTT_PlayCard::UBTT_PlayCard()
+UTC_BTT_PlayMaxCard::UTC_BTT_PlayMaxCard()
 {
-	NodeName = "PlayCard";
+	NodeName = "PlayMaxCard";
 }
 
-EBTNodeResult::Type UBTT_PlayCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UTC_BTT_PlayMaxCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	//Getting AIController from BehaviorTree sent in params
 	AAIController* AIController = OwnerComp.GetAIOwner();
@@ -33,7 +33,7 @@ EBTNodeResult::Type UBTT_PlayCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 	//ATC_GameManager* GameManager = Cast<ATC_GameManager>(AIPlayer->GetWorld()->GetAuthGameMode());
 	//if (!GameManager)
 	//{
-	//	//UE_LOG(LogTemp, Error, TEXT("BTTask_PlayCard: GameManager (GameMode) not found."));
+	//	//UE_LOG(LogTemp, Error, TEXT("BTTask_DrawCard: GameManager (GameMode) not found."));
 	//	return EBTNodeResult::Failed;
 	//}
 
@@ -43,7 +43,7 @@ EBTNodeResult::Type UBTT_PlayCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 	ATC_GameManager* GameManager = Cast<ATC_GameManager>(GameManagerActor);
 	if (!GameManager)
 	{
-		//UE_LOG(LogTemp, Error, TEXT("BTTask_PlayCard: GameManager (Actor) not found."));
+		//UE_LOG(LogTemp, Error, TEXT("BTTask_DrawCard: GameManager (Actor) not found."));
 		return EBTNodeResult::Failed;
 	}
 
@@ -53,10 +53,10 @@ EBTNodeResult::Type UBTT_PlayCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 		return EBTNodeResult::Failed;
 	}
 
-	TArray<ATC_Card*> AIPlayableCards;
 	int CurrentMana = AIPlayer->GetPlayerCurrentMana();
 	TArray<ATC_Card*> AIHandCards = AIPlayer->GetHand();
 
+	TArray<ATC_Card*> AIPlayableCards;
 	for (ATC_Card* AICard : AIHandCards)
 	{
 		if (!AICard || AICard->GetCardCurrentMana() <= CurrentMana)
@@ -70,7 +70,10 @@ EBTNodeResult::Type UBTT_PlayCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 		return EBTNodeResult::Failed;
 	}
 
-	ATC_Card* SelectedCard = AIPlayableCards[FMath::RandRange(0, AIPlayableCards.Num() - 1)];
+	AIPlayableCards.Sort([](ATC_Card& A,ATC_Card& B)
+		{
+			return A.GetCardCurrentMana() < B.GetCardCurrentMana();
+		});
 
 	ATC_Board* AIBoard = AIPlayer->GetPlayerBoard();
 	if (!AIBoard)
@@ -95,16 +98,27 @@ EBTNodeResult::Type UBTT_PlayCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 		return EBTNodeResult::Failed;
 	}
 
-	ATC_Slot* SelectedSlot = AIAvailableSlots[FMath::RandRange(0, AIAvailableSlots.Num() - 1)];
+	for (ATC_Card* CardToPlay : AIPlayableCards)
+	{
+		if (CardToPlay->GetCardCurrentMana() <= CurrentMana)
+		{
+			ATC_Slot* Slot = AIAvailableSlots[FMath::RandRange(0, AIAvailableSlots.Num() - 1)];
+			if (!Slot)
+			{
+				continue;
+			}
 
-	FAIActions PlayCard(EActionType::PlayCard);
-	PlayCard.CardInHand = SelectedCard;
-	PlayCard.PlayingSlot = SelectedSlot;
-	PlayCard.CardinHandIndex = AIHandCards.Find(SelectedCard);
-	PlayCard.BoardSlotIndex = AIBoard->GetBoardSlots().Find(SelectedSlot->GetSlotBoardSlot());
-	PlayCard.BoardSlotCardIndex = SelectedSlot->GetSlotBoardSlot()->GetBoardSlotSlots().Find(SelectedSlot);
+			FAIActions PlayAction(EActionType::PlayCard);
+			PlayAction.CardInHand = CardToPlay;
+			PlayAction.PlayingSlot = Slot;
+			PlayAction.CardinHandIndex = AIHandCards.Find(CardToPlay);
+			PlayAction.BoardSlotIndex = AIBoard->GetBoardSlots().Find(Slot->GetSlotBoardSlot());
+			PlayAction.BoardSlotCardIndex = Slot->GetSlotBoardSlot()->GetBoardSlotSlots().Find(Slot);
 
-	GameManager->GetCurrentGameState().ApplyAction(PlayCard);
-	UE_LOG(LogTemp, Log, TEXT("BTTask_PlayCard: AI player %s 's has spawned %s card."), *AIPlayer->GetName(), *SelectedCard->GetName());
-	return EBTNodeResult::Succeeded;
+			GameManager->GetCurrentGameState().ApplyAction(PlayAction);
+			return EBTNodeResult::Succeeded;
+		}
+	}
+
+	return EBTNodeResult::Failed;
 }
