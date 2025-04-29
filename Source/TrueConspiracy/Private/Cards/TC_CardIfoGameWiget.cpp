@@ -3,23 +3,20 @@
 
 #include "Cards/TC_CardIfoGameWiget.h"
 #include "Cards/TC_Card.h"
+#include "Cards/Faces/TC_Face.h"
 
-void UTC_CardIfoGameWiget::NativeConstruct()
-{
 
-}
-void UTC_CardIfoGameWiget::SetCardInstance(ATC_Card* Instance)
+ATC_Card* UTC_CardIfoGameWiget::GetPureWidgetCard()
 {
+	return _widgetCard;
+}
 
-}
-/*
-void UTC_CardIfoGameWiget::SetCardInstance(UCardInstance* Instance)
+ATC_Card* UTC_CardIfoGameWiget::GetWidgetCard()
 {
-    CardInstance = Instance;
-    if (CardInstance && CardInstance->CardData)
-    {
-        CardNameText->SetText(CardInstance->CardData->CardName);
-        ManaText->SetText(FText::AsNumber(CardInstance->CurrentMana));
-    }
+	return _widgetCard;
 }
-*/
+
+void UTC_CardIfoGameWiget::SetWidgetCard(ATC_Card* newCard)
+{
+	_widgetCard = newCard;
+}

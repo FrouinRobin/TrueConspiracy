@@ -20,28 +20,30 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	TArray<ETC_CardAttribute>& GetFaceAttribute();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	UTexture2D* GetCardIllustration();
+	UTexture2D* GetFaceIllustration();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	UTexture2D* GetCardBackground();
+	UTexture2D* GetFaceBackground();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	FString GetCardDescription();
+	FString GetFaceName();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	float GetCardMana();
+	FString GetFaceDescription();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
-	float GetCardScore();
+	float GetFaceMana();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	float GetFaceScore();
 
 	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetCardTypeList(TArray<ETC_CardAttribute>& newFaceAttribute);
+	void SetFaceTypeList(TArray<ETC_CardAttribute>& newFaceAttribute);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetCardIllustration(UTexture2D* newImage);
+	void SetFaceIllustration(UTexture2D* newImage);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetCardBackground(UTexture2D* newImage);
+	void SetFaceBackground(UTexture2D* newImage);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetCardDescription(FString newDescription);
+	void SetFaceDescription(FString newDescription);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetCardMana(float newMana);
+	void SetFaceMana(float newMana);
 	UFUNCTION(BlueprintCallable, Category = "Setters")
-	void SetCardScore(float newScore);
+	void SetFaceScore(float newScore);
 
 	/* CUSTOM EVENT */
 
@@ -70,20 +72,22 @@ public:
 
 public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Type")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Face Face Type")
 	TArray<ETC_CardAttribute> FaceAttribute;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Illustration")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Face Face Illustration")
 	UTexture2D* FaceIllustration;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Background")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Face Face Background")
 	UTexture2D* FaceBackground;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Description")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Face Face Name")
+	FString FaceName;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Face Face Description")
 	FString FaceDescription;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Mana")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Face Face Mana")
 	float FaceMana;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Face Score")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Face Face Score")
 	float FaceScore;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category = "Card Effects")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category = "Face Effects")
 	TArray<UTC_EffectType*> FaceEffect;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Effects")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Face Effects")
 	bool _keepTarget;
 };

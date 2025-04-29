@@ -15,7 +15,21 @@ ATC_Card::ATC_Card()
 	CardMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CardMesh"));
 	CardMesh->SetupAttachment(CardAnchor);
 
+	AttackFaceUIAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("AttackFaceUIAnchor"));
+	AttackFaceUIAnchor->SetupAttachment(CardAnchor);
+	DefendFaceUIAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("DefendFaceUIAnchor"));
+	DefendFaceUIAnchor->SetupAttachment(CardAnchor);
 
+	CardAttackFaceUI = CreateDefaultSubobject<UWidgetComponent>(TEXT("CardAttackFaceUI"));
+	CardAttackFaceUI->SetupAttachment(AttackFaceUIAnchor);
+
+	CardDefendFaceUI = CreateDefaultSubobject<UWidgetComponent>(TEXT("CardDefendFaceUI"));
+	CardDefendFaceUI->SetupAttachment(DefendFaceUIAnchor);
+
+	CardAttackFaceUI->SetWidgetSpace(EWidgetSpace::World); // "World" pour un widget 3D
+	CardAttackFaceUI->SetDrawSize(FVector2D(500.0f, 500.0f)); // Taille du widget
+	CardDefendFaceUI->SetWidgetSpace(EWidgetSpace::World); // "World" pour un widget 3D
+	CardDefendFaceUI->SetDrawSize(FVector2D(500.0f, 500.0f)); // Taille du widget
 }
 
 
@@ -23,27 +37,42 @@ void ATC_Card::BeginPlay()
 {
 	Super::BeginPlay();
 
+	UUserWidget* CreatedWidgetOne = CardAttackFaceUI->GetWidget();
+
+	if (CreatedWidgetOne)
+	{
+		UTC_CardIfoGameWiget* CardWidgetOne = Cast<UTC_CardIfoGameWiget>(CreatedWidgetOne);
+
+		if (CardWidgetOne)
+		{
+			CardWidgetOne->SetWidgetCard(this);
+			CardWidgetOne->OnInit(CardAttackFace);
+
+
+			CardAttackFaceUIReference = CardWidgetOne;
+		}
+	}
+
+	UUserWidget* CreatedWidgetTwo = CardDefendFaceUI->GetWidget();
+
+	if (CreatedWidgetTwo)
+	{
+		UTC_CardIfoGameWiget* CardWidgetTwo = Cast<UTC_CardIfoGameWiget>(CreatedWidgetTwo);
+
+		if (CardWidgetTwo)
+		{
+			CardWidgetTwo->SetWidgetCard(this);
+			CardWidgetTwo->OnInit(CardDefendFace);
+
+			CardDefendFaceUIReference = CardWidgetTwo;
+		}
+	}
+
 }
 
 void ATC_Card::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
-	//switch (_cardPlayer->GetPlayerPhaseState())
-	//{
-	//	case(ETC_PhaseState::Attack):
-	//	{
-	//		SetCardCurrentFace(CardDefendFace);
-	//		break;
-	//	}
-	//	case(ETC_PhaseState::Defense):
-	//	{
-	//		SetCardCurrentFace(CardAttackFace);
-	//		break;
-	//	}
-	//default:
-	//	break;
-	//}
 }
 
 /*GETTER*/
@@ -133,6 +162,16 @@ ATC_Slot* ATC_Card::GetSlot()
 	return _cardSlot;
 }
 
+UTC_CardIfoGameWiget* ATC_Card::GetCardAttackFaceUIRef()
+{
+	return CardAttackFaceUIReference;
+}
+
+UTC_CardIfoGameWiget* ATC_Card::GetCardDefendFaceUIRef()
+{
+	return CardDefendFaceUIReference;
+}
+
 USceneComponent* ATC_Card::GetCardAnchor()
 {
 	return CardAnchor;
@@ -151,14 +190,14 @@ void ATC_Card::SetCardCurrentFace(UTC_Face* newCurrentFace)
 {
 	_cardCurrentFace = newCurrentFace; // Met � jour d'abord !
 
-	SetCardMaxMana(_cardCurrentFace->GetCardMana());
-	SetCardCurrentMana(_cardCurrentFace->FaceMana); // Reset complet sur les nouvelles valeurs
-	SetCardMaxScore(_cardCurrentFace->FaceScore);
-	SetCardCurrentScore(_cardCurrentFace->FaceScore);
+	SetCardMaxMana(_cardCurrentFace->GetFaceMana());
+	SetCardCurrentMana(_cardCurrentFace->GetFaceMana()); // Reset complet sur les nouvelles valeurs
+	SetCardMaxScore(_cardCurrentFace->GetFaceScore());
+	SetCardCurrentScore(_cardCurrentFace->GetFaceScore());
 
 	GetCardAttribute().Empty();
-	SetCardAttributeList(newCurrentFace->FaceAttribute);
-	SetCardDescription(newCurrentFace->FaceDescription);
+	SetCardAttributeList(newCurrentFace->GetFaceAttribute());
+	SetCardDescription(newCurrentFace->GetFaceDescription());
 	_cardCurrentFace = newCurrentFace;
 	OnChangeStats();
 }
@@ -335,11 +374,6 @@ void ATC_Card::AssignCardMaterialsAndTextures(
 void ATC_Card::SetTexture()
 {
 	OnCardSetTexture();
-}
-
-void ATC_Card::UpdateCardUIFunc(FTC_CardDataStruct CardData, UTC_CardIfoGameWiget* widget)
-{
-	widget->OnUpdateCardData(CardData);
 }
 
 // In any world, those two functions would be a bad idea

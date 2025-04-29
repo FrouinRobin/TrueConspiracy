@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/WidgetComponent.h"
 #include "Cards/Faces/TC_Face.h"
 #include "Cards/Faces/TC_AttackFace.h"
 #include "Cards/Faces/TC_DefendFace.h"
@@ -23,11 +24,17 @@ class TRUECONSPIRACY_API ATC_Card : public AActor
 
 public:
 	ATC_Card();
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Main Anchor")
 	USceneComponent* MainAnchor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Anchor")
 	USceneComponent* CardAnchor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack Face UI Anchor")
+	USceneComponent* AttackFaceUIAnchor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Defend Face UI Anchor")
+	USceneComponent* DefendFaceUIAnchor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Mesh")
 	UStaticMeshComponent* CardMesh;
@@ -46,6 +53,18 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
 	USoundBase* CardDrawnSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Face UI")
+	UWidgetComponent* CardAttackFaceUI;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Face UI")
+	UWidgetComponent* CardDefendFaceUI;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Face UI Reference")
+	UTC_CardIfoGameWiget* CardAttackFaceUIReference;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Face UI Reference")
+	UTC_CardIfoGameWiget* CardDefendFaceUIReference;
 
 protected:
 	// Called when the game starts or when spawned
@@ -92,6 +111,10 @@ public:
 	ATC_Player* GetPlayer();
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	ATC_Slot* GetSlot();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	UTC_CardIfoGameWiget* GetCardAttackFaceUIRef();
+	UFUNCTION(BlueprintCallable, Category = "Getters")
+	UTC_CardIfoGameWiget* GetCardDefendFaceUIRef();
 
 	UFUNCTION(BlueprintCallable, Category = "Getters")
 	USceneComponent* GetCardAnchor();
@@ -198,9 +221,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Init();
-
-	UFUNCTION(BlueprintCallable)
-	void UpdateCardUIFunc(FTC_CardDataStruct CardData, UTC_CardIfoGameWiget* widget);
 
 	UFUNCTION(BlueprintCallable, Category = "Card")
 	void AssignCardMaterialsAndTextures(
