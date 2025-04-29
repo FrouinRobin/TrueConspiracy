@@ -23,7 +23,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetMyText(const FString& NewText, UTextBlock* TextScore);
 
-	UFUNCTION(BlueprintImplementableEvent, CallInEditor)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnUpdate();
 
 protected:

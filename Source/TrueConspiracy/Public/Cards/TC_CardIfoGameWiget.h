@@ -4,12 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/TextBlock.h"
-#include "TC_CardDataStruct.h"
 #include "TC_CardIfoGameWiget.generated.h"
 
 
 class ATC_Card;
+class UTC_Face;
+
 /**
  * 
  */
@@ -21,28 +21,25 @@ class TRUECONSPIRACY_API UTC_CardIfoGameWiget : public UUserWidget
 
 public:
 
-	/*UPROPERTY(meta = (BindWidget))
-	UTextBlock * CardNameText;
-
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* CardManaText;
-
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* CardScoreText;*/
-
 protected:
 
-	virtual void NativeConstruct();
-
 public:
-	UFUNCTION(BlueprintCallable)
-	void SetCardInstance(ATC_Card* Instance);
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnUpdateCardData(FTC_CardDataStruct CardData);
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "GetPureWidgetCard"))
+	ATC_Card* GetPureWidgetCard();
+
+	UFUNCTION(BlueprintCallable)
+	ATC_Card* GetWidgetCard();
+
+	UFUNCTION(BlueprintCallable)
+	void SetWidgetCard(ATC_Card* newCard);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnUpdateCardData();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnInit(UTC_Face* FaceRef);
 
 private:
-	UPROPERTY()
-	ATC_Card* CardInstance;
-
+	ATC_Card* _widgetCard;
 };
