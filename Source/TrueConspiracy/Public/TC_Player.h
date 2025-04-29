@@ -193,6 +193,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnChangePhaseState(ETC_PhaseState newPhaseState);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnStartGame();
 	
 
 private:
