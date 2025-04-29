@@ -127,7 +127,7 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 	}
 
 		InAction.PlayingSlot->SetSlotCard(SpawnedCard);
-		InAction.CardInHand->SetSlot(InAction.PlayingSlot);
+		SpawnedCard->SetSlot(InAction.PlayingSlot);
 		InAction.PlayingSlot->GetSlotBoardSlot()->WidgetReference->OnUpdate();
 		InAction.PlayingSlot->GetSlotBoardSlot()->WidgetReference->InvalidateLayoutAndVolatility();
 
