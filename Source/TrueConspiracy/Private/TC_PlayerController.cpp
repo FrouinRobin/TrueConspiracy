@@ -31,9 +31,11 @@ void ATC_PlayerController::SetupInputComponent()
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
 	{
-		EnhancedInputComponent->BindAction(TouchAction, ETriggerEvent::Triggered, this, &ATC_PlayerController::INTERNAL_OnTouchTriggered);
-		EnhancedInputComponent->BindAction(TouchAction, ETriggerEvent::Completed, this, &ATC_PlayerController::INTERNAL_OnTouchReleased);
-		EnhancedInputComponent->BindAction(TouchAction, ETriggerEvent::Canceled, this, &ATC_PlayerController::INTERNAL_OnTouchReleased);
+		EnhancedInputComponent->BindAction(TouchTapAction, ETriggerEvent::Triggered, this, &ATC_PlayerController::INTERNAL_OnTouchTriggered);
+		EnhancedInputComponent->BindAction(TouchTapAction, ETriggerEvent::Completed, this, &ATC_PlayerController::INTERNAL_OnTouchReleased);
+		EnhancedInputComponent->BindAction(TouchTapAction, ETriggerEvent::Canceled, this, &ATC_PlayerController::INTERNAL_OnTouchReleased);
+
+		EnhancedInputComponent->BindAction(TouchHoldAction, ETriggerEvent::Triggered, this, &ATC_PlayerController::INTERNAL_OnTouchHold);
 
 		OnInputStart(EnhancedInputComponent);
 	}
@@ -60,6 +62,17 @@ void ATC_PlayerController::INTERNAL_OnTouchReleased()
 {
 	_isTouching = false;
 	OnTouchReleased();
+}
+
+void ATC_PlayerController::INTERNAL_OnTouchHold()
+{
+	FHitResult hit;
+	bool didHit = GetHitResultUnderFingerByChannel(ETouchIndex::Touch1, UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_MAX), true, hit);
+
+	if (!didHit)
+		didHit = GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_MAX), true, hit);
+
+	OnTouchHold(hit, didHit);
 }
 
 ATC_Player* ATC_PlayerController::GetMyPawn()

@@ -29,6 +29,7 @@ protected:
 
 	void INTERNAL_OnTouchTriggered(const FInputActionValue& Value);
 	void INTERNAL_OnTouchReleased();
+	void INTERNAL_OnTouchHold();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnInputStart(UEnhancedInputComponent* EnhancedInputComponent);
@@ -50,6 +51,9 @@ private:
 
 	/* Touch Input Action */
 	UPROPERTY(EditDefaultsOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* TouchAction;
+	UInputAction* TouchTapAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* TouchHoldAction;
 	
 };
