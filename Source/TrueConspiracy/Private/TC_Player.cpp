@@ -16,6 +16,7 @@
 #include "Cards/TC_LandCard.h"
 #include "Board/TC_LandCardSlot.h"
 #include "Board/TC_Plate.h"
+#include "TC_PlayerUI.h"
 
 
 
@@ -37,6 +38,9 @@ ATC_Player::ATC_Player()
 	PlayerCardAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("CardAnchor"));
 	PlayerCardAnchor->SetupAttachment(RootComponent);
 	PlayerCardAnchor->SetRelativeLocation(FVector(150, 0, -120));
+
+
+
 
 
 	_PlayerState = ETC_PlayerState::SELECTHAND;
@@ -284,6 +288,8 @@ void ATC_Player::SetPlayerHand(TArray<ATC_Card*>& newDeck)
 void ATC_Player::SetPlayerCurrentMana(int newCurrrentMana)
 {
 	_playerCurrentMana = newCurrrentMana;
+	//OnUpdate
+
 }
 
 void ATC_Player::SetPlayerPhaseState(ETC_PhaseState newPhaseState)
