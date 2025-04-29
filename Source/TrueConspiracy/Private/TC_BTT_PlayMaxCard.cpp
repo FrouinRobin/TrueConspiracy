@@ -5,6 +5,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Board/TC_Plate.h"
 #include "TC_AIActions.h"
+#include "Cards/TC_LandCard.h"
+
 
 UTC_BTT_PlayMaxCard::UTC_BTT_PlayMaxCard()
 {
@@ -59,7 +61,7 @@ EBTNodeResult::Type UTC_BTT_PlayMaxCard::ExecuteTask(UBehaviorTreeComponent& Own
 	TArray<ATC_Card*> AIPlayableCards;
 	for (ATC_Card* AICard : AIHandCards)
 	{
-		if (!AICard || AICard->GetCardCurrentMana() <= CurrentMana)
+		if (AICard && AICard->GetCardCurrentMana() <= CurrentMana)
 		{
 			AIPlayableCards.Add(AICard);
 		}
@@ -76,10 +78,15 @@ EBTNodeResult::Type UTC_BTT_PlayMaxCard::ExecuteTask(UBehaviorTreeComponent& Own
 		});
 
 	ATC_Board* AIBoard = AIPlayer->GetPlayerBoard();
-	if (!AIBoard)
+	ATC_Plate* Plate = GameManager->GetCurrentGameState().GetGamePlate();
+	if (!AIBoard || !Plate)
 	{
 		return EBTNodeResult::Failed;
 	}
+	//if (!AIBoard)
+	//{
+	//	return EBTNodeResult::Failed;
+	//}
 
 	TArray<ATC_Slot*> AIAvailableSlots;
 	for (ATC_BoardSlot* AIBoardSlots : AIBoard->GetBoardSlots())
@@ -93,6 +100,15 @@ EBTNodeResult::Type UTC_BTT_PlayMaxCard::ExecuteTask(UBehaviorTreeComponent& Own
 		}
 	}
 
+	TArray<ATC_LandCardSlot*> AIAvailableLandSlots;
+	for (ATC_LandCardSlot* LandSlot : Plate->GetLandCardSlots())
+	{
+		if (LandSlot && !LandSlot->HasCard())
+		{
+			AIAvailableLandSlots.Add(LandSlot);
+		}
+	}
+
 	if (AIAvailableSlots.Num() == 0)
 	{
 		return EBTNodeResult::Failed;
@@ -100,25 +116,81 @@ EBTNodeResult::Type UTC_BTT_PlayMaxCard::ExecuteTask(UBehaviorTreeComponent& Own
 
 	for (ATC_Card* CardToPlay : AIPlayableCards)
 	{
-		if (CardToPlay->GetCardCurrentMana() <= CurrentMana)
+		if (CardToPlay->GetCardCurrentMana() > CurrentMana)
+			continue;
+
+		FAIActions PlayAction(EActionType::PlayCard);
+		PlayAction.CardInHand = CardToPlay;
+		PlayAction.CardinHandIndex = AIHandCards.Find(CardToPlay);
+
+		if (CardToPlay->GetCardType() == ETC_CardType::LandCard)
 		{
+			if (AIAvailableLandSlots.Num() == 0)
+				continue;
+
+			ATC_LandCardSlot* LandSlot = AIAvailableLandSlots[FMath::RandRange(0, AIAvailableLandSlots.Num() - 1)];
+			if (!LandSlot)
+				continue;
+
+			PlayAction.PlayingLandSlot = LandSlot;
+			PlayAction.LandSlotIndex = Plate->GetLandCardSlots().Find(LandSlot);
+			PlayAction.LandCardInHand = Cast<ATC_LandCard>(CardToPlay);
+			PlayAction.LandCardInHandIndex = AIHandCards.Find(CardToPlay);
+		}
+		else
+		{
+			if (AIAvailableSlots.Num() == 0)
+				continue;
+
 			ATC_Slot* Slot = AIAvailableSlots[FMath::RandRange(0, AIAvailableSlots.Num() - 1)];
 			if (!Slot)
-			{
 				continue;
-			}
 
-			FAIActions PlayAction(EActionType::PlayCard);
-			PlayAction.CardInHand = CardToPlay;
 			PlayAction.PlayingSlot = Slot;
-			PlayAction.CardinHandIndex = AIHandCards.Find(CardToPlay);
 			PlayAction.BoardSlotIndex = AIBoard->GetBoardSlots().Find(Slot->GetSlotBoardSlot());
 			PlayAction.BoardSlotCardIndex = Slot->GetSlotBoardSlot()->GetBoardSlotSlots().Find(Slot);
-
-			GameManager->GetCurrentGameState().ApplyAction(PlayAction);
-			return EBTNodeResult::Succeeded;
 		}
+		GameManager->GetCurrentGameState().ApplyAction(PlayAction);
+		return EBTNodeResult::Succeeded;
+		//if (CardToPlay->GetCardCurrentMana() <= CurrentMana)
+		//{
+		//	ATC_Slot* Slot = AIAvailableSlots[FMath::RandRange(0, AIAvailableSlots.Num() - 1)];
+		//	if (!Slot)
+		//	{
+		//		continue;
+		//	}
+		//
+		//	FAIActions PlayAction(EActionType::PlayCard);
+		//	PlayAction.CardInHand = CardToPlay;
+		//	PlayAction.PlayingSlot = Slot;
+		//	PlayAction.CardinHandIndex = AIHandCards.Find(CardToPlay);
+		//	//PlayAction.BoardSlotIndex = AIBoard->GetBoardSlots().Find(Slot->GetSlotBoardSlot());
+		//	//PlayAction.BoardSlotCardIndex = Slot->GetSlotBoardSlot()->GetBoardSlotSlots().Find(Slot);
+		//
+		//	if (CardToPlay->GetCardType() != ETC_CardType::LandCard)
+		//	{
+		//		PlayAction.BoardSlotIndex = AIBoard->GetBoardSlots().Find(Slot->GetSlotBoardSlot());
+		//		PlayAction.BoardSlotCardIndex = Slot->GetSlotBoardSlot()->GetBoardSlotSlots().Find(Slot);
+		//	}
+		//	else
+		//	{
+		//		for (int i = 0; i < Plate->GetLandCardSlots().Num(); ++i)
+		//		{
+		//			if (Plate->GetLandCardSlots()[i] == Slot)
+		//			{
+		//				ATC_LandCard* _InLandCard = Cast<ATC_LandCard>(CardToPlay);
+		//				ATC_LandCardSlot* _InLandSlot = Cast<ATC_LandCardSlot>(Slot);
+		//				PlayAction.LandCardInHand = _InLandCard;
+		//				PlayAction.PlayingLandSlot = _InLandSlot;
+		//				PlayAction.LandCardInHandIndex = AIHandCards.Find(CardToPlay);
+		//				PlayAction.LandSlotIndex = i;
+		//				break;
+		//			}
+		//		}
+		//	}
+		//	GameManager->GetCurrentGameState().ApplyAction(PlayAction);
+		//	return EBTNodeResult::Succeeded;
+		//}
 	}
-
 	return EBTNodeResult::Failed;
 }

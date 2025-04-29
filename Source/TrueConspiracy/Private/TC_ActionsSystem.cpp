@@ -135,16 +135,18 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 	}
 	else if (SelectedCard->GetCardType() == ETC_CardType::LandCard)
 	{
-		ATC_LandCard* SpawnedCard = GameInstance->GetWorld()->SpawnActor<ATC_LandCard>(
-			SelectedCard->GetClass(),
-			Plate->GetLandCardSlots()[InAction.LandSlotIndex]->GetActorLocation(),
-			FRotator(0));
-		SpawnedCard->SetPlayer(ActivePlayer);
-		SpawnedCard->Init();
-		InAction.PlayingLandSlot->SetLandCard(SpawnedCard);
-		InAction.LandCardInHand->SetLandSlot(InAction.PlayingLandSlot);
+		if (Plate->GetLandCardSlots().IsValidIndex(InAction.LandSlotIndex))
+		{
+			ATC_LandCard* SpawnedCard = GameInstance->GetWorld()->SpawnActor<ATC_LandCard>(
+				SelectedCard->GetClass(),
+				Plate->GetLandCardSlots()[InAction.LandSlotIndex]->GetActorLocation(),
+				FRotator(0));
+			SpawnedCard->SetPlayer(ActivePlayer);
+			SpawnedCard->Init();
+			InAction.PlayingLandSlot->SetLandCard(Cast<ATC_LandCard>(SpawnedCard));
+			InAction.LandCardInHand->SetLandSlot(InAction.PlayingLandSlot);
+		}
 	}
-	
 
 	//UE_LOG(LogTemp, Log, TEXT("PlayCard: Carte %s jou�e avec succ�s."), *SpawnedCard->GetName());
 

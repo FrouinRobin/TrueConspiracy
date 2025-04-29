@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "TC_AIActions.h"
 #include "Board/TC_Plate.h"
+#include "Cards/TC_LandCard.h"
 
 UBTT_PlayCard::UBTT_PlayCard()
 {
@@ -53,13 +54,13 @@ EBTNodeResult::Type UBTT_PlayCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 		return EBTNodeResult::Failed;
 	}
 
-	TArray<ATC_Card*> AIPlayableCards;
 	int CurrentMana = AIPlayer->GetPlayerCurrentMana();
 	TArray<ATC_Card*> AIHandCards = AIPlayer->GetHand();
 
+	TArray<ATC_Card*> AIPlayableCards;
 	for (ATC_Card* AICard : AIHandCards)
 	{
-		if (!AICard || AICard->GetCardCurrentMana() <= CurrentMana)
+		if (AICard && AICard->GetCardCurrentMana() <= CurrentMana)
 		{
 			AIPlayableCards.Add(AICard);
 		}
@@ -71,6 +72,10 @@ EBTNodeResult::Type UBTT_PlayCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 	}
 
 	ATC_Card* SelectedCard = AIPlayableCards[FMath::RandRange(0, AIPlayableCards.Num() - 1)];
+	if (!SelectedCard)
+	{
+		return EBTNodeResult::Failed;
+	}
 
 	ATC_Board* AIBoard = AIPlayer->GetPlayerBoard();
 	if (!AIBoard)
@@ -78,14 +83,33 @@ EBTNodeResult::Type UBTT_PlayCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 		return EBTNodeResult::Failed;
 	}
 
-	TArray<ATC_Slot*> AIAvailableSlots;
-	for (ATC_BoardSlot* AIBoardSlots : AIBoard->GetBoardSlots())
+	ATC_Plate* Plate = GameManager->GetCurrentGameState().GetGamePlate();
+	if (!Plate)
 	{
-		for (ATC_Slot* AISlot : AIBoardSlots->GetBoardSlotSlots())
+		return EBTNodeResult::Failed;
+	}
+
+	TArray<ATC_Slot*> AIAvailableSlots;
+	if (SelectedCard->GetCardType() == ETC_CardType::LandCard)
+	{
+		for (ATC_LandCardSlot* LandSlot : Plate->GetLandCardSlots())
 		{
-			if (AISlot && !AISlot->HasCard())
+			if (LandSlot && !LandSlot->HasCard())
 			{
-				AIAvailableSlots.Add(AISlot);
+				AIAvailableSlots.Add(LandSlot);
+			}
+		}
+	}
+	else
+	{
+		for (ATC_BoardSlot* AIBoardSlots : AIBoard->GetBoardSlots())
+		{
+			for (ATC_Slot* AISlot : AIBoardSlots->GetBoardSlotSlots())
+			{
+				if (AISlot && !AISlot->HasCard())
+				{
+					AIAvailableSlots.Add(AISlot);
+				}
 			}
 		}
 	}
@@ -94,17 +118,43 @@ EBTNodeResult::Type UBTT_PlayCard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 	{
 		return EBTNodeResult::Failed;
 	}
-
+	
 	ATC_Slot* SelectedSlot = AIAvailableSlots[FMath::RandRange(0, AIAvailableSlots.Num() - 1)];
+	if (!SelectedSlot)
+	{
+		return EBTNodeResult::Failed;
+	}
 
-	FAIActions PlayCard(EActionType::PlayCard);
-	PlayCard.CardInHand = SelectedCard;
-	PlayCard.PlayingSlot = SelectedSlot;
-	PlayCard.CardinHandIndex = AIHandCards.Find(SelectedCard);
-	PlayCard.BoardSlotIndex = AIBoard->GetBoardSlots().Find(SelectedSlot->GetSlotBoardSlot());
-	PlayCard.BoardSlotCardIndex = SelectedSlot->GetSlotBoardSlot()->GetBoardSlotSlots().Find(SelectedSlot);
+	FAIActions PlayCardAction(EActionType::PlayCard);
+	PlayCardAction.CardInHand = SelectedCard;
+	PlayCardAction.PlayingSlot = SelectedSlot;
+	PlayCardAction.CardinHandIndex = AIHandCards.Find(SelectedCard);
 
-	GameManager->GetCurrentGameState().ApplyAction(PlayCard);
-	UE_LOG(LogTemp, Log, TEXT("BTTask_PlayCard: AI player %s 's has spawned %s card."), *AIPlayer->GetName(), *SelectedCard->GetName());
+	//PlayCardAction.BoardSlotIndex = AIBoard->GetBoardSlots().Find(SelectedSlot->GetSlotBoardSlot());
+	//PlayCardAction.BoardSlotCardIndex = SelectedSlot->GetSlotBoardSlot()->GetBoardSlotSlots().Find(SelectedSlot);
+
+	if (SelectedCard->GetCardType() != ETC_CardType::LandCard)
+	{
+		PlayCardAction.BoardSlotIndex = AIBoard->GetBoardSlots().Find(SelectedSlot->GetSlotBoardSlot());
+		PlayCardAction.BoardSlotCardIndex = SelectedSlot->GetSlotBoardSlot()->GetBoardSlotSlots().Find(SelectedSlot);
+	}
+	else
+	{
+		for (int i = 0; i < Plate->GetLandCardSlots().Num(); ++i)
+		{
+			if (Plate->GetLandCardSlots()[i] == SelectedSlot)
+			{
+				ATC_LandCard* _InLandCard = Cast<ATC_LandCard>(SelectedCard);
+				ATC_LandCardSlot* _InLandSlot = Cast<ATC_LandCardSlot>(SelectedSlot);
+				PlayCardAction.LandCardInHand = _InLandCard;
+				PlayCardAction.PlayingLandSlot = _InLandSlot;
+				PlayCardAction.LandCardInHandIndex = AIHandCards.Find(SelectedCard);
+				PlayCardAction.LandSlotIndex = i;
+				break;
+			}
+		}
+	}
+	GameManager->GetCurrentGameState().ApplyAction(PlayCardAction);
+	//UE_LOG(LogTemp, Log, TEXT("BTTask_PlayCard: AI player %s 's has spawned %s card."), *AIPlayer->GetName(), *SelectedCard->GetName());
 	return EBTNodeResult::Succeeded;
 }
