@@ -34,7 +34,10 @@ public:
 	void StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> Players);
 	void StartTurn();
 	void StartPhase();
+
+	UFUNCTION(BlueprintCallable)
 	void EndPhase();
+
 	void SwitchPhase();
 	void PlayAction(const FAIActions& InActionToPlay);
 	void EndTurn();

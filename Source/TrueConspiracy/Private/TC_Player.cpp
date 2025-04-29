@@ -16,7 +16,7 @@
 #include "Cards/TC_LandCard.h"
 #include "Board/TC_LandCardSlot.h"
 #include "Board/TC_Plate.h"
-#include "TC_PlayerUI.h"
+#include "TC_PlayerGameUI.h"
 
 
 
@@ -288,7 +288,12 @@ void ATC_Player::SetPlayerHand(TArray<ATC_Card*>& newDeck)
 void ATC_Player::SetPlayerCurrentMana(int newCurrrentMana)
 {
 	_playerCurrentMana = newCurrrentMana;
-	//OnUpdate
+	
+	if (PlayerGameUI)
+	{
+		PlayerGameUI->OnUpdate();
+	}
+	
 
 }
 

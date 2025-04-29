@@ -4,23 +4,31 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "TC_PlayerUI.generated.h"
+#include "TC_PlayerGameUI.generated.h"
+
 
 class UTextBlock;
 class UButton;
 class UTC_LeaveGamePopup;
-
+class ATC_Player;
+/**
+ * 
+ */
 UCLASS()
-class TRUECONSPIRACY_API UTC_PlayerUI : public UUserWidget
+class TRUECONSPIRACY_API UTC_PlayerGameUI : public UUserWidget
 {
 	GENERATED_BODY()
 	
 public:
-	// Fonctions pour mettre à jour l'UI
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnUpdate();
 
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	ATC_Player* GetWidgetPlayer();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ATC_Player* Widgetplayer;
 
 
 
@@ -33,5 +41,4 @@ protected:
 private:
 	UPROPERTY()
 	UTC_LeaveGamePopup* LeaveGamePopup;
-
 };
