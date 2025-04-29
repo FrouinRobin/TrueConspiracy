@@ -490,7 +490,6 @@ ATC_Card* ATC_Player::PlayCard(ATC_Card* InCard, ATC_Slot* InSlot)
 	// Applique l'action au GameState actuel
 	GameManager->GetCurrentGameState().ApplyAction(PlayAction);
 	RemoveCardFromHand(InCard);
-	UE_LOG(LogTemp, Error, TEXT("Player Mana %d"), GetPlayerCurrentMana());
 	return InSlot->GetSlotCard();
 }
 

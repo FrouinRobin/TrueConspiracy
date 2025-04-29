@@ -62,12 +62,12 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 
 	// V�rification du co�t en mana
 	int32 CurrentMana = ActivePlayer->GetPlayerCurrentMana();
-	UE_LOG(LogTemp, Warning, TEXT("PlayCard: Current Mana : %i du joueur : %s"), ActivePlayer->GetPlayerCurrentMana(), *GetNameSafe(ActivePlayer));
-	UE_LOG(LogTemp, Warning, TEXT("ACTION: Current Mana : %f du joueur : %s"), InAction.CardInHand->GetCardCurrentMana(), *GetNameSafe(ActivePlayer));
+	//UE_LOG(LogTemp, Warning, TEXT("PlayCard: Current Mana : %i du joueur : %s"), ActivePlayer->GetPlayerCurrentMana(), *GetNameSafe(ActivePlayer));
+	//UE_LOG(LogTemp, Warning, TEXT("ACTION: Current Mana : %f du joueur : %s"), InAction.CardInHand->GetCardCurrentMana(), *GetNameSafe(ActivePlayer));
 	if (InAction.CardInHand->GetCardCurrentMana() > CurrentMana)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Mana insuffisant pour le joueur : %s."), *GetNameSafe(ActivePlayer));
-		UE_LOG(LogTemp, Warning, TEXT("PlayCard: Current Mana : %i du joueur : %s"), ActivePlayer->GetPlayerCurrentMana(), *GetNameSafe(ActivePlayer));
+		//UE_LOG(LogTemp, Warning, TEXT("PlayCard: Mana insuffisant pour le joueur : %s."), *GetNameSafe(ActivePlayer));
+		//UE_LOG(LogTemp, Warning, TEXT("PlayCard: Current Mana : %i du joueur : %s"), ActivePlayer->GetPlayerCurrentMana(), *GetNameSafe(ActivePlayer));
 		return;
 	}
 	
@@ -86,7 +86,7 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 	
 	// D�penser le mana
 	ActivePlayer->SetPlayerCurrentMana(CurrentMana - InAction.CardInHand->GetCardCurrentMana());
-	UE_LOG(LogTemp, Warning, TEXT("NEW: Current Mana : %i du joueur : %s"), ActivePlayer->GetPlayerCurrentMana(), *GetNameSafe(ActivePlayer));
+	//UE_LOG(LogTemp, Warning, TEXT("NEW: Current Mana : %i du joueur : %s"), ActivePlayer->GetPlayerCurrentMana(), *GetNameSafe(ActivePlayer));
 
 	// Spawn de la carte
 	UTC_GameInstance* GameInstance = UTC_GameInstance::GetInstance(InAction.PlayingSlot);
@@ -122,7 +122,7 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 		if (SpawnedCard->CardPlaceSound)
 		{
 			UGameplayStatics::PlaySoundAtLocation(SpawnedCard, SpawnedCard->CardPlaceSound, SpawnedCard->GetActorLocation());
-			UE_LOG(LogTemp, Warning, TEXT("PlayCard: PlaySound."));
+			//UE_LOG(LogTemp, Warning, TEXT("PlayCard: PlaySound."));
 		}
 	}
 

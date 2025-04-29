@@ -159,7 +159,6 @@ void ATC_Card::SetCardCurrentFace(UTC_Face* newCurrentFace)
 	GetCardAttribute().Empty();
 	SetCardAttributeList(newCurrentFace->FaceAttribute);
 	SetCardDescription(newCurrentFace->FaceDescription);
-	_cardCurrentFace = newCurrentFace;
 	OnChangeStats();
 }
 

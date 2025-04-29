@@ -70,7 +70,7 @@ void ATC_GameManager::StartGame(EGameModeFormat InFormat, TArray<ATC_Player*> Pl
 	SetCurrentGameState(TC_GameStates(GameInstance->GetSelectedFormat()));
 
 	//UE_LOG(LongTemp, Error, TEXT("", GameInstance->GetSelectedFormat());
-	UE_LOG(LogTemp, Error, TEXT("SelectedFormat = %s"), *UEnum::GetValueAsString(GameInstance->GetSelectedFormat()));
+	//UE_LOG(LogTemp, Error, TEXT("SelectedFormat = %s"), *UEnum::GetValueAsString(GameInstance->GetSelectedFormat()));
 	
 	GetCurrentGameState().SetGamePlate(Plate);
 	
@@ -126,7 +126,7 @@ void ATC_GameManager::StartTurn()
 
 void ATC_GameManager::StartPhase()
 {
-	UE_LOG(LogTemp, Error, TEXT("StartPhase: Called !"));
+	//UE_LOG(LogTemp, Error, TEXT("StartPhase: Called !"));
 
 	ATC_Player* CurrentPlayer = GetCurrentGameState().GetActivePlayer();
 
@@ -183,7 +183,7 @@ void ATC_GameManager::StartPhase()
 
 void ATC_GameManager::EndPhase()
 {
-	UE_LOG(LogTemp, Error, TEXT("EndPhase: Called !"));
+	//UE_LOG(LogTemp, Error, TEXT("EndPhase: Called !"));
 	//for (ATC_Board* Board : GetCurrentGameState().GetGamePlate()->GetPlateBoard())
 	//{
 	//	for (ATC_BoardSlot* BoardSlot : Board->GetBoardSlots())
@@ -249,7 +249,7 @@ void ATC_GameManager::EndPhase()
 
 void ATC_GameManager::SwitchPhase()
 {
-	UE_LOG(LogTemp, Error, TEXT("SwitchPhase: Rotating Cards !"));
+	//UE_LOG(LogTemp, Error, TEXT("SwitchPhase: Rotating Cards !"));
 	for (ATC_Card* Card : GetCurrentGameState().GetPlayer1()->GetHand())
 	{
 		Card->SwitchPhase();
@@ -282,7 +282,7 @@ void ATC_GameManager::PlayAction(const FAIActions& InActionToPlay)
 
 void ATC_GameManager::EndTurn()
 {
-	UE_LOG(LogTemp, Error, TEXT("EndTurn: Lancement de EndTurn."));
+	//UE_LOG(LogTemp, Error, TEXT("EndTurn: Lancement de EndTurn."));
 
 	//for (ATC_Board* Board : GetCurrentGameState().GetGamePlate()->GetPlateBoard())
 	//{
@@ -342,13 +342,13 @@ void ATC_GameManager::EndTurn()
 
 void ATC_GameManager::EndGame()
 {
-	UE_LOG(LogTemp, Error, TEXT("EndGame: Called !"));
+	//UE_LOG(LogTemp, Error, TEXT("EndGame: Called !"));
 	onEndGame();
 }
 
 void ATC_GameManager::CalculateScore()
 {
-	UE_LOG(LogTemp, Warning, TEXT("CalculateScore: Calculating Scores"));
+	//UE_LOG(LogTemp, Warning, TEXT("CalculateScore: Calculating Scores"));
 
 	int ActivePlayerScore = 0;
 	ATC_Player* CurrentPlayer = GetCurrentGameState().GetActivePlayer();
@@ -379,7 +379,7 @@ void ATC_GameManager::CalculateScore()
 
 bool ATC_GameManager::CheckForWin()
 {
-	UE_LOG(LogTemp, Warning, TEXT("CheckForWin: Looking for winner"));
+	//UE_LOG(LogTemp, Warning, TEXT("CheckForWin: Looking for winner"));
 
 	ATC_Player* PlayerOne = GetCurrentGameState().GetPlayer1();
 	ATC_Player* PlayerTwo = GetCurrentGameState().GetPlayer2();
