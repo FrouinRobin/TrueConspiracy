@@ -117,15 +117,6 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 			return;
 		}
 
-	if (SpawnedCard)
-	{
-		if (SpawnedCard->CardPlaceSound)
-		{
-			UGameplayStatics::PlaySoundAtLocation(SpawnedCard, SpawnedCard->CardPlaceSound, SpawnedCard->GetActorLocation());
-			UE_LOG(LogTemp, Warning, TEXT("PlayCard: PlaySound."));
-		}
-	}
-
 		InAction.PlayingSlot->SetSlotCard(SpawnedCard);
 		InAction.CardInHand->SetSlot(InAction.PlayingSlot);
 		InAction.PlayingSlot->GetSlotBoardSlot()->WidgetReference->OnUpdate();
@@ -149,6 +140,14 @@ void TC_ActionsSystem::PlayCard(TC_GameStates& InGameState, const FAIActions& In
 	}
 
 	//UE_LOG(LogTemp, Log, TEXT("PlayCard: Carte %s jou�e avec succ�s."), *SpawnedCard->GetName());
+
+	if (SelectedCard)
+	{
+		if (SelectedCard->CardPlaceSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(SelectedCard, SelectedCard->CardPlaceSound, SelectedCard->GetActorLocation());
+		}
+	}
 
 	if (SelectedCard->Destroy()) 
 	{
