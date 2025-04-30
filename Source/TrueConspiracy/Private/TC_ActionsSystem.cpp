@@ -177,6 +177,11 @@ void TC_ActionsSystem::DrawCard(TC_GameStates& InGameState, const FAIActions& In
 		return;
 	}
 
+	if (CardToDraw && CardToDraw->CardDrawnSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(CardToDraw, CardToDraw->CardDrawnSound, CardToDraw->GetActorLocation());
+	}
+
 	TSubclassOf<ATC_Card> CardClass = CardToDraw->GetClass();
 
 	ActivePlayer->RemoveCardFromDeck(CardToDraw);
