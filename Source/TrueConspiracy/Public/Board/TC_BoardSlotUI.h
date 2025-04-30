@@ -20,6 +20,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetBoardSlot(ATC_BoardSlot* newBoardSlot);
+
 	UFUNCTION(BlueprintCallable)
 	void SetMyText(const FString& NewText, UTextBlock* TextScore);
 
